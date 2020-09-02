@@ -51,3 +51,9 @@ func (controller *OrderController) GetOrders(c echo.Context) error {
 	result := controller.orderservice.GetOrders()
 	return c.JSON(http.StatusOK, result)
 }
+
+func (controller *OrderController) GetOrder(c echo.Context) error {
+	id := c.Param("id")
+	result := controller.orderservice.GetOrder(id)
+	return c.JSON(http.StatusOK, result)
+}

@@ -1,7 +1,6 @@
 package order
 
 import (
-	"strconv"
 	"sync"
 )
 
@@ -12,7 +11,7 @@ type OrderRepository interface {
 	Update(o Order)
 }
 
-var fakeOrders = []Order{}
+var fakeOrders = make(map[string]Order)
 
 var lockMutex = new(sync.RWMutex)
 
@@ -23,25 +22,29 @@ func NewOrderRepository() OrderRepository {
 }
 
 func (r *repository) GetOrders() []Order {
-	return fakeOrders
+	result := make([]Order, 0, len(fakeOrders))
+
+	for _, v := range fakeOrders {
+		result = append(result, v)
+	}
+
+	return result
 }
 
 func (r *repository) Get(id string) Order {
-	i, _ := strconv.Atoi(id)
-	return fakeOrders[i]
+	return fakeOrders[id]
 }
 
 func (r *repository) Update(o Order) {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
-	i, _ := strconv.Atoi(string(o.ID))
-	fakeOrders[i] = o
+	fakeOrders[string(o.ID)] = o
 }
 
 func (r *repository) Create(o Order) {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
-	fakeOrders = append(fakeOrders, o)
+	fakeOrders[string(o.ID)] = o
 }
