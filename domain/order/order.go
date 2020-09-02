@@ -3,6 +3,7 @@ package order
 import (
 	"orderContext/domain/customer"
 	"orderContext/domain/product"
+	"orderContext/domain/shared"
 )
 
 type Status int
@@ -17,23 +18,32 @@ const (
 type OrderId string
 
 type Order struct {
-	id         OrderId
+	shared.AggregateRoot
+	ID         OrderId
 	customerId customer.CustomerId
 	productId  product.ProductId
 	status     Status
 }
 
 func NewOrder(id OrderId, customerId customer.CustomerId, productId product.ProductId) *Order {
-	return &Order{
-		id:         id,
+	order := &Order{
+		ID:         id,
 		customerId: customerId,
 		productId:  productId,
 	}
+	order.AddEvent(OrderCreatedEvent{id: string(id)})
+	return order
 }
 
-func (o *Order) Pay() { o.status = Paid }
+func (o *Order) Pay() {
+	o.status = Paid
+	o.AddEvent(OrderPaidEvent{id: string(o.ID)})
+}
 
-func (o *Order) Cancel() { o.status = Cancelled }
+func (o *Order) Cancel() {
+	o.status = Cancelled
+	o.AddEvent(OrderCancelledEvent{id: string(o.ID)})
+}
 
 func (o *Order) Ship() error {
 
@@ -42,6 +52,5 @@ func (o *Order) Ship() error {
 	}
 
 	o.status = Shipped
-
 	return nil
 }
