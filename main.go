@@ -1,26 +1,27 @@
 package main
 
 import (
-	"fmt"
-	"reflect"
+	"net/http"
+	"orderContext/api"
 
-	"orderContext/domain/order"
+	"github.com/labstack/echo"
 )
 
 func main() {
 
-	fmt.Println("App Started!!!")
+	e := echo.New()
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "order context api  is running!")
+	})
 
-	order := order.NewOrder("1", "21", "312")
+	controller := api.NewOrderController()
 
-	order.Pay()
+	e.GET("/order", controller.GetOrders)
 
-	events := order.Events()
+	e.PUT("/order"+"/pay"+"/:id", controller.Pay)
 
-	order.ClearEvents()
+	e.POST("/order", controller.Create)
 
-	for _, e := range events {
-		fmt.Println(reflect.TypeOf(e).Name())
-	}
+	e.Logger.Fatal(e.Start(":8080"))
 
 }

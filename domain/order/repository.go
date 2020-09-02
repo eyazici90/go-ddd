@@ -43,6 +43,5 @@ func (r *repository) Create(o Order) {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
-	i, _ := strconv.Atoi(string(o.ID))
-	fakeOrders[i] = o
+	fakeOrders = append(fakeOrders, o)
 }
