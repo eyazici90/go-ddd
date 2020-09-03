@@ -1,38 +1,44 @@
 package api
 
 import (
-	"errors"
 	"net/http"
 
 	"orderContext/application"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-var InvalidRequestError = errors.New("Invalid Request params")
-
-type OrderController struct {
+type orderController struct {
 	orderservice application.OrderService
 }
 
-func NewOrderController() OrderController {
-	return OrderController{orderservice: application.NewOrderService()}
+func newOrderController() orderController {
+	return orderController{orderservice: application.NewOrderService()}
 }
 
-func (controller *OrderController) Create(c echo.Context) error {
+// CreateOrder godoc
+// @Summary Create a order
+// @Description Create a new order
+// @Tags order
+// @Accept json
+// @Produce json
+// @Success 201 {object} string
+// @Router /order [post]
+func (controller *orderController) create(c echo.Context) error {
 	controller.orderservice.Create()
+
 	return c.JSON(http.StatusCreated, "")
 }
 
-func (controller *OrderController) Pay(c echo.Context) error {
+func (controller *orderController) pay(c echo.Context) error {
 	return handle(c, func(id string) { controller.orderservice.Pay(id) })
 }
 
-func (controller *OrderController) Cancel(c echo.Context) error {
+func (controller *orderController) cancel(c echo.Context) error {
 	return handle(c, func(id string) { controller.orderservice.Cancel(id) })
 }
 
-func (controller *OrderController) Ship(c echo.Context) error {
+func (controller *orderController) ship(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return c.JSON(http.StatusBadRequest, InvalidRequestError)
@@ -47,12 +53,21 @@ func (controller *OrderController) Ship(c echo.Context) error {
 	return c.JSON(http.StatusAccepted, "")
 }
 
-func (controller *OrderController) GetOrders(c echo.Context) error {
+// GetOrder godoc
+// @Summary Get orders
+// @Description Get all orders
+// @Tags order
+// @Accept json
+// @Produce json
+// @Success 200 {object} order.Order
+// @Router /order [get]
+func (controller *orderController) getOrders(c echo.Context) error {
 	result := controller.orderservice.GetOrders()
+
 	return c.JSON(http.StatusOK, result)
 }
 
-func (controller *OrderController) GetOrder(c echo.Context) error {
+func (controller *orderController) getOrder(c echo.Context) error {
 	id := c.Param("id")
 	result := controller.orderservice.GetOrder(id)
 	return c.JSON(http.StatusOK, result)

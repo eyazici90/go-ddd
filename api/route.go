@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func RegisterHandlers(e *echo.Echo) {
@@ -12,14 +12,17 @@ func RegisterHandlers(e *echo.Echo) {
 		return c.String(http.StatusOK, "order context api  is running!")
 	})
 
-	controller := NewOrderController()
+	v1 := e.Group("/api/v1")
+	{
+		controller := newOrderController()
 
-	e.GET("/order", controller.GetOrders)
+		v1.GET("/order", controller.getOrders)
 
-	e.GET("/order"+"/:id", controller.GetOrder)
+		v1.GET("/order"+"/:id", controller.getOrder)
 
-	e.PUT("/order"+"/pay"+"/:id", controller.Pay)
+		v1.PUT("/order"+"/pay"+"/:id", controller.pay)
 
-	e.POST("/order", controller.Create)
+		v1.POST("/order", controller.create)
+	}
 
 }
