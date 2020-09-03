@@ -24,27 +24,27 @@ func newOrderController() orderController {
 // @Produce json
 // @Success 201 {object} string
 // @Router /order [post]
-func (controller *orderController) create(c echo.Context) error {
-	controller.orderservice.Create()
+func (this *orderController) create(c echo.Context) error {
+	this.orderservice.Create()
 
 	return c.JSON(http.StatusCreated, "")
 }
 
-func (controller *orderController) pay(c echo.Context) error {
-	return handle(c, func(id string) { controller.orderservice.Pay(id) })
+func (this *orderController) pay(c echo.Context) error {
+	return handle(c, func(id string) { this.orderservice.Pay(id) })
 }
 
-func (controller *orderController) cancel(c echo.Context) error {
-	return handle(c, func(id string) { controller.orderservice.Cancel(id) })
+func (this *orderController) cancel(c echo.Context) error {
+	return handle(c, func(id string) { this.orderservice.Cancel(id) })
 }
 
-func (controller *orderController) ship(c echo.Context) error {
+func (this *orderController) ship(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return c.JSON(http.StatusBadRequest, InvalidRequestError)
 	}
 
-	result := controller.orderservice.Ship(id)
+	result := this.orderservice.Ship(id)
 
 	if result != nil {
 		return c.JSON(http.StatusBadRequest, result)
@@ -61,14 +61,14 @@ func (controller *orderController) ship(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} order.Order
 // @Router /order [get]
-func (controller *orderController) getOrders(c echo.Context) error {
-	result := controller.orderservice.GetOrders()
+func (this *orderController) getOrders(c echo.Context) error {
+	result := this.orderservice.GetOrders()
 
 	return c.JSON(http.StatusOK, result)
 }
 
-func (controller *orderController) getOrder(c echo.Context) error {
+func (this *orderController) getOrder(c echo.Context) error {
 	id := c.Param("id")
-	result := controller.orderservice.GetOrder(id)
+	result := this.orderservice.GetOrder(id)
 	return c.JSON(http.StatusOK, result)
 }
