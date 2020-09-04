@@ -14,15 +14,15 @@ func RegisterHandlers(e *echo.Echo) {
 
 	v1 := e.Group("/api/v1")
 	{
-		controller := newOrderController()
+		handler := NewOrderHandler()
 
-		v1.GET("/order", controller.getOrders)
+		v1.GET("/order", handler.GetOrders)
 
-		v1.GET("/order"+"/:id", controller.getOrder)
+		v1.GET("/order"+"/:id", handler.GetOrder)
 
-		v1.PUT("/order"+"/pay"+"/:id", controller.pay)
+		v1.PUT("/order"+"/pay"+"/:id", handler.Pay)
 
-		v1.POST("/order", controller.create)
+		v1.POST("/order", handler.Create)
 	}
 
 }

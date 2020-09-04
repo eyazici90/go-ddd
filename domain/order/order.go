@@ -35,22 +35,22 @@ func NewOrder(id OrderId, customerId customer.CustomerId, productId product.Prod
 	return order
 }
 
-func (this *Order) Pay() {
-	this.status = Paid
-	this.AddEvent(OrderPaidEvent{id: string(this.ID)})
+func (o *Order) Pay() {
+	o.status = Paid
+	o.AddEvent(OrderPaidEvent{id: string(o.ID)})
 }
 
-func (this *Order) Cancel() {
-	this.status = Cancelled
-	this.AddEvent(OrderCancelledEvent{id: string(this.ID)})
+func (o *Order) Cancel() {
+	o.status = Cancelled
+	o.AddEvent(OrderCancelledEvent{id: string(o.ID)})
 }
 
-func (this *Order) Ship() error {
+func (o *Order) Ship() error {
 
-	if this.status != Paid {
+	if o.status != Paid {
 		return OrderNotPaidError
 	}
 
-	this.status = Shipped
+	o.status = Shipped
 	return nil
 }
