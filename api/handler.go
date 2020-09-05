@@ -2,18 +2,28 @@ package api
 
 import (
 	"net/http"
+	"reflect"
 
 	"orderContext/application"
+	"orderContext/application/command"
+	"orderContext/core/mediator"
 
 	"github.com/labstack/echo/v4"
 )
 
-type OrderHandler struct {
+type orderHandler struct {
+	mediator     mediator.Mediator
 	orderservice application.OrderService
 }
 
-func NewOrderHandler() OrderHandler {
-	return OrderHandler{orderservice: application.NewOrderService()}
+func newOrderHandler() orderHandler {
+	m := mediator.New().
+		RegisterHandler(reflect.TypeOf(command.CreateOrderCommand{}), func() interface{} { return command.NewCreateOrderCommandHandler() })
+
+	return orderHandler{
+		mediator:     m,
+		orderservice: application.NewOrderService(),
+	}
 }
 
 // CreateOrder godoc
@@ -24,34 +34,21 @@ func NewOrderHandler() OrderHandler {
 // @Produce json
 // @Success 201 {object} string
 // @Router /order [post]
-func (o *OrderHandler) Create(c echo.Context) error {
-	o.orderservice.Create()
-
-	return c.JSON(http.StatusCreated, "")
+func (o *orderHandler) create(c echo.Context) error {
+	return create(c, func() { o.mediator.Send(command.CreateOrderCommand{}) })
 }
 
-func (o *OrderHandler) Pay(c echo.Context) error {
-	return handle(c, func(id string) { o.orderservice.Pay(id) })
+func (o *orderHandler) pay(c echo.Context) error {
+	return update(c, func(id string) { o.mediator.Send(command.PayOrderCommand{OrderId: id}) })
 }
 
-func (o *OrderHandler) Cancel(c echo.Context) error {
-	return handle(c, func(id string) { o.orderservice.Cancel(id) })
+func (o *orderHandler) cancel(c echo.Context) error {
+	return update(c, func(id string) { o.mediator.Send(command.CancelOrderCommand{OrderId: id}) })
 }
 
-func (o *OrderHandler) Ship(c echo.Context) error {
-	id := c.Param("id")
-	if id == "" {
-		return c.JSON(http.StatusBadRequest, InvalidRequestError)
-	}
-
-	result := o.orderservice.Ship(id)
-
-	if result != nil {
-		return c.JSON(http.StatusBadRequest, result)
-	}
-
-	return c.JSON(http.StatusAccepted, "")
-}
+// func (o *orderHandler) ship(c echo.Context) error {
+// 	return updateErr(c, func(id string) error { return o.orderservice.Ship(id) })
+// }
 
 // GetOrder godoc
 // @Summary Get orders
@@ -61,7 +58,7 @@ func (o *OrderHandler) Ship(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} order.Order
 // @Router /order [get]
-func (o *OrderHandler) GetOrders(c echo.Context) error {
+func (o *orderHandler) getOrders(c echo.Context) error {
 	result := o.orderservice.GetOrders()
 
 	return c.JSON(http.StatusOK, result)
@@ -76,7 +73,7 @@ func (o *OrderHandler) GetOrders(c echo.Context) error {
 // @Success 200 {object} order.Order
 // @Router /order/:id [get]
 
-func (o *OrderHandler) GetOrder(c echo.Context) error {
+func (o *orderHandler) getOrder(c echo.Context) error {
 	id := c.Param("id")
 	result := o.orderservice.GetOrder(id)
 	return c.JSON(http.StatusOK, result)

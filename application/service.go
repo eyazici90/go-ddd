@@ -1,16 +1,10 @@
 package application
 
 import (
-	"orderContext/domain/customer"
 	"orderContext/domain/order"
-	"orderContext/domain/product"
-
-	"github.com/google/uuid"
 )
 
 type OrderService interface {
-	Create()
-
 	Pay(orderId string)
 
 	Ship(orderId string) error
@@ -28,12 +22,6 @@ type service struct {
 
 func NewOrderService() OrderService {
 	return &service{repository: order.NewOrderRepository()}
-}
-
-func (s *service) Create() {
-	order := order.NewOrder(order.OrderId(uuid.New().String()), customer.New(), product.New())
-
-	s.repository.Create(*order)
 }
 
 func (s *service) Pay(orderId string) {

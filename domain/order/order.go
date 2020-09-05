@@ -1,9 +1,11 @@
 package order
 
 import (
+	"time"
+
+	"orderContext/core/aggregate"
 	"orderContext/domain/customer"
 	"orderContext/domain/product"
-	"orderContext/domain/shared"
 )
 
 type Status int
@@ -15,23 +17,22 @@ const (
 	Cancelled Status = 4
 )
 
-type OrderId string
-
 type Order struct {
-	shared.AggregateRoot
-	ID         OrderId
-	customerId customer.CustomerId
-	productId  product.ProductId
-	status     Status
+	aggregate.AggregateRoot
+	customerId  customer.CustomerId
+	productId   product.ProductId
+	createdTime time.Time
+	status      Status
 }
 
-func NewOrder(id OrderId, customerId customer.CustomerId, productId product.ProductId) *Order {
+func NewOrder(id string, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now) *Order {
 	order := &Order{
-		ID:         id,
-		customerId: customerId,
-		productId:  productId,
+		customerId:  customerId,
+		productId:   productId,
+		createdTime: now(),
 	}
-	order.AddEvent(OrderCreatedEvent{id: string(id)})
+	order.ID = id
+	order.AddEvent(OrderCreatedEvent{id: id})
 	return order
 }
 
