@@ -2,12 +2,14 @@ package api
 
 import (
 	"net/http"
+	"orderContext/application/behaviour"
 	"reflect"
 
 	"orderContext/application"
 	"orderContext/application/command"
 	"orderContext/core/mediator"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,7 +20,9 @@ type orderHandler struct {
 
 func newOrderHandler() orderHandler {
 	m := mediator.New().
-		RegisterHandler(reflect.TypeOf(command.CreateOrderCommand{}), func() interface{} { return command.NewCreateOrderCommandHandler() })
+		RegisterBehaviour(behaviour.NewValidator().Process).
+		RegisterHandler(reflect.TypeOf(command.CreateOrderCommand{}), func() interface{} { return command.NewCreateOrderCommandHandler() }).
+		RegisterHandler(reflect.TypeOf(command.PayOrderCommand{}), func() interface{} { return command.NewPayOrderCommandHandler() })
 
 	return orderHandler{
 		mediator:     m,
@@ -35,15 +39,24 @@ func newOrderHandler() orderHandler {
 // @Success 201 {object} string
 // @Router /order [post]
 func (o *orderHandler) create(c echo.Context) error {
-	return create(c, func() { o.mediator.Send(command.CreateOrderCommand{}) })
+	return create(c, func() { o.mediator.Send(command.CreateOrderCommand{Id: uuid.New().String()}) })
 }
 
+// PayOrder godoc
+// @Summary Pay order
+// @Description Pay the order
+// @Tags order
+// @Accept json
+// @Produce json
+// @Success 202 {object} string
+// @Param id path string true "id"
+// @Router /order/pay/{id} [put]
 func (o *orderHandler) pay(c echo.Context) error {
-	return update(c, func(id string) { o.mediator.Send(command.PayOrderCommand{OrderId: id}) })
+	return updateErr(c, func(id string) error { return o.mediator.Send(command.PayOrderCommand{OrderId: id}) })
 }
 
 func (o *orderHandler) cancel(c echo.Context) error {
-	return update(c, func(id string) { o.mediator.Send(command.CancelOrderCommand{OrderId: id}) })
+	return updateErr(c, func(id string) error { return o.mediator.Send(command.CancelOrderCommand{OrderId: id}) })
 }
 
 // func (o *orderHandler) ship(c echo.Context) error {

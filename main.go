@@ -3,9 +3,10 @@ package main
 import (
 	"orderContext/api"
 
+	"github.com/labstack/echo/v4"
+
 	_ "orderContext/docs"
 
-	echo "github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -23,4 +24,5 @@ func main() {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.Logger.Fatal(e.Start(":8080"))
+
 }

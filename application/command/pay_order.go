@@ -5,11 +5,15 @@ import (
 )
 
 type PayOrderCommand struct {
-	OrderId string
+	OrderId string `validate:"required,min=3"`
 }
 
 type PayOrderCommandHandler struct {
 	repository order.OrderRepository
+}
+
+func NewPayOrderCommandHandler() PayOrderCommandHandler {
+	return PayOrderCommandHandler{repository: order.NewOrderRepository()}
 }
 
 func (handler PayOrderCommandHandler) Handle(cmd PayOrderCommand) {

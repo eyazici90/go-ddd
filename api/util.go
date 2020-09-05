@@ -27,9 +27,9 @@ func updateErr(c echo.Context, action func(identifier string) error) error {
 	if id == "" {
 		return c.JSON(http.StatusBadRequest, InvalidRequestError)
 	}
-	result := action(id)
-	if result != nil {
-		return c.JSON(http.StatusBadRequest, result)
+	err := action(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusAccepted, "")
 }
