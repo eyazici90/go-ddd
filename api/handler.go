@@ -3,7 +3,6 @@ package api
 import (
 	"net/http"
 	"orderContext/application/behaviour"
-	"reflect"
 
 	"orderContext/application"
 	"orderContext/application/command"
@@ -21,8 +20,8 @@ type orderHandler struct {
 func newOrderHandler() orderHandler {
 	m := mediator.New().
 		RegisterBehaviour(behaviour.NewValidator().Process).
-		RegisterHandler(reflect.TypeOf(command.CreateOrderCommand{}), func() interface{} { return command.NewCreateOrderCommandHandler() }).
-		RegisterHandler(reflect.TypeOf(command.PayOrderCommand{}), func() interface{} { return command.NewPayOrderCommandHandler() })
+		RegisterHandler(command.NewCreateOrderCommandHandler()).
+		RegisterHandler(command.NewPayOrderCommandHandler())
 
 	return orderHandler{
 		mediator:     m,

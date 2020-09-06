@@ -9,7 +9,7 @@ import (
 )
 
 type CreateOrderCommand struct {
-	Id string
+	Id string `validate:"required,min=10"`
 }
 
 type CreateOrderCommandHandler struct {
@@ -20,8 +20,10 @@ func NewCreateOrderCommandHandler() CreateOrderCommandHandler {
 	return CreateOrderCommandHandler{repository: order.NewOrderRepository()}
 }
 
-func (handler CreateOrderCommandHandler) Handle(cmd CreateOrderCommand) {
+func (handler CreateOrderCommandHandler) Handle(cmd CreateOrderCommand) error {
 	order := order.NewOrder(cmd.Id, customer.New(), product.New(), func() time.Time { return time.Now() })
 
 	handler.repository.Create(*order)
+
+	return nil
 }

@@ -5,7 +5,7 @@ import (
 )
 
 type CancelOrderCommand struct {
-	OrderId string
+	OrderId string `validate:"required,min=10"`
 }
 
 type CancelOrderCommandHandler struct {

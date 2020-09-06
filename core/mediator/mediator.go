@@ -9,17 +9,21 @@ type Next func(interface{}) error
 type Mediator interface {
 	Send(msg interface{}) error
 	Publish(msg interface{})
-	RegisterHandler(mType reflect.Type, handlerFactory func() interface{}) Mediator
+	RegisterHandler(handler interface{}) Mediator
 	RegisterBehaviour(func(interface{}, Next) error) Mediator
 }
 
 type reflectBasedMediator struct {
-	behaviours func(interface{}, Next) error
-	handlers   map[reflect.Type]interface{}
+	behaviours   func(interface{}, Next) error
+	handlers     map[reflect.Type]interface{}
+	handlersFunc map[reflect.Type]reflect.Value
 }
 
 func New() Mediator {
-	return &reflectBasedMediator{handlers: make(map[reflect.Type]interface{})}
+	return &reflectBasedMediator{
+		handlers:     make(map[reflect.Type]interface{}),
+		handlersFunc: make(map[reflect.Type]reflect.Value),
+	}
 }
 
 func (m *reflectBasedMediator) Send(msg interface{}) error {
@@ -31,35 +35,28 @@ func (m *reflectBasedMediator) Send(msg interface{}) error {
 
 func (m *reflectBasedMediator) send(msg interface{}) error {
 	msgType := reflect.TypeOf(msg)
-	handler := m.handlers[msgType]
+	handler, _ := m.handlers[msgType]
+	handlerFunc, _ := m.handlersFunc[msgType]
+	return call(handler, handlerFunc, msg)
+}
 
+func (m *reflectBasedMediator) Publish(msg interface{}) {
+	// return callHandle(handler, msg)
+}
+
+func (m *reflectBasedMediator) RegisterHandler(handler interface{}) Mediator {
 	handlerType := reflect.TypeOf(handler)
-
-	handleMethod, ok := handlerType.MethodByName("Handle")
-
+	method, ok := handlerType.MethodByName(HandleMethodName)
 	if !ok {
 		panic("handle method does not exists for the typeOf" + handlerType.String())
 	}
 
-	in := []reflect.Value{reflect.ValueOf(handler), reflect.ValueOf(msg)}
+	cType := reflect.TypeOf(method.Func.Interface()).In(1)
 
-	result := handleMethod.Func.Call(in)
-	if result == nil {
-		return nil
-	}
+	// fmt.Println(cType)
 
-	if v := result[0].Interface(); v != nil {
-		return v.(error)
-	}
-	return nil
-}
-
-func (m *reflectBasedMediator) Publish(msg interface{}) {
-
-}
-
-func (m *reflectBasedMediator) RegisterHandler(mType reflect.Type, handlerFactory func() interface{}) Mediator {
-	m.handlers[mType] = handlerFactory()
+	m.handlers[cType] = handler
+	m.handlersFunc[cType] = method.Func
 	return m
 }
 
