@@ -6,11 +6,15 @@ import (
 
 type Next func(interface{}) error
 
+type PipelineBehaviour interface {
+	Process(cmd interface{}, next Next) error
+}
+
 type Mediator interface {
 	Send(msg interface{}) error
 	Publish(msg interface{})
 	RegisterHandler(handler interface{}) Mediator
-	RegisterBehaviour(func(interface{}, Next) error) Mediator
+	RegisterBehaviour(pipelineBehaviour PipelineBehaviour) Mediator
 }
 
 type reflectBasedMediator struct {
@@ -46,6 +50,7 @@ func (m *reflectBasedMediator) Publish(msg interface{}) {
 
 func (m *reflectBasedMediator) RegisterHandler(handler interface{}) Mediator {
 	handlerType := reflect.TypeOf(handler)
+
 	method, ok := handlerType.MethodByName(HandleMethodName)
 	if !ok {
 		panic("handle method does not exists for the typeOf" + handlerType.String())
@@ -53,14 +58,12 @@ func (m *reflectBasedMediator) RegisterHandler(handler interface{}) Mediator {
 
 	cType := reflect.TypeOf(method.Func.Interface()).In(1)
 
-	// fmt.Println(cType)
-
 	m.handlers[cType] = handler
 	m.handlersFunc[cType] = method.Func
 	return m
 }
 
-func (m *reflectBasedMediator) RegisterBehaviour(behaviour func(interface{}, Next) error) Mediator {
-	m.behaviours = behaviour
+func (m *reflectBasedMediator) RegisterBehaviour(pipelineBehaviour PipelineBehaviour) Mediator {
+	m.behaviours = pipelineBehaviour.Process
 	return m
 }

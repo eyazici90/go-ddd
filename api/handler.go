@@ -19,7 +19,7 @@ type orderHandler struct {
 
 func newOrderHandler() orderHandler {
 	m := mediator.New().
-		RegisterBehaviour(behaviour.NewValidator().Process).
+		RegisterBehaviour(behaviour.NewValidator()).
 		RegisterHandler(command.NewCreateOrderCommandHandler()).
 		RegisterHandler(command.NewPayOrderCommandHandler())
 
