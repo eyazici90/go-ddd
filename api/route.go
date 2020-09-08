@@ -5,10 +5,11 @@ import (
 )
 
 const orderBaseUrl string = "/order"
+const version string = "v1"
 
 func RegisterHandlers(e *echo.Echo) {
 
-	v1 := e.Group("/api/v1")
+	v1 := e.Group("/api/" + version)
 	{
 		handler := newOrderHandler()
 

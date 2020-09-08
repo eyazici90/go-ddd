@@ -1,10 +1,9 @@
 package api
 
 import (
-	"net/http"
 	"orderContext/application/behaviour"
+	"orderContext/application/query"
 
-	"orderContext/application"
 	"orderContext/application/command"
 	"orderContext/core/mediator"
 
@@ -14,11 +13,11 @@ import (
 
 type orderHandler struct {
 	mediator     mediator.Mediator
-	orderservice application.OrderService
+	orderservice query.OrderQueryService
 }
 
 func newOrderHandler() orderHandler {
-	m := mediator.New().
+	m := mediator.NewMediator().
 		UseBehaviour(behaviour.NewLogger()).
 		UseBehaviour(behaviour.NewValidator()).
 		RegisterHandler(command.NewCreateOrderCommandHandler()).
@@ -26,7 +25,7 @@ func newOrderHandler() orderHandler {
 
 	return orderHandler{
 		mediator:     m,
-		orderservice: application.NewOrderService(),
+		orderservice: query.NewOrderQueryService(),
 	}
 }
 
@@ -57,6 +56,15 @@ func (o *orderHandler) pay(c echo.Context) error {
 	})
 }
 
+// CancelOrder godoc
+// @Summary Cancel order
+// @Description Cancel the order
+// @Tags order
+// @Accept json
+// @Produce json
+// @Success 202 {object} string
+// @Param id path string true "id"
+// @Router /order/cancel/{id} [put]
 func (o *orderHandler) cancel(c echo.Context) error {
 	return updateErr(c, func(id string) error {
 		return o.mediator.Send(c.Request().Context(), command.CancelOrderCommand{OrderId: id})
@@ -76,9 +84,7 @@ func (o *orderHandler) cancel(c echo.Context) error {
 // @Success 200 {object} order.Order
 // @Router /order [get]
 func (o *orderHandler) getOrders(c echo.Context) error {
-	result := o.orderservice.GetOrders()
-
-	return c.JSON(http.StatusOK, result)
+	return get(c, o.orderservice.GetOrders())
 }
 
 // GetOrder godoc
@@ -89,9 +95,6 @@ func (o *orderHandler) getOrders(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} order.Order
 // @Router /order/:id [get]
-
 func (o *orderHandler) getOrder(c echo.Context) error {
-	id := c.Param("id")
-	result := o.orderservice.GetOrder(id)
-	return c.JSON(http.StatusOK, result)
+	return get(c, func(id string) interface{} { return o.orderservice.GetOrder(id) })
 }

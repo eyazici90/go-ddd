@@ -39,3 +39,13 @@ func create(c echo.Context, action func()) error {
 
 	return c.JSON(http.StatusCreated, "")
 }
+
+func get(c echo.Context, result interface{}) error {
+	return c.JSON(http.StatusOK, result)
+}
+
+func getById(c echo.Context, action func(id string) interface{}) error {
+	id := c.Param("id")
+	result := action(id)
+	return c.JSON(http.StatusOK, result)
+}

@@ -4,6 +4,8 @@ import (
 	"reflect"
 )
 
+type Next func() error
+
 const HandleMethodName string = "Handle"
 
 func call(handler interface{}, ctx interface{}, method reflect.Value, msg interface{}) error {

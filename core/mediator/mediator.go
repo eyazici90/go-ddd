@@ -5,12 +5,6 @@ import (
 	"reflect"
 )
 
-type Next func() error
-
-type PipelineBehaviour interface {
-	Process(context.Context, interface{}, Next) error
-}
-
 type Mediator interface {
 	Send(context.Context, interface{}) error
 	Publish(msg interface{})
@@ -25,7 +19,7 @@ type reflectBasedMediator struct {
 	handlersFunc map[reflect.Type]reflect.Value
 }
 
-func New() Mediator {
+func NewMediator() Mediator {
 	return &reflectBasedMediator{
 		handlers:     make(map[reflect.Type]interface{}),
 		handlersFunc: make(map[reflect.Type]reflect.Value),
@@ -47,7 +41,6 @@ func (m *reflectBasedMediator) send(ctx context.Context, msg interface{}) error 
 }
 
 func (m *reflectBasedMediator) Publish(msg interface{}) {
-	// return callHandle(handler, msg)
 }
 
 func (m *reflectBasedMediator) RegisterHandler(handler interface{}) Mediator {
