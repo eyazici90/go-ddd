@@ -28,6 +28,8 @@ func main() {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
+	// e.Use(middleware.Logger())
+
 	e.Logger.Fatal(e.Start(":8080"))
 
 }

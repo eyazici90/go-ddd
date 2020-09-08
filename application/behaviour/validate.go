@@ -1,6 +1,7 @@
 package behaviour
 
 import (
+	"context"
 	"orderContext/core/mediator"
 
 	"github.com/go-playground/validator/v10"
@@ -8,11 +9,13 @@ import (
 
 var validate *validator.Validate = validator.New()
 
-type Validator struct{}
+type Validator struct {
+	next mediator.Next
+}
 
-func NewValidator() Validator { return Validator{} }
+func NewValidator() *Validator { return &Validator{} }
 
-func (v Validator) Process(cmd interface{}, next mediator.Next) error {
+func (v *Validator) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
 
 	err := validate.Struct(cmd)
 
@@ -20,5 +23,5 @@ func (v Validator) Process(cmd interface{}, next mediator.Next) error {
 		return err
 	}
 
-	return next(cmd)
+	return next()
 }

@@ -1,24 +1,26 @@
 package mediator
 
 import (
+	"context"
 	"reflect"
 )
 
-type Next func(interface{}) error
+type Next func() error
 
 type PipelineBehaviour interface {
-	Process(cmd interface{}, next Next) error
+	Process(context.Context, interface{}, Next) error
 }
 
 type Mediator interface {
-	Send(msg interface{}) error
+	Send(context.Context, interface{}) error
 	Publish(msg interface{})
-	RegisterHandler(handler interface{}) Mediator
-	RegisterBehaviour(pipelineBehaviour PipelineBehaviour) Mediator
+	RegisterHandler(interface{}) Mediator
+	UseBehaviour(PipelineBehaviour) Mediator
+	Use(call func(context.Context, interface{}, Next) error) Mediator
 }
 
 type reflectBasedMediator struct {
-	behaviours   func(interface{}, Next) error
+	behaviour    func(context.Context, interface{}) error
 	handlers     map[reflect.Type]interface{}
 	handlersFunc map[reflect.Type]reflect.Value
 }
@@ -30,18 +32,18 @@ func New() Mediator {
 	}
 }
 
-func (m *reflectBasedMediator) Send(msg interface{}) error {
-	if m.behaviours != nil {
-		return m.behaviours(msg, m.send)
+func (m *reflectBasedMediator) Send(ctx context.Context, msg interface{}) error {
+	if m.behaviour != nil {
+		return m.behaviour(ctx, msg)
 	}
-	return m.send(msg)
+	return m.send(ctx, msg)
 }
 
-func (m *reflectBasedMediator) send(msg interface{}) error {
+func (m *reflectBasedMediator) send(ctx context.Context, msg interface{}) error {
 	msgType := reflect.TypeOf(msg)
 	handler, _ := m.handlers[msgType]
 	handlerFunc, _ := m.handlersFunc[msgType]
-	return call(handler, handlerFunc, msg)
+	return call(handler, ctx, handlerFunc, msg)
 }
 
 func (m *reflectBasedMediator) Publish(msg interface{}) {
@@ -56,14 +58,26 @@ func (m *reflectBasedMediator) RegisterHandler(handler interface{}) Mediator {
 		panic("handle method does not exists for the typeOf" + handlerType.String())
 	}
 
-	cType := reflect.TypeOf(method.Func.Interface()).In(1)
+	cType := reflect.TypeOf(method.Func.Interface()).In(2)
 
 	m.handlers[cType] = handler
 	m.handlersFunc[cType] = method.Func
 	return m
 }
 
-func (m *reflectBasedMediator) RegisterBehaviour(pipelineBehaviour PipelineBehaviour) Mediator {
-	m.behaviours = pipelineBehaviour.Process
+func (m *reflectBasedMediator) UseBehaviour(pipelineBehaviour PipelineBehaviour) Mediator {
+	return m.Use(pipelineBehaviour.Process)
+}
+
+func (m *reflectBasedMediator) Use(call func(context.Context, interface{}, Next) error) Mediator {
+	if m.behaviour == nil {
+		m.behaviour = m.send
+	}
+	seed := m.behaviour
+
+	m.behaviour = func(ctx context.Context, msg interface{}) error {
+		return call(ctx, msg, func() error { return seed(ctx, msg) })
+	}
+
 	return m
 }

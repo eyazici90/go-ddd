@@ -1,11 +1,13 @@
 package mediator
 
-import "reflect"
+import (
+	"reflect"
+)
 
 const HandleMethodName string = "Handle"
 
-func call(handler interface{}, method reflect.Value, msg interface{}) error {
-	in := []reflect.Value{reflect.ValueOf(handler), reflect.ValueOf(msg)}
+func call(handler interface{}, ctx interface{}, method reflect.Value, msg interface{}) error {
+	in := []reflect.Value{reflect.ValueOf(handler), reflect.ValueOf(ctx), reflect.ValueOf(msg)}
 
 	result := method.Call(in)
 

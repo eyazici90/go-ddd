@@ -19,7 +19,8 @@ type orderHandler struct {
 
 func newOrderHandler() orderHandler {
 	m := mediator.New().
-		RegisterBehaviour(behaviour.NewValidator()).
+		UseBehaviour(behaviour.NewLogger()).
+		UseBehaviour(behaviour.NewValidator()).
 		RegisterHandler(command.NewCreateOrderCommandHandler()).
 		RegisterHandler(command.NewPayOrderCommandHandler())
 
@@ -38,7 +39,7 @@ func newOrderHandler() orderHandler {
 // @Success 201 {object} string
 // @Router /order [post]
 func (o *orderHandler) create(c echo.Context) error {
-	return create(c, func() { o.mediator.Send(command.CreateOrderCommand{Id: uuid.New().String()}) })
+	return create(c, func() { o.mediator.Send(c.Request().Context(), command.CreateOrderCommand{Id: uuid.New().String()}) })
 }
 
 // PayOrder godoc
@@ -51,11 +52,15 @@ func (o *orderHandler) create(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /order/pay/{id} [put]
 func (o *orderHandler) pay(c echo.Context) error {
-	return updateErr(c, func(id string) error { return o.mediator.Send(command.PayOrderCommand{OrderId: id}) })
+	return updateErr(c, func(id string) error {
+		return o.mediator.Send(c.Request().Context(), command.PayOrderCommand{OrderId: id})
+	})
 }
 
 func (o *orderHandler) cancel(c echo.Context) error {
-	return updateErr(c, func(id string) error { return o.mediator.Send(command.CancelOrderCommand{OrderId: id}) })
+	return updateErr(c, func(id string) error {
+		return o.mediator.Send(c.Request().Context(), command.CancelOrderCommand{OrderId: id})
+	})
 }
 
 // func (o *orderHandler) ship(c echo.Context) error {
