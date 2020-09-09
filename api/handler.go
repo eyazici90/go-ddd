@@ -11,20 +11,28 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type orderHandler struct {
-	mediator     mediator.Mediator
+type orderCommandHandler struct {
+	mediator mediator.Mediator
+}
+
+type orderQueryHandler struct {
 	orderservice query.OrderQueryService
 }
 
-func newOrderHandler() orderHandler {
+func newOrderCommandHandler() orderCommandHandler {
 	m := mediator.NewMediator().
 		UseBehaviour(behaviour.NewLogger()).
 		UseBehaviour(behaviour.NewValidator()).
 		RegisterHandler(command.NewCreateOrderCommandHandler()).
 		RegisterHandler(command.NewPayOrderCommandHandler())
 
-	return orderHandler{
-		mediator:     m,
+	return orderCommandHandler{
+		mediator: m,
+	}
+}
+
+func newOrderQueryHandler() orderQueryHandler {
+	return orderQueryHandler{
 		orderservice: query.NewOrderQueryService(),
 	}
 }
@@ -37,7 +45,7 @@ func newOrderHandler() orderHandler {
 // @Produce json
 // @Success 201 {object} string
 // @Router /order [post]
-func (o *orderHandler) create(c echo.Context) error {
+func (o *orderCommandHandler) create(c echo.Context) error {
 	return create(c, func() { o.mediator.Send(c.Request().Context(), command.CreateOrderCommand{Id: uuid.New().String()}) })
 }
 
@@ -50,7 +58,7 @@ func (o *orderHandler) create(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /order/pay/{id} [put]
-func (o *orderHandler) pay(c echo.Context) error {
+func (o *orderCommandHandler) pay(c echo.Context) error {
 	return updateErr(c, func(id string) error {
 		return o.mediator.Send(c.Request().Context(), command.PayOrderCommand{OrderId: id})
 	})
@@ -65,7 +73,7 @@ func (o *orderHandler) pay(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /order/cancel/{id} [put]
-func (o *orderHandler) cancel(c echo.Context) error {
+func (o *orderCommandHandler) cancel(c echo.Context) error {
 	return updateErr(c, func(id string) error {
 		return o.mediator.Send(c.Request().Context(), command.CancelOrderCommand{OrderId: id})
 	})
@@ -83,7 +91,7 @@ func (o *orderHandler) cancel(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} order.Order
 // @Router /order [get]
-func (o *orderHandler) getOrders(c echo.Context) error {
+func (o *orderQueryHandler) getOrders(c echo.Context) error {
 	return get(c, o.orderservice.GetOrders())
 }
 
@@ -95,6 +103,6 @@ func (o *orderHandler) getOrders(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} order.Order
 // @Router /order/:id [get]
-func (o *orderHandler) getOrder(c echo.Context) error {
+func (o *orderQueryHandler) getOrder(c echo.Context) error {
 	return get(c, func(id string) interface{} { return o.orderservice.GetOrder(id) })
 }

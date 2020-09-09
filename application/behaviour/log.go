@@ -7,7 +7,6 @@ import (
 )
 
 type Logger struct {
-	next mediator.Next
 }
 
 func NewLogger() *Logger { return &Logger{} }

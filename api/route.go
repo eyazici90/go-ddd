@@ -11,15 +11,16 @@ func RegisterHandlers(e *echo.Echo) {
 
 	v1 := e.Group("/api/" + version)
 	{
-		handler := newOrderHandler()
+		commandHandler := newOrderCommandHandler()
+		queryHandler := newOrderQueryHandler()
 
-		v1.GET(orderBaseUrl, handler.getOrders)
+		v1.GET(orderBaseUrl, queryHandler.getOrders)
 
-		v1.GET(orderBaseUrl+"/:id", handler.getOrder)
+		v1.GET(orderBaseUrl+"/:id", queryHandler.getOrder)
 
-		v1.PUT(orderBaseUrl+"/pay"+"/:id", handler.pay)
+		v1.PUT(orderBaseUrl+"/pay"+"/:id", commandHandler.pay)
 
-		v1.POST(orderBaseUrl, handler.create)
+		v1.POST(orderBaseUrl, commandHandler.create)
 	}
 
 }

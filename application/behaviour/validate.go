@@ -10,7 +10,6 @@ import (
 var validate *validator.Validate = validator.New()
 
 type Validator struct {
-	next mediator.Next
 }
 
 func NewValidator() *Validator { return &Validator{} }
