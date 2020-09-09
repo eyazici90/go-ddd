@@ -3,6 +3,7 @@ package api
 import (
 	"orderContext/application/behaviour"
 	"orderContext/application/query"
+	"orderContext/domain/order"
 
 	"orderContext/application/command"
 	"orderContext/core/mediator"
@@ -11,29 +12,30 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type orderCommandHandler struct {
+type orderCommandController struct {
 	mediator mediator.Mediator
 }
 
-type orderQueryHandler struct {
+type orderQueryController struct {
 	orderservice query.OrderQueryService
 }
 
-func newOrderCommandHandler() orderCommandHandler {
+func newOrderCommandController(r order.OrderRepository) orderCommandController {
 	m := mediator.NewMediator().
 		UseBehaviour(behaviour.NewLogger()).
 		UseBehaviour(behaviour.NewValidator()).
-		RegisterHandler(command.NewCreateOrderCommandHandler()).
-		RegisterHandler(command.NewPayOrderCommandHandler())
+		RegisterHandler(command.NewCreateOrderCommandHandler(r)).
+		RegisterHandler(command.NewPayOrderCommandHandler(r)).
+		RegisterHandler(command.NewShipOrderCommandHandler(r))
 
-	return orderCommandHandler{
+	return orderCommandController{
 		mediator: m,
 	}
 }
 
-func newOrderQueryHandler() orderQueryHandler {
-	return orderQueryHandler{
-		orderservice: query.NewOrderQueryService(),
+func newOrderQueryController(s query.OrderQueryService) orderQueryController {
+	return orderQueryController{
+		orderservice: s,
 	}
 }
 
@@ -45,7 +47,7 @@ func newOrderQueryHandler() orderQueryHandler {
 // @Produce json
 // @Success 201 {object} string
 // @Router /order [post]
-func (o *orderCommandHandler) create(c echo.Context) error {
+func (o *orderCommandController) create(c echo.Context) error {
 	return create(c, func() { o.mediator.Send(c.Request().Context(), command.CreateOrderCommand{Id: uuid.New().String()}) })
 }
 
@@ -58,7 +60,7 @@ func (o *orderCommandHandler) create(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /order/pay/{id} [put]
-func (o *orderCommandHandler) pay(c echo.Context) error {
+func (o *orderCommandController) pay(c echo.Context) error {
 	return updateErr(c, func(id string) error {
 		return o.mediator.Send(c.Request().Context(), command.PayOrderCommand{OrderId: id})
 	})
@@ -73,15 +75,26 @@ func (o *orderCommandHandler) pay(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /order/cancel/{id} [put]
-func (o *orderCommandHandler) cancel(c echo.Context) error {
+func (o *orderCommandController) cancel(c echo.Context) error {
 	return updateErr(c, func(id string) error {
 		return o.mediator.Send(c.Request().Context(), command.CancelOrderCommand{OrderId: id})
 	})
 }
 
-// func (o *orderHandler) ship(c echo.Context) error {
-// 	return updateErr(c, func(id string) error { return o.orderservice.Ship(id) })
-// }
+// ShipOrder godoc
+// @Summary Ship order
+// @Description ship the order
+// @Tags order
+// @Accept json
+// @Produce json
+// @Success 202 {object} string
+// @Param id path string true "id"
+// @Router /order/ship/{id} [put]
+func (o *orderCommandController) ship(c echo.Context) error {
+	return updateErr(c, func(id string) error {
+		return o.mediator.Send(c.Request().Context(), command.ShipOrderCommand{OrderId: id})
+	})
+}
 
 // GetOrder godoc
 // @Summary Get orders
@@ -91,7 +104,7 @@ func (o *orderCommandHandler) cancel(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} order.Order
 // @Router /order [get]
-func (o *orderQueryHandler) getOrders(c echo.Context) error {
+func (o *orderQueryController) getOrders(c echo.Context) error {
 	return get(c, o.orderservice.GetOrders())
 }
 
@@ -103,6 +116,6 @@ func (o *orderQueryHandler) getOrders(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} order.Order
 // @Router /order/:id [get]
-func (o *orderQueryHandler) getOrder(c echo.Context) error {
+func (o *orderQueryController) getOrder(c echo.Context) error {
 	return get(c, func(id string) interface{} { return o.orderservice.GetOrder(id) })
 }

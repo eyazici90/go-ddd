@@ -13,8 +13,8 @@ type PayOrderCommandHandler struct {
 	repository order.OrderRepository
 }
 
-func NewPayOrderCommandHandler() PayOrderCommandHandler {
-	return PayOrderCommandHandler{repository: order.NewOrderRepository()}
+func NewPayOrderCommandHandler(r order.OrderRepository) PayOrderCommandHandler {
+	return PayOrderCommandHandler{repository: r}
 }
 
 func (handler PayOrderCommandHandler) Handle(_ context.Context, cmd PayOrderCommand) error {

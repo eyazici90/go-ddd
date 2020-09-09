@@ -41,6 +41,14 @@ func TestShipOrder(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
+	o := fakeOrder()
+
+	err := o.Ship()
+
+	assert.Equal(t, OrderNotPaidError, err)
+}
+
 func fakeOrder() *Order {
 	return NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() })
 }

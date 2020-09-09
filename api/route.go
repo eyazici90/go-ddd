@@ -1,6 +1,9 @@
 package api
 
 import (
+	"orderContext/application/query"
+	"orderContext/infrastructure"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -11,16 +14,21 @@ func RegisterHandlers(e *echo.Echo) {
 
 	v1 := e.Group("/api/" + version)
 	{
-		commandHandler := newOrderCommandHandler()
-		queryHandler := newOrderQueryHandler()
+		r := infrastructure.NewOrderRepository()
+		s := query.NewOrderQueryService(r)
 
-		v1.GET(orderBaseUrl, queryHandler.getOrders)
+		commandController := newOrderCommandController(r)
+		queryController := newOrderQueryController(s)
 
-		v1.GET(orderBaseUrl+"/:id", queryHandler.getOrder)
+		v1.GET(orderBaseUrl, queryController.getOrders)
 
-		v1.PUT(orderBaseUrl+"/pay"+"/:id", commandHandler.pay)
+		v1.GET(orderBaseUrl+"/:id", queryController.getOrder)
 
-		v1.POST(orderBaseUrl, commandHandler.create)
+		v1.POST(orderBaseUrl, commandController.create)
+
+		v1.PUT(orderBaseUrl+"/pay"+"/:id", commandController.pay)
+		v1.PUT(orderBaseUrl+"/ship"+"/:id", commandController.ship)
+
 	}
 
 }

@@ -17,8 +17,8 @@ type CreateOrderCommandHandler struct {
 	repository order.OrderRepository
 }
 
-func NewCreateOrderCommandHandler() CreateOrderCommandHandler {
-	return CreateOrderCommandHandler{repository: order.NewOrderRepository()}
+func NewCreateOrderCommandHandler(r order.OrderRepository) CreateOrderCommandHandler {
+	return CreateOrderCommandHandler{repository: r}
 }
 
 func (handler CreateOrderCommandHandler) Handle(_ context.Context, cmd CreateOrderCommand) error {

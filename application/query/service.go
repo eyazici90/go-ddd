@@ -14,8 +14,8 @@ type service struct {
 	repository order.OrderRepository
 }
 
-func NewOrderQueryService() OrderQueryService {
-	return &service{repository: order.NewOrderRepository()}
+func NewOrderQueryService(r order.OrderRepository) OrderQueryService {
+	return &service{repository: r}
 }
 
 func (s *service) GetOrders() []order.Order {
