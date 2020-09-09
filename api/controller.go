@@ -115,7 +115,8 @@ func (o *orderQueryController) getOrders(c echo.Context) error {
 // @Accept json
 // @Produce json
 // @Success 200 {object} order.Order
-// @Router /order/:id [get]
+// @Param id path string true "id"
+// @Router /order/{id} [get]
 func (o *orderQueryController) getOrder(c echo.Context) error {
-	return get(c, func(id string) interface{} { return o.orderservice.GetOrder(id) })
+	return getById(c, func(id string) interface{} { return o.orderservice.GetOrder(id) })
 }
