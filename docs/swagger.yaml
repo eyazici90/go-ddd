@@ -1,0 +1,129 @@
+basePath: /api/v1
+definitions:
+  order.Order:
+    properties:
+      id:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: order context
+  license: {}
+  title: Order Application
+  version: "1.0"
+paths:
+  /order:
+    get:
+      consumes:
+      - application/json
+      description: Get all orders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/order.Order'
+      summary: Get orders
+      tags:
+      - order
+    post:
+      consumes:
+      - application/json
+      description: Create a new order
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+      summary: Create a order
+      tags:
+      - order
+  /order/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/order.Order'
+      summary: Get order
+      tags:
+      - order
+  /order/cancel/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Cancel the order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            type: string
+      summary: Cancel order
+      tags:
+      - order
+  /order/pay/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Pay the order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            type: string
+      summary: Pay order
+      tags:
+      - order
+  /order/ship/{id}:
+    put:
+      consumes:
+      - application/json
+      description: ship the order
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            type: string
+      summary: Ship order
+      tags:
+      - order
+swagger: "2.0"
