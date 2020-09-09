@@ -21,7 +21,7 @@ func NewCreateOrderCommandHandler() CreateOrderCommandHandler {
 	return CreateOrderCommandHandler{repository: order.NewOrderRepository()}
 }
 
-func (handler CreateOrderCommandHandler) Handle(ctx context.Context, cmd CreateOrderCommand) error {
+func (handler CreateOrderCommandHandler) Handle(_ context.Context, cmd CreateOrderCommand) error {
 	order := order.NewOrder(cmd.Id, customer.New(), product.New(), func() time.Time { return time.Now() })
 
 	handler.repository.Create(*order)
