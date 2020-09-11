@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
@@ -9,33 +10,33 @@ import (
 
 var InvalidRequestError = errors.New("Invalid Request params")
 
-func update(c echo.Context, action func(identifier string)) error {
+func update(c echo.Context, action func(ctx context.Context, identifier string)) error {
 	id := c.Param("id")
 
 	if id == "" {
 		return c.JSON(http.StatusBadRequest, InvalidRequestError)
 	}
 
-	action(id)
+	action(c.Request().Context(), id)
 
 	return c.JSON(http.StatusAccepted, "")
 }
 
-func updateErr(c echo.Context, action func(identifier string) error) error {
+func updateErr(c echo.Context, action func(ctx context.Context, identifier string) error) error {
 	id := c.Param("id")
 
 	if id == "" {
 		return c.JSON(http.StatusBadRequest, InvalidRequestError)
 	}
-	err := action(id)
+	err := action(c.Request().Context(), id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusAccepted, "")
 }
 
-func create(c echo.Context, action func()) error {
-	action()
+func create(c echo.Context, action func(ctx context.Context)) error {
+	action(c.Request().Context())
 
 	return c.JSON(http.StatusCreated, "")
 }

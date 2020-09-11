@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"orderContext/application/behaviour"
 	"orderContext/application/query"
 	"orderContext/domain/order"
@@ -49,7 +50,9 @@ func newOrderQueryController(s query.OrderQueryService) orderQueryController {
 // @Success 201 {object} string
 // @Router /order [post]
 func (o *orderCommandController) create(c echo.Context) error {
-	return create(c, func() { o.mediator.Send(c.Request().Context(), command.CreateOrderCommand{Id: uuid.New().String()}) })
+	return create(c, func(ctx context.Context) {
+		o.mediator.Send(ctx, command.CreateOrderCommand{Id: uuid.New().String()})
+	})
 }
 
 // PayOrder godoc
@@ -62,8 +65,8 @@ func (o *orderCommandController) create(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /order/pay/{id} [put]
 func (o *orderCommandController) pay(c echo.Context) error {
-	return updateErr(c, func(id string) error {
-		return o.mediator.Send(c.Request().Context(), command.PayOrderCommand{OrderId: id})
+	return updateErr(c, func(ctx context.Context, id string) error {
+		return o.mediator.Send(ctx, command.PayOrderCommand{OrderId: id})
 	})
 }
 
@@ -77,8 +80,8 @@ func (o *orderCommandController) pay(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /order/cancel/{id} [put]
 func (o *orderCommandController) cancel(c echo.Context) error {
-	return updateErr(c, func(id string) error {
-		return o.mediator.Send(c.Request().Context(), command.CancelOrderCommand{OrderId: id})
+	return updateErr(c, func(ctx context.Context, id string) error {
+		return o.mediator.Send(ctx, command.CancelOrderCommand{OrderId: id})
 	})
 }
 
@@ -92,8 +95,8 @@ func (o *orderCommandController) cancel(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /order/ship/{id} [put]
 func (o *orderCommandController) ship(c echo.Context) error {
-	return updateErr(c, func(id string) error {
-		return o.mediator.Send(c.Request().Context(), command.ShipOrderCommand{OrderId: id})
+	return updateErr(c, func(ctx context.Context, id string) error {
+		return o.mediator.Send(ctx, command.ShipOrderCommand{OrderId: id})
 	})
 }
 

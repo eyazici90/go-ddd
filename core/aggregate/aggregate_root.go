@@ -1,8 +1,8 @@
 package aggregate
 
 type AggregateRoot struct {
-	ID            string
 	eventRecorder EventRecorder
+	ID            string
 }
 
 func (root *AggregateRoot) AddEvent(event interface{}) { root.eventRecorder.Record(event) }
