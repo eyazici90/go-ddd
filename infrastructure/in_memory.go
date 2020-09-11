@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"context"
 	"orderContext/domain/order"
 	"sync"
 )
@@ -15,7 +16,7 @@ func NewOrderRepository() order.OrderRepository {
 	return &repository{}
 }
 
-func (r *repository) GetOrders() []order.Order {
+func (r *repository) GetOrders(_ context.Context) []order.Order {
 	result := make([]order.Order, 0, len(fakeOrders))
 
 	for _, v := range fakeOrders {
@@ -25,18 +26,18 @@ func (r *repository) GetOrders() []order.Order {
 	return result
 }
 
-func (r *repository) Get(id string) order.Order {
+func (r *repository) Get(_ context.Context, id string) order.Order {
 	return fakeOrders[id]
 }
 
-func (r *repository) Update(o order.Order) {
+func (r *repository) Update(_ context.Context, o order.Order) {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
 	fakeOrders[string(o.ID)] = o
 }
 
-func (r *repository) Create(o order.Order) {
+func (r *repository) Create(_ context.Context, o order.Order) {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 

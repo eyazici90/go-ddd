@@ -17,9 +17,9 @@ func NewPayOrderCommandHandler(r order.OrderRepository) PayOrderCommandHandler {
 	return PayOrderCommandHandler{repository: r}
 }
 
-func (handler PayOrderCommandHandler) Handle(_ context.Context, cmd PayOrderCommand) error {
-	order := handler.repository.Get(cmd.OrderId)
+func (handler PayOrderCommandHandler) Handle(ctx context.Context, cmd PayOrderCommand) error {
+	order := handler.repository.Get(ctx, cmd.OrderId)
 	order.Pay()
-	handler.repository.Update(order)
+	handler.repository.Update(ctx, order)
 	return nil
 }

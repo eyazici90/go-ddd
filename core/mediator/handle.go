@@ -1,10 +1,11 @@
 package mediator
 
 import (
+	"context"
 	"reflect"
 )
 
-type Next func() error
+type Next func(ctx context.Context) error
 
 const HandleMethodName string = "Handle"
 

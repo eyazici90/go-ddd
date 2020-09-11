@@ -14,7 +14,7 @@ type Validator struct {
 
 func NewValidator() *Validator { return &Validator{} }
 
-func (v *Validator) Process(_ context.Context, cmd interface{}, next mediator.Next) error {
+func (v *Validator) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
 
 	err := validate.Struct(cmd)
 
@@ -22,5 +22,5 @@ func (v *Validator) Process(_ context.Context, cmd interface{}, next mediator.Ne
 		return err
 	}
 
-	return next()
+	return next(ctx)
 }

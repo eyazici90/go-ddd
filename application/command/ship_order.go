@@ -17,12 +17,12 @@ func NewShipOrderCommandHandler(r order.OrderRepository) ShipOrderCommandHandler
 	return ShipOrderCommandHandler{repository: r}
 }
 
-func (handler ShipOrderCommandHandler) Handle(_ context.Context, cmd ShipOrderCommand) error {
-	order := handler.repository.Get(cmd.OrderId)
+func (handler ShipOrderCommandHandler) Handle(ctx context.Context, cmd ShipOrderCommand) error {
+	order := handler.repository.Get(ctx, cmd.OrderId)
 	err := order.Ship()
 	if err != nil {
 		return err
 	}
-	handler.repository.Update(order)
+	handler.repository.Update(ctx, order)
 	return nil
 }

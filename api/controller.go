@@ -22,6 +22,7 @@ type orderQueryController struct {
 
 func newOrderCommandController(r order.OrderRepository) orderCommandController {
 	m := mediator.NewMediator().
+		UseBehaviour(behaviour.NewCancellator()).
 		UseBehaviour(behaviour.NewLogger()).
 		UseBehaviour(behaviour.NewValidator()).
 		RegisterHandler(command.NewCreateOrderCommandHandler(r)).
@@ -105,7 +106,7 @@ func (o *orderCommandController) ship(c echo.Context) error {
 // @Success 200 {object} order.Order
 // @Router /order [get]
 func (o *orderQueryController) getOrders(c echo.Context) error {
-	return get(c, o.orderservice.GetOrders())
+	return get(c, o.orderservice.GetOrders(c.Request().Context()))
 }
 
 // GetOrder godoc
@@ -118,5 +119,5 @@ func (o *orderQueryController) getOrders(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /order/{id} [get]
 func (o *orderQueryController) getOrder(c echo.Context) error {
-	return getById(c, func(id string) interface{} { return o.orderservice.GetOrder(id) })
+	return getById(c, func(id string) interface{} { return o.orderservice.GetOrder(c.Request().Context(), id) })
 }

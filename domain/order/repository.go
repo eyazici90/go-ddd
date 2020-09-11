@@ -1,8 +1,10 @@
 package order
 
+import "context"
+
 type OrderRepository interface {
-	GetOrders() []Order
-	Get(id string) Order
-	Create(o Order)
-	Update(o Order)
+	GetOrders(context.Context) []Order
+	Get(ctx context.Context, id string) Order
+	Create(ctx context.Context, o Order)
+	Update(ctx context.Context, o Order)
 }

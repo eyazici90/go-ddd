@@ -1,13 +1,14 @@
 package query
 
 import (
+	"context"
 	"orderContext/domain/order"
 )
 
 type OrderQueryService interface {
-	GetOrders() []order.Order
+	GetOrders(context.Context) []order.Order
 
-	GetOrder(id string) order.Order
+	GetOrder(ctx context.Context, id string) order.Order
 }
 
 type service struct {
@@ -18,10 +19,10 @@ func NewOrderQueryService(r order.OrderRepository) OrderQueryService {
 	return &service{repository: r}
 }
 
-func (s *service) GetOrders() []order.Order {
-	return s.repository.GetOrders()
+func (s *service) GetOrders(ctx context.Context) []order.Order {
+	return s.repository.GetOrders(ctx)
 }
 
-func (s *service) GetOrder(id string) order.Order {
-	return s.repository.Get(id)
+func (s *service) GetOrder(ctx context.Context, id string) order.Order {
+	return s.repository.Get(ctx, id)
 }

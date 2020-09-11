@@ -11,11 +11,11 @@ type Logger struct {
 
 func NewLogger() *Logger { return &Logger{} }
 
-func (l *Logger) Process(_ context.Context, cmd interface{}, next mediator.Next) error {
+func (l *Logger) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
 
 	fmt.Println("Pre Process!")
 
-	result := next()
+	result := next(ctx)
 
 	fmt.Println("Post Process")
 
