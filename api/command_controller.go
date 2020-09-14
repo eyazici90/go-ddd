@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"orderContext/application/behaviour"
-	"orderContext/application/query"
 	"orderContext/domain/order"
 
 	"orderContext/application/command"
@@ -17,10 +16,6 @@ type orderCommandController struct {
 	mediator mediator.Mediator
 }
 
-type orderQueryController struct {
-	orderservice query.OrderQueryService
-}
-
 func newOrderCommandController(r order.OrderRepository) orderCommandController {
 	m := mediator.NewMediator().
 		UseBehaviour(behaviour.NewCancellator()).
@@ -32,12 +27,6 @@ func newOrderCommandController(r order.OrderRepository) orderCommandController {
 
 	return orderCommandController{
 		mediator: m,
-	}
-}
-
-func newOrderQueryController(s query.OrderQueryService) orderQueryController {
-	return orderQueryController{
-		orderservice: s,
 	}
 }
 
@@ -98,29 +87,4 @@ func (o *orderCommandController) ship(c echo.Context) error {
 	return updateErr(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.ShipOrderCommand{OrderId: id})
 	})
-}
-
-// GetOrder godoc
-// @Summary Get orders
-// @Description Get all orders
-// @Tags order
-// @Accept json
-// @Produce json
-// @Success 200 {object} order.Order
-// @Router /order [get]
-func (o *orderQueryController) getOrders(c echo.Context) error {
-	return get(c, o.orderservice.GetOrders(c.Request().Context()))
-}
-
-// GetOrder godoc
-// @Summary Get order
-// @Description Get order
-// @Tags order
-// @Accept json
-// @Produce json
-// @Success 200 {object} order.Order
-// @Param id path string true "id"
-// @Router /order/{id} [get]
-func (o *orderQueryController) getOrder(c echo.Context) error {
-	return getById(c, func(id string) interface{} { return o.orderservice.GetOrder(c.Request().Context(), id) })
 }

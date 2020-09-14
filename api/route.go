@@ -21,7 +21,6 @@ func RegisterHandlers(e *echo.Echo) {
 		queryController := newOrderQueryController(s)
 
 		v1.GET(orderBaseUrl, queryController.getOrders)
-
 		v1.GET(orderBaseUrl+"/:id", queryController.getOrder)
 
 		v1.POST(orderBaseUrl, commandController.create)
