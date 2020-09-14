@@ -4,6 +4,8 @@ import (
 	"context"
 	"orderContext/core/mediator"
 	"time"
+
+	"github.com/spf13/viper"
 )
 
 type Cancellator struct {
@@ -12,7 +14,8 @@ type Cancellator struct {
 func NewCancellator() *Cancellator { return &Cancellator{} }
 
 func (l *Cancellator) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
-	c, cancel := context.WithTimeout(ctx, time.Duration(60*time.Second))
+	timeout := viper.GetInt("context.timeout")
+	c, cancel := context.WithTimeout(ctx, time.Duration(time.Duration(timeout)*time.Second))
 	defer cancel()
 
 	result := next(c)

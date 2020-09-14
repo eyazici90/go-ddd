@@ -4,6 +4,7 @@ import (
 	"context"
 	"orderContext/application/behaviour"
 	"orderContext/domain/order"
+	"orderContext/infrastructure"
 
 	"orderContext/application/command"
 	"orderContext/core/mediator"
@@ -16,14 +17,14 @@ type orderCommandController struct {
 	mediator mediator.Mediator
 }
 
-func newOrderCommandController(r order.OrderRepository) orderCommandController {
+func newOrderCommandController(r order.OrderRepository, e infrastructure.EventPublisher) orderCommandController {
 	m := mediator.NewMediator().
 		UseBehaviour(behaviour.NewCancellator()).
 		UseBehaviour(behaviour.NewLogger()).
 		UseBehaviour(behaviour.NewValidator()).
 		RegisterHandler(command.NewCreateOrderCommandHandler(r)).
 		RegisterHandler(command.NewPayOrderCommandHandler(r)).
-		RegisterHandler(command.NewShipOrderCommandHandler(r))
+		RegisterHandler(command.NewShipOrderCommandHandler(r, e))
 
 	return orderCommandController{
 		mediator: m,

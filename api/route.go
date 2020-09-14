@@ -16,8 +16,9 @@ func RegisterHandlers(e *echo.Echo) {
 	{
 		r := infrastructure.NewOrderRepository()
 		s := query.NewOrderQueryService(r)
+		e := infrastructure.NewRabbitMQBus()
 
-		commandController := newOrderCommandController(r)
+		commandController := newOrderCommandController(r, e)
 		queryController := newOrderQueryController(s)
 
 		v1.GET(orderBaseUrl, queryController.getOrders)

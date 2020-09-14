@@ -1,0 +1,11 @@
+{
+    "debug": true,
+    "server": {
+      "address": ":8080"
+    },
+    "context":{
+      "timeout":60
+    }
+  
+  }
+  

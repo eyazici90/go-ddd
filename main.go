@@ -5,11 +5,20 @@ import (
 	"orderContext/api"
 
 	"github.com/labstack/echo/v4"
+	"github.com/spf13/viper"
 
 	_ "orderContext/docs"
 
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
+
+func init() {
+	viper.SetConfigFile(`config.json`)
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
+}
 
 // @title Order Application
 // @description order context
@@ -24,12 +33,9 @@ func main() {
 		return c.String(http.StatusOK, "Healthy")
 	})
 
-	api.RegisterHandlers(e)
-
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	// e.Use(middleware.Logger())
+	api.RegisterHandlers(e)
 
-	e.Logger.Fatal(e.Start(":8080"))
-
+	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
 }

@@ -15,8 +15,11 @@ type ShipOrderCommandHandler struct {
 	eventPublisher infrastructure.EventPublisher
 }
 
-func NewShipOrderCommandHandler(r order.OrderRepository) ShipOrderCommandHandler {
-	return ShipOrderCommandHandler{repository: r}
+func NewShipOrderCommandHandler(r order.OrderRepository, e infrastructure.EventPublisher) ShipOrderCommandHandler {
+	return ShipOrderCommandHandler{
+		repository:     r,
+		eventPublisher: e,
+	}
 }
 
 func (handler ShipOrderCommandHandler) Handle(ctx context.Context, cmd ShipOrderCommand) error {
