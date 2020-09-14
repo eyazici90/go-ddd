@@ -10,19 +10,7 @@ import (
 
 var InvalidRequestError = errors.New("Invalid Request params")
 
-func update(c echo.Context, action func(ctx context.Context, identifier string)) error {
-	id := c.Param("id")
-
-	if id == "" {
-		return c.JSON(http.StatusBadRequest, InvalidRequestError)
-	}
-
-	action(c.Request().Context(), id)
-
-	return c.JSON(http.StatusAccepted, "")
-}
-
-func updateErr(c echo.Context, action func(ctx context.Context, identifier string) error) error {
+func update(c echo.Context, action func(ctx context.Context, identifier string) error) error {
 	id := c.Param("id")
 
 	if id == "" {

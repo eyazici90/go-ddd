@@ -55,7 +55,7 @@ func (o *orderCommandController) create(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /order/pay/{id} [put]
 func (o *orderCommandController) pay(c echo.Context) error {
-	return updateErr(c, func(ctx context.Context, id string) error {
+	return update(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.PayOrderCommand{OrderId: id})
 	})
 }
@@ -70,7 +70,7 @@ func (o *orderCommandController) pay(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /order/cancel/{id} [put]
 func (o *orderCommandController) cancel(c echo.Context) error {
-	return updateErr(c, func(ctx context.Context, id string) error {
+	return update(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.CancelOrderCommand{OrderId: id})
 	})
 }
@@ -85,7 +85,7 @@ func (o *orderCommandController) cancel(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /order/ship/{id} [put]
 func (o *orderCommandController) ship(c echo.Context) error {
-	return updateErr(c, func(ctx context.Context, id string) error {
+	return update(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.ShipOrderCommand{OrderId: id})
 	})
 }

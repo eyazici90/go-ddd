@@ -1,5 +1,8 @@
 {
     "debug": true,
+    
+    "appName":"order",
+
     "server": {
       "address": ":8080"
     },
