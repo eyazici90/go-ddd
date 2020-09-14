@@ -6,9 +6,9 @@ import (
 )
 
 type OrderQueryService interface {
-	GetOrders(context.Context) []order.Order
+	GetOrders(context.Context) GetOrdersModel
 
-	GetOrder(ctx context.Context, id string) order.Order
+	GetOrder(ctx context.Context, id string) GetOrderModel
 }
 
 type service struct {
@@ -19,10 +19,33 @@ func NewOrderQueryService(r order.OrderRepository) OrderQueryService {
 	return &service{repository: r}
 }
 
-func (s *service) GetOrders(ctx context.Context) []order.Order {
-	return s.repository.GetOrders(ctx)
+func (s *service) GetOrders(ctx context.Context) GetOrdersModel {
+	oViews := mapToAll(s.repository.GetOrders(ctx))
+
+	result := GetOrdersModel{OrderViews: oViews}
+
+	return result
 }
 
-func (s *service) GetOrder(ctx context.Context, id string) order.Order {
-	return s.repository.Get(ctx, id)
+func (s *service) GetOrder(ctx context.Context, id string) GetOrderModel {
+	oView := mapTo(s.repository.Get(ctx, id))
+
+	result := GetOrderModel{OrderView: oView}
+	return result
+}
+
+func mapTo(o order.Order) OrderView {
+	return OrderView{
+		Id:     o.ID,
+		Status: int(o.Status()),
+	}
+}
+
+func mapToAll(orders []order.Order) []OrderView {
+	result := make([]OrderView, len(orders))
+
+	for i, o := range orders {
+		result[i] = mapTo(o)
+	}
+	return result
 }

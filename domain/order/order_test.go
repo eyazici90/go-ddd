@@ -34,6 +34,7 @@ func TestCancelOrder(t *testing.T) {
 
 func TestShipOrder(t *testing.T) {
 	o := fakeOrder()
+
 	o.Pay()
 
 	err := o.Ship()
@@ -50,5 +51,6 @@ func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
 }
 
 func fakeOrder() *Order {
-	return NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() })
+	o, _ := NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() })
+	return o
 }

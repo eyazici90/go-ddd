@@ -25,15 +25,30 @@ type Order struct {
 	status      Status
 }
 
-func NewOrder(id string, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now) *Order {
+func NewOrder(id string, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now) (*Order, error) {
 	order := &Order{
 		customerId:  customerId,
 		productId:   productId,
 		createdTime: now(),
 	}
 	order.ID = id
+
+	err := ValidateState(order)
+
+	if err != nil {
+		return nil, err
+	}
+
 	order.AddEvent(OrderCreatedEvent{id: id})
-	return order
+
+	return order, nil
+}
+
+func ValidateState(o *Order) error {
+	if o.ID == "" || o.customerId == "" {
+		return InvalidValueError
+	}
+	return nil
 }
 
 func (o *Order) Pay() {
@@ -55,3 +70,5 @@ func (o *Order) Ship() error {
 	o.status = Shipped
 	return nil
 }
+
+func (o *Order) Status() Status { return o.status }

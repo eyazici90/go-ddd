@@ -42,7 +42,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/order.Order"
+                            "$ref": "#/definitions/query.GetOrdersModel"
                         }
                     }
                 }
@@ -191,7 +191,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/order.Order"
+                            "$ref": "#/definitions/query.GetOrderModel"
                         }
                     }
                 }
@@ -199,11 +199,34 @@ var doc = `{
         }
     },
     "definitions": {
-        "order.Order": {
+        "query.GetOrderModel": {
+            "type": "object",
+            "properties": {
+                "orderView": {
+                    "type": "object",
+                    "$ref": "#/definitions/query.OrderView"
+                }
+            }
+        },
+        "query.GetOrdersModel": {
+            "type": "object",
+            "properties": {
+                "orderViews": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/query.OrderView"
+                    }
+                }
+            }
+        },
+        "query.OrderView": {
             "type": "object",
             "properties": {
                 "id": {
                     "type": "string"
+                },
+                "status": {
+                    "type": "integer"
                 }
             }
         }
