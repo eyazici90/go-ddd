@@ -2,22 +2,22 @@ package behaviour
 
 import (
 	"context"
-	"fmt"
+	"log"
+
 	"orderContext/core/mediator"
 )
 
-type Logger struct {
-}
+type Logger struct{}
 
 func NewLogger() *Logger { return &Logger{} }
 
 func (l *Logger) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
 
-	fmt.Println("Pre Process!")
+	log.Println("Pre Process!")
 
 	result := next(ctx)
 
-	fmt.Println("Post Process")
+	log.Println("Post Process")
 
 	return result
 }

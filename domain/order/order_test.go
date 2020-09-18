@@ -21,7 +21,7 @@ func TestPayOrder(t *testing.T) {
 
 	o.Pay()
 
-	assert.Equal(t, Paid, o.status)
+	assert.Equal(t, Paid, o.Status())
 }
 
 func TestCancelOrder(t *testing.T) {
@@ -29,7 +29,7 @@ func TestCancelOrder(t *testing.T) {
 
 	o.Cancel()
 
-	assert.Equal(t, Cancelled, o.status)
+	assert.Equal(t, Cancelled, o.Status())
 }
 
 func TestShipOrder(t *testing.T) {
@@ -50,7 +50,7 @@ func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
 	assert.Equal(t, OrderNotPaidError, err)
 }
 
-func fakeOrder() *Order {
+func fakeOrder() Order {
 	o, _ := NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() })
 	return o
 }

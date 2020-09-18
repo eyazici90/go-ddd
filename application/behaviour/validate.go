@@ -9,8 +9,7 @@ import (
 
 var validate *validator.Validate = validator.New()
 
-type Validator struct {
-}
+type Validator struct{}
 
 func NewValidator() *Validator { return &Validator{} }
 

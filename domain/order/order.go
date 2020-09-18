@@ -54,7 +54,7 @@ func NewOrder(id string, customerId customer.CustomerId, productId product.Produ
 }
 
 func ValidateState(o *order) error {
-	if o.ID == "" || o.customerId == "" {
+	if o.ID == "" || o.customerId == "" || o.productId == "" {
 		return InvalidValueError
 	}
 	return nil
