@@ -1,5 +1,11 @@
 package aggregate
 
+type EventTracker interface {
+	AddEvent(event interface{})
+	Events() []interface{}
+	Clear()
+}
+
 type AggregateRoot struct {
 	eventRecorder EventRecorder
 	ID            string

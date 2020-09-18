@@ -36,7 +36,7 @@ func (s *service) GetOrder(ctx context.Context, id string) GetOrderModel {
 
 func mapTo(o order.Order) OrderView {
 	return OrderView{
-		Id:     o.ID,
+		Id:     o.Id(),
 		Status: int(o.Status()),
 	}
 }

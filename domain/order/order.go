@@ -17,7 +17,16 @@ const (
 	Cancelled Status = 4
 )
 
-type Order struct {
+type Order interface {
+	aggregate.EventTracker
+	Pay()
+	Cancel()
+	Ship() error
+	Status() Status
+	Id() string
+}
+
+type order struct {
 	aggregate.AggregateRoot
 	customerId  customer.CustomerId
 	productId   product.ProductId
@@ -25,43 +34,43 @@ type Order struct {
 	status      Status
 }
 
-func NewOrder(id string, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now) (*Order, error) {
-	order := &Order{
+func NewOrder(id string, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now) (Order, error) {
+	o := &order{
 		customerId:  customerId,
 		productId:   productId,
 		createdTime: now(),
 	}
-	order.ID = id
+	o.ID = id
 
-	err := ValidateState(order)
+	err := ValidateState(o)
 
 	if err != nil {
 		return nil, err
 	}
 
-	order.AddEvent(OrderCreatedEvent{id: id})
+	o.AddEvent(OrderCreatedEvent{id: id})
 
-	return order, nil
+	return o, nil
 }
 
-func ValidateState(o *Order) error {
+func ValidateState(o *order) error {
 	if o.ID == "" || o.customerId == "" {
 		return InvalidValueError
 	}
 	return nil
 }
 
-func (o *Order) Pay() {
+func (o *order) Pay() {
 	o.status = Paid
 	o.AddEvent(OrderPaidEvent{id: string(o.ID)})
 }
 
-func (o *Order) Cancel() {
+func (o *order) Cancel() {
 	o.status = Cancelled
 	o.AddEvent(OrderCancelledEvent{id: string(o.ID)})
 }
 
-func (o *Order) Ship() error {
+func (o *order) Ship() error {
 
 	if o.status != Paid {
 		return OrderNotPaidError
@@ -71,4 +80,5 @@ func (o *Order) Ship() error {
 	return nil
 }
 
-func (o *Order) Status() Status { return o.status }
+func (o *order) Status() Status { return o.status }
+func (o *order) Id() string     { return o.ID }

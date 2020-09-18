@@ -28,7 +28,7 @@ func (handler CreateOrderCommandHandler) Handle(ctx context.Context, cmd CreateO
 		return err
 	}
 
-	handler.repository.Create(ctx, *order)
+	handler.repository.Create(ctx, order)
 
 	return nil
 }

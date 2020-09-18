@@ -34,12 +34,12 @@ func (r *repository) Update(_ context.Context, o order.Order) {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
-	fakeOrders[string(o.ID)] = o
+	fakeOrders[string(o.Id())] = o
 }
 
 func (r *repository) Create(_ context.Context, o order.Order) {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
-	fakeOrders[string(o.ID)] = o
+	fakeOrders[string(o.Id())] = o
 }
