@@ -12,18 +12,18 @@ type EventPublisher interface {
 	PublishAll(events ...interface{})
 }
 
-type RabbitMQBus struct{}
+type NoBus struct{}
 
-func NewRabbitMQBus() *RabbitMQBus {
-	return &RabbitMQBus{}
+func NewNoBus() *NoBus {
+	return &NoBus{}
 }
 
-func (r *RabbitMQBus) Publish(event interface{}) {
+func (r *NoBus) Publish(event interface{}) {
 	//
 	fmt.Println("event that is published :" + reflect.ValueOf(event).String())
 }
 
-func (r *RabbitMQBus) PublishAll(events ...interface{}) {
+func (r *NoBus) PublishAll(events ...interface{}) {
 	for _, event := range events {
 		r.Publish(event)
 	}

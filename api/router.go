@@ -16,7 +16,7 @@ func RegisterHandlers(e *echo.Echo) {
 	{
 		r := infrastructure.NewOrderRepository()
 		s := query.NewOrderQueryService(r)
-		e := infrastructure.NewRabbitMQBus()
+		e := infrastructure.NewNoBus()
 
 		commandController := newOrderCommandController(r, e)
 		queryController := newOrderQueryController(s)
