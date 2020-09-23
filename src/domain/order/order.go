@@ -3,9 +3,9 @@ package order
 import (
 	"time"
 
-	"orderContext/core/aggregate"
 	"orderContext/domain/customer"
 	"orderContext/domain/product"
+	"orderContext/shared/aggregate"
 )
 
 type Status int

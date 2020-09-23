@@ -2,7 +2,7 @@ package behaviour
 
 import (
 	"context"
-	"orderContext/core/mediator"
+	"orderContext/shared/mediator"
 	"time"
 
 	"github.com/spf13/viper"

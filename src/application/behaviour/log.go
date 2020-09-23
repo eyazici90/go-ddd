@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"orderContext/core/mediator"
+	"orderContext/shared/mediator"
 )
 
 type Logger struct{}

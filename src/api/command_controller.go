@@ -7,7 +7,7 @@ import (
 	"orderContext/infrastructure"
 
 	"orderContext/application/command"
-	"orderContext/core/mediator"
+	"orderContext/shared/mediator"
 
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
