@@ -7,7 +7,7 @@ import (
 
 type Next func(ctx context.Context) error
 
-const HandleMethodName string = "Handle"
+const handleMethodName string = "Handle"
 
 func call(handler interface{}, ctx interface{}, method reflect.Value, msg interface{}) error {
 	in := []reflect.Value{reflect.ValueOf(handler), reflect.ValueOf(ctx), reflect.ValueOf(msg)}
@@ -20,7 +20,7 @@ func call(handler interface{}, ctx interface{}, method reflect.Value, msg interf
 func callHandle(handler interface{}, msg interface{}) error {
 	handlerType := reflect.TypeOf(handler)
 
-	handleMethod, ok := handlerType.MethodByName(HandleMethodName)
+	handleMethod, ok := handlerType.MethodByName(handleMethodName)
 
 	if !ok {
 		panic("handle method does not exists for the typeOf" + handlerType.String())
