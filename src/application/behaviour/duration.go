@@ -2,9 +2,10 @@ package behaviour
 
 import (
 	"context"
-	"orderContext/shared/mediator"
+
 	"time"
 
+	"github.com/eyazici90/go-mediator"
 	"github.com/spf13/viper"
 )
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"orderContext/shared/mediator"
+	"github.com/eyazici90/go-mediator"
 )
 
 type Logger struct{}

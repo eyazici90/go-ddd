@@ -7,8 +7,8 @@ import (
 	"orderContext/infrastructure"
 
 	"orderContext/application/command"
-	"orderContext/shared/mediator"
 
+	"github.com/eyazici90/go-mediator"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )

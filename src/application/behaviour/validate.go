@@ -2,8 +2,8 @@ package behaviour
 
 import (
 	"context"
-	"orderContext/shared/mediator"
 
+	"github.com/eyazici90/go-mediator"
 	"github.com/go-playground/validator/v10"
 )
 
