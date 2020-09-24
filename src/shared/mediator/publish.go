@@ -5,4 +5,5 @@ type publisher interface {
 }
 
 func (m *reflectBasedMediator) Publish(msg interface{}) {
+	//
 }

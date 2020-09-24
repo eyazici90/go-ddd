@@ -6,11 +6,10 @@ import (
 )
 
 type Mediator interface {
+	initializer
 	sender
 	publisher
-	RegisterHandler(interface{}) Mediator
-	UseBehaviour(PipelineBehaviour) Mediator
-	Use(call func(context.Context, interface{}, Next) error) Mediator
+	pipelineBuilder
 }
 
 type reflectBasedMediator struct {
@@ -24,19 +23,4 @@ func NewMediator() Mediator {
 		handlers:     make(map[reflect.Type]interface{}),
 		handlersFunc: make(map[reflect.Type]reflect.Value),
 	}
-}
-
-func (m *reflectBasedMediator) RegisterHandler(handler interface{}) Mediator {
-	handlerType := reflect.TypeOf(handler)
-
-	method, ok := handlerType.MethodByName(handleMethodName)
-	if !ok {
-		panic("handle method does not exists for the typeOf" + handlerType.String())
-	}
-
-	cType := reflect.TypeOf(method.Func.Interface()).In(2)
-
-	m.handlers[cType] = handler
-	m.handlersFunc[cType] = method.Func
-	return m
 }
