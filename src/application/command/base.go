@@ -6,10 +6,10 @@ import (
 )
 
 type commandHandlerBase struct {
-	repository order.OrderRepository
+	repository order.Repository
 }
 
-func newcommandHandlerBase(r order.OrderRepository) commandHandlerBase {
+func newcommandHandlerBase(r order.Repository) commandHandlerBase {
 	return commandHandlerBase{
 		repository: r,
 	}

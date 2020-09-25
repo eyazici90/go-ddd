@@ -17,7 +17,7 @@ type orderCommandController struct {
 	mediator mediator.Mediator
 }
 
-func newOrderCommandController(r order.OrderRepository, e infrastructure.EventPublisher) orderCommandController {
+func newOrderCommandController(r order.Repository, e infrastructure.EventPublisher) orderCommandController {
 	m := mediator.NewMediator().
 		UseBehaviour(behaviour.NewCancellator()).
 		UseBehaviour(behaviour.NewLogger()).

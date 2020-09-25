@@ -12,7 +12,7 @@ var lockMutex = new(sync.RWMutex)
 
 type repository struct{}
 
-func NewOrderRepository() order.OrderRepository {
+func NewOrderRepository() order.Repository {
 	return &repository{}
 }
 

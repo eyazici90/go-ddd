@@ -14,10 +14,10 @@ type CreateOrderCommand struct {
 }
 
 type CreateOrderCommandHandler struct {
-	repository order.OrderRepository
+	repository order.Repository
 }
 
-func NewCreateOrderCommandHandler(r order.OrderRepository) CreateOrderCommandHandler {
+func NewCreateOrderCommandHandler(r order.Repository) CreateOrderCommandHandler {
 	return CreateOrderCommandHandler{repository: r}
 }
 

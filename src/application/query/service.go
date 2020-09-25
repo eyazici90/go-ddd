@@ -12,10 +12,10 @@ type OrderQueryService interface {
 }
 
 type service struct {
-	repository order.OrderRepository
+	repository order.Repository
 }
 
-func NewOrderQueryService(r order.OrderRepository) OrderQueryService {
+func NewOrderQueryService(r order.Repository) OrderQueryService {
 	return &service{repository: r}
 }
 

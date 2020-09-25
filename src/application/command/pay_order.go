@@ -13,7 +13,7 @@ type PayOrderCommandHandler struct {
 	commandHandlerBase
 }
 
-func NewPayOrderCommandHandler(r order.OrderRepository) PayOrderCommandHandler {
+func NewPayOrderCommandHandler(r order.Repository) PayOrderCommandHandler {
 	return PayOrderCommandHandler{
 		commandHandlerBase: newcommandHandlerBase(r),
 	}

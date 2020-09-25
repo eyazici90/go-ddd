@@ -2,7 +2,7 @@ package order
 
 import "context"
 
-type OrderRepository interface {
+type Repository interface {
 	GetOrders(context.Context) []Order
 	Get(ctx context.Context, id string) Order
 	Create(ctx context.Context, o Order)

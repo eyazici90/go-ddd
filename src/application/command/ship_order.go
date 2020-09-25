@@ -11,11 +11,11 @@ type ShipOrderCommand struct {
 }
 
 type ShipOrderCommandHandler struct {
-	repository     order.OrderRepository
+	repository     order.Repository
 	eventPublisher infrastructure.EventPublisher
 }
 
-func NewShipOrderCommandHandler(r order.OrderRepository, e infrastructure.EventPublisher) ShipOrderCommandHandler {
+func NewShipOrderCommandHandler(r order.Repository, e infrastructure.EventPublisher) ShipOrderCommandHandler {
 	return ShipOrderCommandHandler{
 		repository:     r,
 		eventPublisher: e,
