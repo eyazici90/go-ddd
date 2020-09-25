@@ -13,10 +13,8 @@ import (
 
 func init() {
 	viper.SetConfigFile(`config.json`)
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
+
+	must(viper.ReadInConfig)
 }
 
 // @title Order Application
@@ -35,4 +33,11 @@ func main() {
 	api.RegisterHandlers(e)
 
 	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
+}
+
+func must(action func() error) {
+	err := action()
+	if err != nil {
+		panic(err)
+	}
 }
