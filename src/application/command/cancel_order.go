@@ -10,12 +10,11 @@ type CancelOrderCommand struct {
 }
 
 type CancelOrderCommandHandler struct {
-	repository order.OrderRepository
+	commandHandlerBase
 }
 
 func (handler CancelOrderCommandHandler) Handle(ctx context.Context, cmd CancelOrderCommand) error {
-	order := handler.repository.Get(ctx, cmd.OrderId)
-	order.Cancel()
-	handler.repository.Update(ctx, order)
-	return nil
+	return handler.update(ctx, cmd.OrderId, func(order order.Order) {
+		order.Cancel()
+	})
 }

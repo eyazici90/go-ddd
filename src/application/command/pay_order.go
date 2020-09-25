@@ -10,16 +10,17 @@ type PayOrderCommand struct {
 }
 
 type PayOrderCommandHandler struct {
-	repository order.OrderRepository
+	commandHandlerBase
 }
 
 func NewPayOrderCommandHandler(r order.OrderRepository) PayOrderCommandHandler {
-	return PayOrderCommandHandler{repository: r}
+	return PayOrderCommandHandler{
+		commandHandlerBase: newcommandHandlerBase(r),
+	}
 }
 
 func (handler PayOrderCommandHandler) Handle(ctx context.Context, cmd PayOrderCommand) error {
-	order := handler.repository.Get(ctx, cmd.OrderId)
-	order.Pay()
-	handler.repository.Update(ctx, order)
-	return nil
+	return handler.update(ctx, cmd.OrderId, func(order order.Order) {
+		order.Pay()
+	})
 }
