@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"orderContext/api"
 
 	"github.com/labstack/echo/v4"
@@ -29,9 +28,7 @@ func main() {
 
 	e := echo.New()
 
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Healthy")
-	})
+	e.GET("/", api.Health())
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
