@@ -22,9 +22,9 @@ func newOrderCommandController(r order.OrderRepository, e infrastructure.EventPu
 		UseBehaviour(behaviour.NewCancellator()).
 		UseBehaviour(behaviour.NewLogger()).
 		UseBehaviour(behaviour.NewValidator()).
-		RegisterHandler(command.NewCreateOrderCommandHandler(r)).
-		RegisterHandler(command.NewPayOrderCommandHandler(r)).
-		RegisterHandler(command.NewShipOrderCommandHandler(r, e))
+		RegisterHandlers(command.NewCreateOrderCommandHandler(r),
+			command.NewPayOrderCommandHandler(r),
+			command.NewShipOrderCommandHandler(r, e))
 
 	return orderCommandController{
 		mediator: m,
