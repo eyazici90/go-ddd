@@ -18,13 +18,14 @@ type orderCommandController struct {
 }
 
 func newOrderCommandController(r order.Repository, e infrastructure.EventPublisher) orderCommandController {
-	m := mediator.NewMediator().
-		UseBehaviour(behaviour.NewCancellator()).
+	m := mediator.New().
 		UseBehaviour(behaviour.NewLogger()).
+		UseBehaviour(behaviour.NewCancellator()).
 		UseBehaviour(behaviour.NewValidator()).
 		RegisterHandlers(command.NewCreateOrderCommandHandler(r),
 			command.NewPayOrderCommandHandler(r),
-			command.NewShipOrderCommandHandler(r, e))
+			command.NewShipOrderCommandHandler(r, e)).
+		Build()
 
 	return orderCommandController{
 		mediator: m,

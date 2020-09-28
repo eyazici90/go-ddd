@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/eyazici90/go-mediator v0.0.0-20200925071746-f2250c985243
+	github.com/eyazici90/go-mediator v0.0.0-20200928143706-d04cdf26fce9
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-openapi/spec v0.19.9 // indirect
 	github.com/go-openapi/swag v0.19.9 // indirect
