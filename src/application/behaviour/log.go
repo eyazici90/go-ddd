@@ -13,11 +13,11 @@ func NewLogger() *Logger { return &Logger{} }
 
 func (l *Logger) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
 
-	log.Println("Pre Process!")
+	log.Println("Pre Process of the command!")
 
 	result := next(ctx)
 
-	log.Println("Post Process")
+	log.Println("Post Processed of the command type")
 
 	return result
 }

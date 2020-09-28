@@ -9,8 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Cancellator struct {
-}
+type Cancellator struct{}
 
 func NewCancellator() *Cancellator { return &Cancellator{} }
 
