@@ -22,7 +22,7 @@ func NewCreateOrderCommandHandler(r order.Repository) CreateOrderCommandHandler 
 }
 
 func (handler CreateOrderCommandHandler) Handle(ctx context.Context, cmd CreateOrderCommand) error {
-	order, err := order.NewOrder(cmd.Id, customer.New(), product.New(), func() time.Time { return time.Now() })
+	order, err := order.NewOrder(order.OrderId(cmd.Id), customer.New(), product.New(), func() time.Time { return time.Now() })
 
 	if err != nil {
 		return err

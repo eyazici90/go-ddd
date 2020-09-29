@@ -30,15 +30,12 @@ func (s *service) GetOrders(ctx context.Context) GetOrdersModel {
 func (s *service) GetOrder(ctx context.Context, id string) GetOrderModel {
 	oView := mapTo(s.repository.Get(ctx, id))
 
-	result := GetOrderModel{OrderView: oView}
+	result := GetOrderModel{oView}
 	return result
 }
 
 func mapTo(o order.Order) OrderView {
-	return OrderView{
-		Id:     o.Id(),
-		Status: int(o.Status()),
-	}
+	return OrderView{o.Id(), int(o.Status())}
 }
 
 func mapToAll(orders []order.Order) []OrderView {

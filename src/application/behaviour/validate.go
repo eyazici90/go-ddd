@@ -15,9 +15,7 @@ func NewValidator() *Validator { return &Validator{} }
 
 func (v *Validator) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
 
-	err := validate.Struct(cmd)
-
-	if err != nil {
+	if err := validate.Struct(cmd); err != nil {
 		return err
 	}
 

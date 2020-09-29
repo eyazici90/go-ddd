@@ -1,15 +1,15 @@
 package aggregate
 
-type EventRecorder struct {
+type eventRecorder struct {
 	events []interface{}
 }
 
-func (e *EventRecorder) Record(event interface{}) {
+func (e *eventRecorder) Record(event interface{}) {
 	e.events = append(e.events, event)
 }
 
-func (e *EventRecorder) Events() []interface{} { return e.events }
+func (e *eventRecorder) Events() []interface{} { return e.events }
 
-func (e *EventRecorder) Clear() {
+func (e *eventRecorder) Clear() {
 	e.events = []interface{}{}
 }

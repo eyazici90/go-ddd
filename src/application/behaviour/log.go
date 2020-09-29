@@ -17,7 +17,7 @@ func (l *Logger) Process(ctx context.Context, cmd interface{}, next mediator.Nex
 
 	result := next(ctx)
 
-	log.Println("Post Processed of the command type")
+	log.Println("Post Process of the command")
 
 	return result
 }

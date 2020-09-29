@@ -7,8 +7,7 @@ type EventTracker interface {
 }
 
 type AggregateRoot struct {
-	eventRecorder EventRecorder
-	ID            string
+	eventRecorder eventRecorder
 }
 
 func (root *AggregateRoot) AddEvent(event interface{}) { root.eventRecorder.Record(event) }

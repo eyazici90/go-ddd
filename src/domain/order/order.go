@@ -19,19 +19,20 @@ type Order interface {
 
 type order struct {
 	aggregate.AggregateRoot
+	id          OrderId
 	customerId  customer.CustomerId
 	productId   product.ProductId
 	createdTime time.Time
 	status      Status
 }
 
-func NewOrder(id string, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now) (Order, error) {
+func NewOrder(id OrderId, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now) (Order, error) {
 	o := &order{
 		customerId:  customerId,
 		productId:   productId,
 		createdTime: now(),
 	}
-	o.ID = id
+	o.id = id
 
 	err := ValidateState(o)
 
@@ -39,13 +40,13 @@ func NewOrder(id string, customerId customer.CustomerId, productId product.Produ
 		return nil, err
 	}
 
-	o.AddEvent(OrderCreatedEvent{id: id})
+	o.AddEvent(OrderCreatedEvent{id: string(id)})
 
 	return o, nil
 }
 
 func ValidateState(o *order) error {
-	if o.ID == "" || o.customerId == "" || o.productId == "" {
+	if o.id == "" || o.customerId == "" || o.productId == "" {
 		return InvalidValueError
 	}
 	return nil
@@ -53,12 +54,12 @@ func ValidateState(o *order) error {
 
 func (o *order) Pay() {
 	o.status = Paid
-	o.AddEvent(OrderPaidEvent{id: string(o.ID)})
+	o.AddEvent(OrderPaidEvent{id: string(o.id)})
 }
 
 func (o *order) Cancel() {
 	o.status = Cancelled
-	o.AddEvent(OrderCancelledEvent{id: string(o.ID)})
+	o.AddEvent(OrderCancelledEvent{id: string(o.id)})
 }
 
 func (o *order) Ship() error {
@@ -72,4 +73,4 @@ func (o *order) Ship() error {
 }
 
 func (o *order) Status() Status { return o.status }
-func (o *order) Id() string     { return o.ID }
+func (o *order) Id() string     { return string(o.id) }
