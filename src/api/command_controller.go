@@ -42,8 +42,8 @@ func newOrderCommandController(r order.Repository, e infrastructure.EventPublish
 // @Success 201 {object} string
 // @Router /order [post]
 func (o *orderCommandController) create(c echo.Context) error {
-	return create(c, func(ctx context.Context) {
-		o.mediator.Send(ctx, command.CreateOrderCommand{Id: uuid.New().String()})
+	return create(c, func(ctx context.Context) error {
+		return o.mediator.Send(ctx, command.CreateOrderCommand{Id: uuid.New().String()})
 	})
 }
 

@@ -23,8 +23,10 @@ func update(c echo.Context, action func(ctx context.Context, identifier string) 
 	return c.JSON(http.StatusAccepted, "")
 }
 
-func create(c echo.Context, action func(ctx context.Context)) error {
-	action(c.Request().Context())
+func create(c echo.Context, action func(ctx context.Context) error) error {
+	if err := action(c.Request().Context()); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
 
 	return c.JSON(http.StatusCreated, "")
 }
