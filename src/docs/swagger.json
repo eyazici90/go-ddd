@@ -27,7 +27,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/query.GetOrdersModel"
+                            "$ref": "#/definitions/query.GetOrdersDto"
                         }
                     }
                 }
@@ -176,7 +176,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/query.GetOrderModel"
+                            "$ref": "#/definitions/query.GetOrderDto"
                         }
                     }
                 }
@@ -184,7 +184,7 @@
         }
     },
     "definitions": {
-        "query.GetOrderModel": {
+        "query.GetOrderDto": {
             "type": "object",
             "properties": {
                 "orderView": {
@@ -193,7 +193,7 @@
                 }
             }
         },
-        "query.GetOrdersModel": {
+        "query.GetOrdersDto": {
             "type": "object",
             "properties": {
                 "orderViews": {

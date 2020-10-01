@@ -23,7 +23,7 @@ func newOrderQueryController(s query.OrderQueryService) orderQueryController {
 // @Tags order
 // @Accept json
 // @Produce json
-// @Success 200 {object} query.GetOrdersModel
+// @Success 200 {object} query.GetOrdersDto
 // @Router /order [get]
 func (o *orderQueryController) getOrders(c echo.Context) error {
 	return get(c, o.orderservice.GetOrders(c.Request().Context()))
@@ -35,7 +35,7 @@ func (o *orderQueryController) getOrders(c echo.Context) error {
 // @Tags order
 // @Accept json
 // @Produce json
-// @Success 200 {object} query.GetOrderModel
+// @Success 200 {object} query.GetOrderDto
 // @Param id path string true "id"
 // @Router /order/{id} [get]
 func (o *orderQueryController) getOrder(c echo.Context) error {

@@ -1,12 +1,12 @@
 basePath: /api/v1
 definitions:
-  query.GetOrderModel:
+  query.GetOrderDto:
     properties:
       orderView:
         $ref: '#/definitions/query.OrderView'
         type: object
     type: object
-  query.GetOrdersModel:
+  query.GetOrdersDto:
     properties:
       orderViews:
         items:
@@ -39,7 +39,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/query.GetOrdersModel'
+            $ref: '#/definitions/query.GetOrdersDto'
       summary: Get orders
       tags:
       - order
@@ -74,7 +74,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/query.GetOrderModel'
+            $ref: '#/definitions/query.GetOrderDto'
       summary: Get order
       tags:
       - order
