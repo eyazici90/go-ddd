@@ -35,8 +35,8 @@ func main() {
 	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
 }
 
-func must(action func() error) {
-	err := action()
+func must(fn func() error) {
+	err := fn()
 	if err != nil {
 		panic(err)
 	}

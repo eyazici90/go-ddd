@@ -17,11 +17,13 @@ type orderCommandController struct {
 	mediator mediator.Mediator
 }
 
-func newOrderCommandController(r order.Repository, e infrastructure.EventPublisher) orderCommandController {
+func newOrderCommandController(r order.Repository,
+	e infrastructure.EventPublisher,
+	timeout int) orderCommandController {
 	m := mediator.New().
 		UseBehaviour(behaviour.NewLogger()).
 		UseBehaviour(behaviour.NewValidator()).
-		UseBehaviour(behaviour.NewCancellator()).
+		UseBehaviour(behaviour.NewCancellator(timeout)).
 		UseBehaviour(behaviour.NewRetrier()).
 		RegisterHandlers(command.NewCreateOrderCommandHandler(r),
 			command.NewPayOrderCommandHandler(r),

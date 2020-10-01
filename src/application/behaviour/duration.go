@@ -6,20 +6,20 @@ import (
 	"time"
 
 	"github.com/eyazici90/go-mediator"
-	"github.com/spf13/viper"
 )
 
-type Cancellator struct{}
+type Cancellator struct {
+	timeout int
+}
 
-func NewCancellator() *Cancellator { return &Cancellator{} }
+func NewCancellator(timeout int) *Cancellator { return &Cancellator{timeout} }
 
-func (l *Cancellator) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
-	timeout := viper.GetInt("context.timeout")
+func (c *Cancellator) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
 
-	c, cancel := context.WithTimeout(ctx, time.Duration(time.Duration(timeout)*time.Second))
+	timeoutContext, cancel := context.WithTimeout(ctx, time.Duration(time.Duration(c.timeout)*time.Second))
 	defer cancel()
 
-	result := next(c)
+	result := next(timeoutContext)
 
 	return result
 }
