@@ -20,7 +20,7 @@ locate =>  http://localhost:8080/swagger/index.html
  - echo https://github.com/labstack/echo
  - viper https://github.com/spf13/viper
  -  validator https://github.com/go-playground/validator
- - swaggo github.com/swaggo/echo-swagger
+ - swaggo https://github.com/swaggo/echo-swagger
  - retry-go https://github.com/avast/retry-go
  - testify https://github.com/stretchr/testify
 
