@@ -15,7 +15,7 @@ func (r *Retrier) Process(ctx context.Context, cmd interface{}, next mediator.Ne
 
 	err := retry.Do(func() error {
 		return next(ctx)
-	}, retry.Attempts(1))
+	}, retry.Attempts(2))
 
 	return err
 }

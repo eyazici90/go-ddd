@@ -5,28 +5,34 @@ import (
 	"orderContext/domain/order"
 )
 
-type commandHandlerBase struct {
-	repository order.Repository
-}
+type (
+	GetOrder    func(context.Context, string) order.Order
+	GetOrders   func(context.Context) []order.Order
+	CreateOrder func(context.Context, order.Order)
+	UpdateOrder func(context.Context, order.Order)
 
-func newcommandHandlerBase(r order.Repository) commandHandlerBase {
-	return commandHandlerBase{
-		repository: r,
+	commandHandlerBase struct {
+		getOrder    GetOrder
+		updateOrder UpdateOrder
 	}
+)
+
+func newcommandHandlerBase(getOrder GetOrder, updateOrder UpdateOrder) commandHandlerBase {
+	return commandHandlerBase{getOrder, updateOrder}
 }
 
 func (handler commandHandlerBase) update(ctx context.Context,
 	identifier string,
 	when func(order.Order)) error {
 
-	existingOrder := handler.repository.Get(ctx, identifier)
+	existingOrder := handler.getOrder(ctx, identifier)
 
 	if existingOrder == nil {
 		return order.AggregateNotFound
 	}
 	when(existingOrder)
 
-	handler.repository.Update(ctx, existingOrder)
+	handler.updateOrder(ctx, existingOrder)
 
 	return nil
 }

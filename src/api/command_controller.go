@@ -25,8 +25,8 @@ func newOrderCommandController(r order.Repository,
 		UseBehaviour(behaviour.NewValidator()).
 		UseBehaviour(behaviour.NewCancellator(timeout)).
 		UseBehaviour(behaviour.NewRetrier()).
-		RegisterHandlers(command.NewCreateOrderCommandHandler(r),
-			command.NewPayOrderCommandHandler(r),
+		RegisterHandlers(command.NewCreateOrderCommandHandler(r.Create),
+			command.NewPayOrderCommandHandler(r.Get, r.Update),
 			command.NewShipOrderCommandHandler(r, e)).
 		Build()
 

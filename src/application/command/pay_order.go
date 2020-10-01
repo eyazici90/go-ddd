@@ -13,9 +13,9 @@ type PayOrderCommandHandler struct {
 	commandHandlerBase
 }
 
-func NewPayOrderCommandHandler(r order.Repository) PayOrderCommandHandler {
+func NewPayOrderCommandHandler(getOrder GetOrder, updateOrder UpdateOrder) PayOrderCommandHandler {
 	return PayOrderCommandHandler{
-		commandHandlerBase: newcommandHandlerBase(r),
+		commandHandlerBase: newcommandHandlerBase(getOrder, updateOrder),
 	}
 }
 
