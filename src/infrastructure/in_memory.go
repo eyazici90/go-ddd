@@ -17,6 +17,9 @@ func NewOrderRepository() order.Repository {
 }
 
 func (r *repository) GetOrders(_ context.Context) []order.Order {
+	lockMutex.RLock()
+	defer lockMutex.RUnlock()
+
 	result := make([]order.Order, 0, len(fakeOrders))
 
 	for _, v := range fakeOrders {
@@ -27,6 +30,9 @@ func (r *repository) GetOrders(_ context.Context) []order.Order {
 }
 
 func (r *repository) Get(_ context.Context, id string) order.Order {
+	lockMutex.RLock()
+	defer lockMutex.RUnlock()
+
 	return fakeOrders[id]
 }
 
