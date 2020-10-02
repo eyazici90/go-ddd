@@ -1,6 +1,6 @@
 package aggregate
 
-type EventTracker interface {
+type EventRecorder interface {
 	AddEvent(event interface{})
 	Events() []interface{}
 	Clear()

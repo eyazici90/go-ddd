@@ -9,7 +9,7 @@ import (
 )
 
 type Order interface {
-	aggregate.EventTracker
+	aggregate.EventRecorder
 	Pay()
 	Cancel()
 	Ship() error

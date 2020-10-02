@@ -21,6 +21,7 @@ func newOrderCommandController(r order.Repository,
 	e infrastructure.EventPublisher,
 	timeout int) orderCommandController {
 	m := mediator.New().
+		UseBehaviour(behaviour.NewMeasurer()).
 		UseBehaviour(behaviour.NewLogger()).
 		UseBehaviour(behaviour.NewValidator()).
 		UseBehaviour(behaviour.NewCancellator(timeout)).
