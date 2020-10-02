@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-const orderBaseUrl string = "/order"
+const orderBaseUrl string = "/orders"
 const version string = "v1"
 
 func RegisterHandlers(e *echo.Echo) {
