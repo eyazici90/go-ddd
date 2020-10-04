@@ -10,7 +10,7 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
-        "/order": {
+        "/orders": {
             "get": {
                 "description": "Get all orders",
                 "consumes": [
@@ -54,7 +54,7 @@
                 }
             }
         },
-        "/order/cancel/{id}": {
+        "/orders/cancel/{id}": {
             "put": {
                 "description": "Cancel the order",
                 "consumes": [
@@ -86,7 +86,7 @@
                 }
             }
         },
-        "/order/pay/{id}": {
+        "/orders/pay/{id}": {
             "put": {
                 "description": "Pay the order",
                 "consumes": [
@@ -118,7 +118,7 @@
                 }
             }
         },
-        "/order/ship/{id}": {
+        "/orders/ship/{id}": {
             "put": {
                 "description": "ship the order",
                 "consumes": [
@@ -150,7 +150,7 @@
                 }
             }
         },
-        "/order/{id}": {
+        "/orders/{id}": {
             "get": {
                 "description": "Get order",
                 "consumes": [

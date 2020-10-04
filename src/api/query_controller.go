@@ -24,7 +24,7 @@ func newOrderQueryController(s query.OrderQueryService) orderQueryController {
 // @Accept json
 // @Produce json
 // @Success 200 {object} query.GetOrdersDto
-// @Router /order [get]
+// @Router /orders [get]
 func (o *orderQueryController) getOrders(c echo.Context) error {
 	return get(c, o.orderservice.GetOrders(c.Request().Context()))
 }
@@ -37,7 +37,7 @@ func (o *orderQueryController) getOrders(c echo.Context) error {
 // @Produce json
 // @Success 200 {object} query.GetOrderDto
 // @Param id path string true "id"
-// @Router /order/{id} [get]
+// @Router /orders/{id} [get]
 func (o *orderQueryController) getOrder(c echo.Context) error {
 	return getById(c, func(ctx context.Context, id string) interface{} {
 		return o.orderservice.GetOrder(ctx, id)

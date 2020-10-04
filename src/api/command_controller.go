@@ -8,7 +8,7 @@ import (
 
 	"orderContext/application/command"
 
-	"github.com/eyazici90/go-mediator"
+	mediator "github.com/eyazici90/go-mediator/reflection"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -43,7 +43,7 @@ func newOrderCommandController(r order.Repository,
 // @Accept json
 // @Produce json
 // @Success 201 {object} string
-// @Router /order [post]
+// @Router /orders [post]
 func (o *orderCommandController) create(c echo.Context) error {
 	return create(c, func(ctx context.Context) error {
 		return o.mediator.Send(ctx, command.CreateOrderCommand{Id: uuid.New().String()})
@@ -58,7 +58,7 @@ func (o *orderCommandController) create(c echo.Context) error {
 // @Produce json
 // @Success 202 {object} string
 // @Param id path string true "id"
-// @Router /order/pay/{id} [put]
+// @Router /orders/pay/{id} [put]
 func (o *orderCommandController) pay(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.PayOrderCommand{OrderId: id})
@@ -73,7 +73,7 @@ func (o *orderCommandController) pay(c echo.Context) error {
 // @Produce json
 // @Success 202 {object} string
 // @Param id path string true "id"
-// @Router /order/cancel/{id} [put]
+// @Router /orders/cancel/{id} [put]
 func (o *orderCommandController) cancel(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.CancelOrderCommand{OrderId: id})
@@ -88,7 +88,7 @@ func (o *orderCommandController) cancel(c echo.Context) error {
 // @Produce json
 // @Success 202 {object} string
 // @Param id path string true "id"
-// @Router /order/ship/{id} [put]
+// @Router /orders/ship/{id} [put]
 func (o *orderCommandController) ship(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.ShipOrderCommand{OrderId: id})

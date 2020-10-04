@@ -70,9 +70,9 @@ github.com/denis-tingajkin/go-header v0.3.1/go.mod h1:sq/2IxMhaZX+RRcgHfCRx/m0M5
 github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
-github.com/eyazici90/go-mediator v0.0.0-20200925071746-f2250c985243/go.mod h1:J0x7IeKWudYHxBdv52JhdVjG7w1JpdLWfuM9vslFx6s=
-github.com/eyazici90/go-mediator v0.0.0-20200928143706-d04cdf26fce9 h1:+hrgD4rs7mcqn/Xs1F0w5q9dY6/Qlmtcavm4SrOANOI=
 github.com/eyazici90/go-mediator v0.0.0-20200928143706-d04cdf26fce9/go.mod h1:J0x7IeKWudYHxBdv52JhdVjG7w1JpdLWfuM9vslFx6s=
+github.com/eyazici90/go-mediator v0.0.0-20201004141110-c04f7ecc3c4b h1:C1sOk9fHt4vyQyyVvtrr8glKi4WGbQcQHqlSGQeAkxE=
+github.com/eyazici90/go-mediator v0.0.0-20201004141110-c04f7ecc3c4b/go.mod h1:J0x7IeKWudYHxBdv52JhdVjG7w1JpdLWfuM9vslFx6s=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
 github.com/fatih/color v1.9.0 h1:8xPHl4/q1VyqGIPif1F+1V3Y3lSmrq01EabUW3CoW5s=
 github.com/fatih/color v1.9.0/go.mod h1:eQcE1qtQxscV5RaZvpXrrb8Drkc3/DdQ+uUYCNjL+zU=

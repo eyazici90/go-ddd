@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/avast/retry-go v2.6.1+incompatible
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/eyazici90/go-mediator v0.0.0-20200928143706-d04cdf26fce9
+	github.com/eyazici90/go-mediator v0.0.0-20201004141110-c04f7ecc3c4b
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-openapi/spec v0.19.9 // indirect
 	github.com/go-openapi/swag v0.19.9 // indirect

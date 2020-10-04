@@ -25,7 +25,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/order": {
+        "/orders": {
             "get": {
                 "description": "Get all orders",
                 "consumes": [
@@ -69,7 +69,7 @@ var doc = `{
                 }
             }
         },
-        "/order/cancel/{id}": {
+        "/orders/cancel/{id}": {
             "put": {
                 "description": "Cancel the order",
                 "consumes": [
@@ -101,7 +101,7 @@ var doc = `{
                 }
             }
         },
-        "/order/pay/{id}": {
+        "/orders/pay/{id}": {
             "put": {
                 "description": "Pay the order",
                 "consumes": [
@@ -133,7 +133,7 @@ var doc = `{
                 }
             }
         },
-        "/order/ship/{id}": {
+        "/orders/ship/{id}": {
             "put": {
                 "description": "ship the order",
                 "consumes": [
@@ -165,7 +165,7 @@ var doc = `{
                 }
             }
         },
-        "/order/{id}": {
+        "/orders/{id}": {
             "get": {
                 "description": "Get order",
                 "consumes": [
