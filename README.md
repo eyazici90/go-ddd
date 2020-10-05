@@ -34,15 +34,15 @@ locate =>  http://localhost:8080/swagger/index.html
    
 
      m, err:= mediator.New().
-			UseBehaviour(behaviour.NewMeasurer()).
-			UseBehaviour(behaviour.NewLogger()).
-			UseBehaviour(behaviour.NewValidator()).
-			UseBehaviour(behaviour.NewCancellator(timeout)).
-			UseBehaviour(behaviour.NewRetrier()).
-			RegisterHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(r.Create)).
-			RegisterHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(r.Get, r.Update)).
-			RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(r, e)).
-		      Build()
+				UseBehaviour(behaviour.NewMeasurer()).
+				UseBehaviour(behaviour.NewLogger()).
+				UseBehaviour(behaviour.NewValidator()).
+				UseBehaviour(behaviour.NewCancellator(timeout)).
+				UseBehaviour(behaviour.NewRetrier()).
+				RegisterHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(r.Create)).
+				RegisterHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(r.Get, r.Update)).
+				RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(r, e)).
+			   Build()
 
     err= m.Send(ctx, cmd)
     
