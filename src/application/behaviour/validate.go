@@ -9,11 +9,7 @@ import (
 
 var validate *validator.Validate = validator.New()
 
-type Validator struct{}
-
-func NewValidator() *Validator { return &Validator{} }
-
-func (v *Validator) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
+func Validate(ctx context.Context, cmd interface{}, next mediator.Next) error {
 
 	if err := validate.Struct(cmd); err != nil {
 		return err

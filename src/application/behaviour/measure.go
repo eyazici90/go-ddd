@@ -9,11 +9,7 @@ import (
 	"github.com/eyazici90/go-mediator"
 )
 
-type Measurer struct{}
-
-func NewMeasurer() *Measurer { return &Measurer{} }
-
-func (c *Measurer) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
+func Measure(ctx context.Context, cmd interface{}, next mediator.Next) error {
 	start := time.Now()
 
 	result := next(ctx)

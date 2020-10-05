@@ -7,11 +7,7 @@ import (
 	"github.com/eyazici90/go-mediator"
 )
 
-type Logger struct{}
-
-func NewLogger() *Logger { return &Logger{} }
-
-func (l *Logger) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
+func Log(ctx context.Context, cmd interface{}, next mediator.Next) error {
 
 	log.Println("Pre Process of the command!")
 
