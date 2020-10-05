@@ -3,6 +3,7 @@
 
 
 
+
 # go-ddd
 Practical DDD(*Domain Driven Design*) & CQRS implementation on order bounded context
 
@@ -34,28 +35,19 @@ locate =>  http://localhost:8080/swagger/index.html
 
    
 
-    m, err := mediator.New().
-    
-		    Use(behaviour.Measure).
-		    
-		    Use(behaviour.Log).
-		    
-		    Use(behaviour.Validate).
-		    
-		    UseBehaviour(behaviour.NewCancellator(timeout)).
-		    
-		    Use(behaviour.Retry).
-		    
-		    RegisterHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(r.Create)).
-		    
-		    RegisterHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(r.Get, r.Update)).
-		    
-		    RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(r, e)).
-		    
+    m, err := mediator.New(). 
+		      Use(behaviour.Measure). 
+		      Use(behaviour.Log). 
+		      Use(behaviour.Validate). 
+		      UseBehaviour(behaviour.NewCancellator(timeout)). 
+		      Use(behaviour.Retry). 
+		      RegisterHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(r.Create)). 
+		      RegisterHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(r.Get, r.Update)). 
+		      RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(r, e)). 
 		    Build()
       
 
-    err= m.Send(ctx, cmd)
+    err = m.Send(ctx, cmd)
     
 ***Command & Command handler***
    
