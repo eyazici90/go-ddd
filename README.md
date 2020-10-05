@@ -1,6 +1,7 @@
 
 
 
+
 # go-ddd
 Practical DDD(*Domain Driven Design*) & CQRS implementation on order bounded context
 
@@ -30,17 +31,29 @@ locate =>  http://localhost:8080/swagger/index.html
 ## Command dispatcher 
 ***Mediator with pipeline behaviours*** (order matters for pipeline behaviours)
 
-    m:= mediator.New(). 
-			    UseBehaviour(behaviour.NewLogger()). 
-			    UseBehaviour(behaviour.NewValidator()). 
-			    UseBehaviour(behaviour.NewCancellator()). 
-			    UseBehaviour(behaviour.NewRetrier()). 
-			    RegisterHandlers(command.NewCreateOrderCommandHandler(r), 
-				    command.NewPayOrderCommandHandler(r), 
-				    command.NewShipOrderCommandHandler(r, e)). 
-		    Build()
+   
 
-    err:= m.Send(ctx, cmd)
+     m, err:= mediator.New().
+    
+					    UseBehaviour(behaviour.NewMeasurer()).
+					    
+					    UseBehaviour(behaviour.NewLogger()).
+					    
+					    UseBehaviour(behaviour.NewValidator()).
+					    
+					    UseBehaviour(behaviour.NewCancellator(timeout)).
+					    
+					    UseBehaviour(behaviour.NewRetrier()).
+					    
+					    RegisterHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(r.Create)).
+					    
+					    RegisterHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(r.Get, r.Update)).
+					    
+					    RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(r, e)).
+					    
+					    Build()
+
+    err= m.Send(ctx, cmd)
     
 ***Command & Command handler***
    
@@ -56,8 +69,8 @@ locate =>  http://localhost:8080/swagger/index.html
 	    return CreateOrderCommandHandler{repository: r} 
     } 
     
-    func (handler CreateOrderCommandHandler) Handle(ctx context.Context, cmd CreateOrderCommand) error {
-    
+    func (handler CreateOrderCommandHandler) Handle(ctx context.Context, request interface{}) error {
+	    cmd := request.(CreateOrderCommand)
 	    order, err := order.NewOrder(order.OrderId(cmd.Id), customer.New(), product.New(), func() time.Time { return time.Now() })
 	     
 	    if err != nil { 
