@@ -21,7 +21,8 @@ func NewCreateOrderCommandHandler(createOrder CreateOrder) CreateOrderCommandHan
 	return CreateOrderCommandHandler{createOrder}
 }
 
-func (handler CreateOrderCommandHandler) Handle(ctx context.Context, cmd CreateOrderCommand) error {
+func (handler CreateOrderCommandHandler) Handle(ctx context.Context, request interface{}) error {
+	cmd := request.(CreateOrderCommand)
 	order, err := order.NewOrder(order.OrderId(cmd.Id), customer.New(), product.New(), func() time.Time { return time.Now() })
 
 	if err != nil {

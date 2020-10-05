@@ -15,9 +15,11 @@ func (l *Logger) Process(ctx context.Context, cmd interface{}, next mediator.Nex
 
 	log.Println("Pre Process of the command!")
 
-	result := next(ctx)
+	if err := next(ctx); err != nil {
+		return err
+	}
 
 	log.Println("Post Process of the command")
 
-	return result
+	return nil
 }

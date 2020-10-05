@@ -22,7 +22,8 @@ func NewShipOrderCommandHandler(r order.Repository, e infrastructure.EventPublis
 	}
 }
 
-func (handler ShipOrderCommandHandler) Handle(ctx context.Context, cmd ShipOrderCommand) error {
+func (handler ShipOrderCommandHandler) Handle(ctx context.Context, request interface{}) error {
+	cmd := request.(ShipOrderCommand)
 	order := handler.repository.Get(ctx, cmd.OrderId)
 
 	err := order.Ship()

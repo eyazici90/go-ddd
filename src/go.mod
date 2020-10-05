@@ -6,11 +6,11 @@ require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/avast/retry-go v2.6.1+incompatible
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/eyazici90/go-mediator v0.0.0-20201004141110-c04f7ecc3c4b
+	github.com/eyazici90/go-mediator v0.0.0-20201004222423-945180b3a312
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-openapi/spec v0.19.9 // indirect
 	github.com/go-openapi/swag v0.19.9 // indirect
-	github.com/go-playground/validator/v10 v10.3.0
+	github.com/go-playground/validator/v10 v10.4.0
 	github.com/golangci/golangci-lint v1.31.0 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
@@ -21,6 +21,7 @@ require (
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
+	github.com/mattn/go-colorable v0.1.8 // indirect
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pelletier/go-toml v1.8.1 // indirect
@@ -37,10 +38,10 @@ require (
 	github.com/swaggo/swag v1.6.7
 	github.com/urfave/cli v1.22.4 // indirect
 	github.com/urfave/cli/v2 v2.2.0 // indirect
-	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
-	golang.org/x/net v0.0.0-20200923182212-328152dc79b1 // indirect
-	golang.org/x/sys v0.0.0-20200923182605-d9f96fdee20d // indirect
-	golang.org/x/tools v0.0.0-20200924224222-8d73f17870ce // indirect
+	golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0 // indirect
+	golang.org/x/net v0.0.0-20201002202402-0a1ea396d57c // indirect
+	golang.org/x/sys v0.0.0-20201005065044-765f4ea38db3 // indirect
+	golang.org/x/tools v0.0.0-20201002184944-ecd9fd270d5d // indirect
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
 	gopkg.in/ini.v1 v1.61.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect

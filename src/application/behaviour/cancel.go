@@ -19,7 +19,5 @@ func (c *Cancellator) Process(ctx context.Context, _ interface{}, next mediator.
 	timeoutContext, cancel := context.WithTimeout(ctx, time.Duration(time.Duration(c.timeout)*time.Second))
 	defer cancel()
 
-	result := next(timeoutContext)
-
-	return result
+	return next(timeoutContext)
 }

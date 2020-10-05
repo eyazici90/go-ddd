@@ -2,13 +2,13 @@ package api
 
 import (
 	"context"
-	"orderContext/application/behaviour"
+	"orderContext/application"
 	"orderContext/domain/order"
 	"orderContext/infrastructure"
 
 	"orderContext/application/command"
 
-	mediator "github.com/eyazici90/go-mediator/reflection"
+	"github.com/eyazici90/go-mediator"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
@@ -20,19 +20,8 @@ type orderCommandController struct {
 func newOrderCommandController(r order.Repository,
 	e infrastructure.EventPublisher,
 	timeout int) orderCommandController {
-	m := mediator.New().
-		UseBehaviour(behaviour.NewMeasurer()).
-		UseBehaviour(behaviour.NewLogger()).
-		UseBehaviour(behaviour.NewValidator()).
-		UseBehaviour(behaviour.NewCancellator(timeout)).
-		UseBehaviour(behaviour.NewRetrier()).
-		RegisterHandlers(command.NewCreateOrderCommandHandler(r.Create),
-			command.NewPayOrderCommandHandler(r.Get, r.Update),
-			command.NewShipOrderCommandHandler(r, e)).
-		Build()
-
 	return orderCommandController{
-		mediator: m,
+		mediator: application.NewMediator(r, e, timeout),
 	}
 }
 
