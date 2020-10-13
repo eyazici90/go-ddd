@@ -16,9 +16,9 @@ func TestValidator(t *testing.T) {
 	next := func(context.Context) error {
 		return nil
 	}
-	validator := NewValidator()
+	validator := Validate
 
-	err := validator.Process(nil, cmd, next)
+	err := validator(nil, cmd, next)
 
 	assert.NotNil(t, err)
 }

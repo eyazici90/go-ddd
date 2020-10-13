@@ -15,7 +15,7 @@ import (
 func TestSpec(t *testing.T) {
 
 	Convey("Given order factory", t, func() {
-		factory := func() Order { return fakeOrder() }
+		factory := func() *Order { return fakeOrder() }
 
 		Convey("When called", func() {
 			order := factory()
@@ -89,7 +89,7 @@ func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
 	assert.Equal(t, OrderNotPaidError, err)
 }
 
-func fakeOrder() Order {
+func fakeOrder() *Order {
 	o, _ := NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() })
 	return o
 }

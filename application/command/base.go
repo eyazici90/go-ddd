@@ -6,10 +6,10 @@ import (
 )
 
 type (
-	GetOrder    func(context.Context, string) order.Order
-	GetOrders   func(context.Context) []order.Order
-	CreateOrder func(context.Context, order.Order)
-	UpdateOrder func(context.Context, order.Order)
+	GetOrder    func(context.Context, string) *order.Order
+	GetOrders   func(context.Context) []*order.Order
+	CreateOrder func(context.Context, *order.Order)
+	UpdateOrder func(context.Context, *order.Order)
 
 	commandHandlerBase struct {
 		getOrder    GetOrder
@@ -23,7 +23,7 @@ func newcommandHandlerBase(getOrder GetOrder, updateOrder UpdateOrder) commandHa
 
 func (handler commandHandlerBase) update(ctx context.Context,
 	identifier string,
-	when func(order.Order)) error {
+	when func(*order.Order)) error {
 
 	existingOrder := handler.getOrder(ctx, identifier)
 

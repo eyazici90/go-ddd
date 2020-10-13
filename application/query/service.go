@@ -34,11 +34,11 @@ func (s *service) GetOrder(ctx context.Context, id string) GetOrderDto {
 	return result
 }
 
-func mapTo(o order.Order) OrderView {
+func mapTo(o *order.Order) OrderView {
 	return OrderView{o.Id(), int(o.Status())}
 }
 
-func mapToAll(orders []order.Order) []OrderView {
+func mapToAll(orders []*order.Order) []OrderView {
 	result := make([]OrderView, len(orders))
 
 	for i, o := range orders {

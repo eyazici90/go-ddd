@@ -34,7 +34,7 @@ func TestPayOrder(t *testing.T) {
 
 	newOrder, _ := order.NewOrder(order.OrderId(cmd.OrderId), customer.New(), product.New(), func() time.Time { return time.Now() })
 
-	handler := NewPayOrderCommandHandler(func(context.Context, string) order.Order {
+	handler := NewPayOrderCommandHandler(func(context.Context, string) *order.Order {
 		return newOrder
 	}, infrastructure.NewOrderRepository().Update)
 

@@ -10,7 +10,7 @@ import (
 
 func TestRetrier(t *testing.T) {
 
-	retrier := NewRetrier()
+	retrier := Retry
 
 	retryCount := 0
 
@@ -21,7 +21,7 @@ func TestRetrier(t *testing.T) {
 		return networkError
 	}
 
-	_ = retrier.Process(nil, nil, next)
+	_ = retrier(nil, nil, next)
 
 	assert.Equal(t, 2, retryCount)
 }

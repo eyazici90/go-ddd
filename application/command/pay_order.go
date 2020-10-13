@@ -21,7 +21,7 @@ func NewPayOrderCommandHandler(getOrder GetOrder, updateOrder UpdateOrder) PayOr
 
 func (handler PayOrderCommandHandler) Handle(ctx context.Context, request interface{}) error {
 	cmd := request.(PayOrderCommand)
-	return handler.update(ctx, cmd.OrderId, func(order order.Order) {
+	return handler.update(ctx, cmd.OrderId, func(order *order.Order) {
 		order.Pay()
 	})
 }
