@@ -8,6 +8,7 @@ require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/eyazici90/go-mediator v0.0.0-20201015140327-dc33604f92f1
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-openapi/spec v0.19.9 // indirect
 	github.com/go-openapi/swag v0.19.9 // indirect
 	github.com/go-playground/validator/v10 v10.4.0

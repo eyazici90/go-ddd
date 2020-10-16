@@ -8,7 +8,7 @@ import (
 
 var fakeOrders = make(map[string]*order.Order)
 
-var lockMutex = new(sync.RWMutex)
+var lockMutex = &sync.RWMutex{}
 
 type repository struct{}
 
@@ -20,7 +20,7 @@ func (r *repository) GetOrders(_ context.Context) []*order.Order {
 	lockMutex.RLock()
 	defer lockMutex.RUnlock()
 
-	result := make([]*order.Order, 0, len(fakeOrders))
+	var result []*order.Order
 
 	for _, v := range fakeOrders {
 		result = append(result, v)
