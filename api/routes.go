@@ -1,27 +1,30 @@
 package api
 
 import (
-	"orderContext/application/query"
-	"orderContext/infrastructure"
-
-	"github.com/spf13/viper"
+	"time"
 
 	"github.com/labstack/echo/v4"
+
+	"orderContext/application/query"
+	"orderContext/infrastructure"
+	"orderContext/infrastructure/store"
 )
 
 const orderBaseUrl string = "/orders"
 const version string = "v1"
 
-func RegisterHandlers(e *echo.Echo) {
+func RegisterHandlers(e *echo.Echo, cfg Config) {
 
 	v1 := e.Group("/api/" + version)
 	{
-		repository := infrastructure.NewOrderRepository()
+		mStore := store.NewMongoStore(cfg.MongoDb.Url, cfg.MongoDb.Database, time.Duration(cfg.Context.Timeout)*time.Second)
+
+		repository := infrastructure.NewOrderMongoRepository(mStore)
+
 		service := query.NewOrderQueryService(repository)
 		eventBus := infrastructure.NewNoBus()
-		timeout := viper.GetInt("context.timeout")
 
-		commandController := newOrderCommandController(repository, eventBus, timeout)
+		commandController := newOrderCommandController(repository, eventBus, cfg.Context.Timeout)
 		queryController := newOrderQueryController(service)
 
 		v1.GET(orderBaseUrl, queryController.getOrders)

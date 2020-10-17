@@ -11,15 +11,15 @@ type OrderQueryService interface {
 	GetOrder(ctx context.Context, id string) GetOrderDto
 }
 
-type service struct {
+type Service struct {
 	repository order.Repository
 }
 
-func NewOrderQueryService(r order.Repository) OrderQueryService {
-	return &service{r}
+func NewOrderQueryService(r order.Repository) *Service {
+	return &Service{r}
 }
 
-func (s *service) GetOrders(ctx context.Context) GetOrdersDto {
+func (s *Service) GetOrders(ctx context.Context) GetOrdersDto {
 	oViews := mapToAll(s.repository.GetOrders(ctx))
 
 	result := GetOrdersDto{oViews}
@@ -27,7 +27,7 @@ func (s *service) GetOrders(ctx context.Context) GetOrdersDto {
 	return result
 }
 
-func (s *service) GetOrder(ctx context.Context, id string) GetOrderDto {
+func (s *Service) GetOrder(ctx context.Context, id string) GetOrderDto {
 	oView := mapTo(s.repository.Get(ctx, id))
 
 	result := GetOrderDto{oView}

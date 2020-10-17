@@ -16,13 +16,12 @@ func NewMongoStore(uri, dbName string, timeout time.Duration) *MongoStore {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
-	clientOpts := options.Client().ApplyURI(uri).SetDirect(true)
+	clientOpts := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(ctx, clientOpts)
 
 	if err != nil {
 		panic(err)
 	}
-
 	return &MongoStore{client.Database(dbName)}
 }
 

@@ -222,7 +222,13 @@ var doc = `{
         "query.OrderView": {
             "type": "object",
             "properties": {
+                "customerId": {
+                    "type": "string"
+                },
                 "id": {
+                    "type": "string"
+                },
+                "productId": {
                     "type": "string"
                 },
                 "status": {

@@ -11,10 +11,17 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
+var cfg api.Config
+
 func init() {
+
 	viper.SetConfigFile(`config.json`)
 
 	must(viper.ReadInConfig)
+
+	if err := viper.Unmarshal(&cfg); err != nil {
+		panic(err)
+	}
 }
 
 // @title Order Application
@@ -30,9 +37,9 @@ func main() {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	api.RegisterHandlers(e)
+	api.RegisterHandlers(e, cfg)
 
-	e.Logger.Fatal(e.Start(viper.GetString("server.address")))
+	e.Logger.Fatal(e.Start(cfg.Server.Address))
 }
 
 func must(fn func() error) {

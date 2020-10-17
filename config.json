@@ -2,13 +2,17 @@
     "debug": true,
     
     "appName":"order",
-
+  
     "server": {
       "address": ":8080"
     },
     "context":{
-      "timeout":60
+      "timeout":20
+    },
+    "mongoDb":{
+      "url":"<mongo-url>",
+      "database":"fakeDB"
     }
-  
+    
   }
   

@@ -12,9 +12,7 @@ var lockMutex = &sync.RWMutex{}
 
 type repository struct{}
 
-func NewOrderRepository() order.Repository {
-	return &repository{}
-}
+var InMemoryRepository order.Repository = &repository{}
 
 func (r *repository) GetOrders(_ context.Context) []*order.Order {
 	lockMutex.RLock()

@@ -20,7 +20,7 @@ func NewNoBus() *NoBus {
 
 func (r *NoBus) Publish(event interface{}) {
 	//
-	fmt.Println("event that is published :" + reflect.ValueOf(event).String())
+	fmt.Println("event that is published :" + reflect.TypeOf(event).Name())
 }
 
 func (r *NoBus) PublishAll(events ...interface{}) {

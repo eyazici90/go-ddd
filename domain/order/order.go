@@ -17,13 +17,13 @@ type Order struct {
 	status      Status
 }
 
-func NewOrder(id OrderId, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now) (*Order, error) {
+func NewOrder(id OrderId, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now, status Status) (*Order, error) {
 	o := &Order{
 		id:          id,
 		customerId:  customerId,
 		productId:   productId,
 		createdTime: now(),
-		status:      Submitted,
+		status:      status,
 	}
 
 	if err := ValidateState(o); err != nil {
@@ -62,5 +62,10 @@ func (o *Order) Ship() error {
 	return nil
 }
 
+func (o *Order) Id() string { return string(o.id) }
+
+func (o *Order) ProductId() string { return o.productId.String() }
+
+func (o *Order) CustomerId() string { return o.customerId.String() }
+
 func (o *Order) Status() Status { return o.status }
-func (o *Order) Id() string     { return string(o.id) }

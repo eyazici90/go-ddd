@@ -90,6 +90,6 @@ func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
 }
 
 func fakeOrder() *Order {
-	o, _ := NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() })
+	o, _ := NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() }, Submitted)
 	return o
 }

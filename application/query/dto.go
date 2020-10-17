@@ -10,7 +10,9 @@ type (
 	}
 
 	OrderView struct {
-		Id     string
-		Status int
+		Id         string
+		CustomerId string
+		ProductId  string
+		Status     int
 	}
 )

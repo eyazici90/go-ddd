@@ -15,7 +15,11 @@ definitions:
     type: object
   query.OrderView:
     properties:
+      customerId:
+        type: string
       id:
+        type: string
+      productId:
         type: string
       status:
         type: integer
