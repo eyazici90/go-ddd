@@ -1,6 +1,7 @@
 package order
 
 import (
+	"orderContext/shared/aggregate"
 	"testing"
 	"time"
 
@@ -8,46 +9,7 @@ import (
 	"orderContext/domain/product"
 
 	"github.com/stretchr/testify/assert"
-
-	. "github.com/smartystreets/goconvey/convey"
 )
-
-func TestSpec(t *testing.T) {
-
-	Convey("Given order factory", t, func() {
-		factory := func() *Order { return fakeOrder() }
-
-		Convey("When called", func() {
-			order := factory()
-
-			Convey("Then it should not be null", func() {
-				So(order, ShouldNotBeNil)
-			})
-		})
-	})
-
-	Convey("Given order", t, func() {
-		order := fakeOrder()
-
-		Convey("When order is paid", func() {
-			order.Pay()
-
-			Convey("Then status should be Paid", func() {
-				So(order.Status(), ShouldEqual, Paid)
-			})
-		})
-
-		Convey("When order is cancelled", func() {
-			order.Cancel()
-
-			Convey("Then status should be Cancelled", func() {
-				So(order.Status(), ShouldEqual, Cancelled)
-			})
-		})
-
-	})
-
-}
 
 func TestNewOrder(t *testing.T) {
 	o := fakeOrder()
@@ -90,6 +52,6 @@ func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
 }
 
 func fakeOrder() *Order {
-	o, _ := NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() }, Submitted)
+	o, _ := NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() }, Submitted, aggregate.NewVersion())
 	return o
 }

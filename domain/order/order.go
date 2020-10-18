@@ -15,15 +15,19 @@ type Order struct {
 	productId   product.ProductId
 	createdTime time.Time
 	status      Status
+	version     aggregate.Version
 }
 
-func NewOrder(id OrderId, customerId customer.CustomerId, productId product.ProductId, now aggregate.Now, status Status) (*Order, error) {
+func NewOrder(id OrderId, customerId customer.CustomerId,
+	productId product.ProductId, now aggregate.Now,
+	status Status, version aggregate.Version) (*Order, error) {
 	o := &Order{
 		id:          id,
 		customerId:  customerId,
 		productId:   productId,
 		createdTime: now(),
 		status:      status,
+		version:     version,
 	}
 
 	if err := ValidateState(o); err != nil {
@@ -67,5 +71,7 @@ func (o *Order) Id() string { return string(o.id) }
 func (o *Order) ProductId() string { return o.productId.String() }
 
 func (o *Order) CustomerId() string { return o.customerId.String() }
+
+func (o *Order) Version() string { return o.version.String() }
 
 func (o *Order) Status() Status { return o.status }
