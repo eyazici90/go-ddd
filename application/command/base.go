@@ -6,10 +6,10 @@ import (
 )
 
 type (
-	GetOrder    func(context.Context, string) *order.Order
-	GetOrders   func(context.Context) []*order.Order
-	CreateOrder func(context.Context, *order.Order)
-	UpdateOrder func(context.Context, *order.Order)
+	GetOrder    func(context.Context, string) (*order.Order, error)
+	GetOrders   func(context.Context) ([]*order.Order, error)
+	CreateOrder func(context.Context, *order.Order) error
+	UpdateOrder func(context.Context, *order.Order) error
 
 	commandHandlerBase struct {
 		getOrder    GetOrder
@@ -25,7 +25,11 @@ func (handler commandHandlerBase) update(ctx context.Context,
 	identifier string,
 	when func(*order.Order)) error {
 
-	existingOrder := handler.getOrder(ctx, identifier)
+	existingOrder, err := handler.getOrder(ctx, identifier)
+
+	if err != nil {
+		return err
+	}
 
 	if existingOrder == nil {
 		return order.AggregateNotFound

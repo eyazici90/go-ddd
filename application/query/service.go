@@ -20,7 +20,11 @@ func NewOrderQueryService(r order.Repository) *Service {
 }
 
 func (s *Service) GetOrders(ctx context.Context) GetOrdersDto {
-	oViews := mapToAll(s.repository.GetOrders(ctx))
+	orders, err := s.repository.GetOrders(ctx)
+	if err != nil {
+		return GetOrdersDto{}
+	}
+	oViews := mapToAll(orders)
 
 	result := GetOrdersDto{oViews}
 
@@ -28,7 +32,11 @@ func (s *Service) GetOrders(ctx context.Context) GetOrdersDto {
 }
 
 func (s *Service) GetOrder(ctx context.Context, id string) GetOrderDto {
-	oView := mapTo(s.repository.Get(ctx, id))
+	order, err := s.repository.Get(ctx, id)
+	if err != nil {
+		return GetOrderDto{}
+	}
+	oView := mapTo(order)
 
 	result := GetOrderDto{oView}
 	return result

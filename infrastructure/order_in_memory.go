@@ -14,7 +14,7 @@ type repository struct{}
 
 var InMemoryRepository order.Repository = &repository{}
 
-func (r *repository) GetOrders(_ context.Context) []*order.Order {
+func (r *repository) GetOrders(_ context.Context) ([]*order.Order, error) {
 	lockMutex.RLock()
 	defer lockMutex.RUnlock()
 
@@ -24,26 +24,28 @@ func (r *repository) GetOrders(_ context.Context) []*order.Order {
 		result = append(result, v)
 	}
 
-	return result
+	return result, nil
 }
 
-func (r *repository) Get(_ context.Context, id string) *order.Order {
+func (r *repository) Get(_ context.Context, id string) (*order.Order, error) {
 	lockMutex.RLock()
 	defer lockMutex.RUnlock()
 
-	return fakeOrders[id]
+	return fakeOrders[id], nil
 }
 
-func (r *repository) Update(_ context.Context, o *order.Order) {
+func (r *repository) Update(_ context.Context, o *order.Order) error {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
 	fakeOrders[string(o.Id())] = o
+	return nil
 }
 
-func (r *repository) Create(_ context.Context, o *order.Order) {
+func (r *repository) Create(_ context.Context, o *order.Order) error {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
 	fakeOrders[string(o.Id())] = o
+	return nil
 }

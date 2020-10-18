@@ -6,6 +6,7 @@ import (
 	"orderContext/domain/order"
 	"orderContext/domain/product"
 	"orderContext/infrastructure"
+	"orderContext/shared/aggregate"
 	"testing"
 	"time"
 
@@ -15,7 +16,7 @@ import (
 )
 
 func TestCreateOrder(t *testing.T) {
-	handler := NewCreateOrderCommandHandler(infrastructure.NewOrderRepository().Create)
+	handler := NewCreateOrderCommandHandler(infrastructure.InMemoryRepository.Create)
 
 	orderId := uuid.New().String()
 
@@ -32,11 +33,11 @@ func TestPayOrder(t *testing.T) {
 
 	cmd := PayOrderCommand{orderId}
 
-	newOrder, _ := order.NewOrder(order.OrderId(cmd.OrderId), customer.New(), product.New(), func() time.Time { return time.Now() })
+	newOrder, _ := order.NewOrder(order.OrderId(cmd.OrderId), customer.New(), product.New(), func() time.Time { return time.Now() }, order.Submitted, aggregate.NewVersion())
 
-	handler := NewPayOrderCommandHandler(func(context.Context, string) *order.Order {
-		return newOrder
-	}, infrastructure.NewOrderRepository().Update)
+	handler := NewPayOrderCommandHandler(func(context.Context, string) (*order.Order, error) {
+		return newOrder, nil
+	}, infrastructure.InMemoryRepository.Update)
 
 	err := handler.Handle(nil, cmd)
 

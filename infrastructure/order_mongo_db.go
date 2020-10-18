@@ -2,7 +2,6 @@ package infrastructure
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"orderContext/domain/customer"
@@ -55,12 +54,12 @@ func NewOrderMongoRepository(mongoStore *store.MongoStore) *OrderMongoRepository
 	return &OrderMongoRepository{mStore: mongoStore}
 }
 
-func (r *OrderMongoRepository) GetOrders(ctx context.Context) []*order.Order {
+func (r *OrderMongoRepository) GetOrders(ctx context.Context) ([]*order.Order, error) {
 
 	var result []*orderBson
 
 	if err := r.mStore.FindAll(ctx, collectionName, bson.M{}, &result); err != nil {
-		log.Println(err)
+		return nil, err
 	}
 
 	var orders []*order.Order
@@ -69,40 +68,41 @@ func (r *OrderMongoRepository) GetOrders(ctx context.Context) []*order.Order {
 		orders = append(orders, FromBson(o))
 	}
 
-	return orders
+	return orders, nil
 }
 
-func (r *OrderMongoRepository) Get(ctx context.Context, id string) *order.Order {
+func (r *OrderMongoRepository) Get(ctx context.Context, id string) (*order.Order, error) {
 	var (
 		bsonResult = &orderBson{}
 		query      = bson.M{"id": id}
 	)
 
 	if err := r.mStore.FindOne(ctx, collectionName, query, nil, bsonResult); err != nil {
-		log.Println(err)
+		return nil, err
 	}
 
-	return FromBson(bsonResult)
+	return FromBson(bsonResult), nil
 }
 
-func (r *OrderMongoRepository) Update(ctx context.Context, o *order.Order) {
+func (r *OrderMongoRepository) Update(ctx context.Context, o *order.Order) error {
 	var (
 		query  = bson.M{"id": o.Id(), "version": o.Version()}
 		update = bson.M{"$set": bson.M{"status": o.Status(), "version": aggregate.NewVersion().String()}}
 	)
 
 	if err := r.mStore.Update(ctx, collectionName, query, update); err != nil {
-		log.Println(err)
+		return err
 	}
-
+	return nil
 }
 
-func (r *OrderMongoRepository) Create(ctx context.Context, o *order.Order) {
+func (r *OrderMongoRepository) Create(ctx context.Context, o *order.Order) error {
 	bson := FromOrder(o)
 	if bson.Version == "" {
 		bson.Version = aggregate.NewVersion().String()
 	}
 	if err := r.mStore.Store(ctx, collectionName, bson); err != nil {
-		log.Println(err)
+		return err
 	}
+	return nil
 }

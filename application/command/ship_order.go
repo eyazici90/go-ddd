@@ -24,13 +24,17 @@ func NewShipOrderCommandHandler(r order.Repository, e infrastructure.EventPublis
 
 func (handler ShipOrderCommandHandler) Handle(ctx context.Context, request interface{}) error {
 	cmd := request.(ShipOrderCommand)
-	order := handler.repository.Get(ctx, cmd.OrderId)
+	order, err := handler.repository.Get(ctx, cmd.OrderId)
+	if err != nil {
+		return nil
+	}
 
-	err := order.Ship()
+	err = order.Ship()
 
 	if err != nil {
 		return err
 	}
+
 	handler.repository.Update(ctx, order)
 
 	handler.eventPublisher.PublishAll(order.Events())
