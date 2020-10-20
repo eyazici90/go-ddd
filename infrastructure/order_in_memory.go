@@ -38,7 +38,7 @@ func (r *repository) Update(_ context.Context, o *order.Order) error {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
-	fakeOrders[string(o.Id())] = o
+	fakeOrders[string(o.ID())] = o
 	return nil
 }
 
@@ -46,6 +46,6 @@ func (r *repository) Create(_ context.Context, o *order.Order) error {
 	lockMutex.Lock()
 	defer lockMutex.Unlock()
 
-	fakeOrders[string(o.Id())] = o
+	fakeOrders[string(o.ID())] = o
 	return nil
 }

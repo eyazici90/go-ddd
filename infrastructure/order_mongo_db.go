@@ -16,7 +16,7 @@ import (
 const collectionName = "orders"
 
 type orderBson struct {
-	Id          string    `bson:"id"`
+	ID          string    `bson:"id"`
 	CustomerId  string    `bson:"customerId"`
 	ProductId   string    `bson:"productId"`
 	CreatedTime time.Time `bson:"createdTime"`
@@ -26,7 +26,7 @@ type orderBson struct {
 
 func FromOrder(o *order.Order) *orderBson {
 	return &orderBson{
-		Id:         o.Id(),
+		ID:         o.ID(),
 		Status:     order.FromStatus(o.Status()),
 		ProductId:  o.ProductId(),
 		CustomerId: o.CustomerId(),
@@ -35,7 +35,7 @@ func FromOrder(o *order.Order) *orderBson {
 }
 
 func FromBson(o *orderBson) *order.Order {
-	ord, _ := order.NewOrder(order.OrderId(o.Id),
+	ord, _ := order.NewOrder(order.OrderId(o.ID),
 		customer.CustomerId(o.CustomerId),
 		product.ProductId(o.ProductId),
 		func() time.Time { return time.Now() },
@@ -86,7 +86,7 @@ func (r *OrderMongoRepository) Get(ctx context.Context, id string) (*order.Order
 
 func (r *OrderMongoRepository) Update(ctx context.Context, o *order.Order) error {
 	var (
-		query  = bson.M{"id": o.Id(), "version": o.Version()}
+		query  = bson.M{"id": o.ID(), "version": o.Version()}
 		update = bson.M{"$set": bson.M{"status": o.Status(), "version": aggregate.NewVersion().String()}}
 	)
 

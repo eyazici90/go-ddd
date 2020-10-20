@@ -66,7 +66,7 @@ func (o *Order) Ship() error {
 	return nil
 }
 
-func (o *Order) Id() string { return string(o.id) }
+func (o *Order) ID() string { return string(o.id) }
 
 func (o *Order) ProductId() string { return o.productId.String() }
 
