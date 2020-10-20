@@ -10,14 +10,14 @@ import (
 	"orderContext/infrastructure/store"
 )
 
-const orderBaseUrl string = "/orders"
+const orderBaseURL string = "/orders"
 const version string = "v1"
 
 func RegisterHandlers(e *echo.Echo, cfg Config) {
 
 	v1 := e.Group("/api/" + version)
 	{
-		mStore := store.NewMongoStore(cfg.MongoDb.Url, cfg.MongoDb.Database, time.Duration(cfg.Context.Timeout)*time.Second)
+		mStore := store.NewMongoStore(cfg.MongoDb.URL, cfg.MongoDb.Database, time.Duration(cfg.Context.Timeout)*time.Second)
 
 		repository := infrastructure.NewOrderMongoRepository(mStore)
 
@@ -27,13 +27,13 @@ func RegisterHandlers(e *echo.Echo, cfg Config) {
 		commandController := newOrderCommandController(repository, eventBus, cfg.Context.Timeout)
 		queryController := newOrderQueryController(service)
 
-		v1.GET(orderBaseUrl, queryController.getOrders)
-		v1.GET(orderBaseUrl+"/:id", queryController.getOrder)
+		v1.GET(orderBaseURL, queryController.getOrders)
+		v1.GET(orderBaseURL+"/:id", queryController.getOrder)
 
-		v1.POST(orderBaseUrl, commandController.create)
+		v1.POST(orderBaseURL, commandController.create)
 
-		v1.PUT(orderBaseUrl+"/pay"+"/:id", commandController.pay)
-		v1.PUT(orderBaseUrl+"/ship"+"/:id", commandController.ship)
+		v1.PUT(orderBaseURL+"/pay"+"/:id", commandController.pay)
+		v1.PUT(orderBaseURL+"/ship"+"/:id", commandController.ship)
 
 	}
 

@@ -5,9 +5,9 @@ import (
 )
 
 var (
-	AggregateNotFound = errors.New("aggregate not found!")
+	ErrAggregateNotFound = errors.New("aggregate not found")
 
-	OrderNotPaidError = errors.New("order has not paid yet!")
+	ErrOrderNotPaid = errors.New("order has not paid yet")
 
-	InvalidValueError = errors.New("invalid value!")
+	ErrInvalidValue = errors.New("invalid value")
 )

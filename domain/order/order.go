@@ -41,7 +41,7 @@ func NewOrder(id OrderId, customerId customer.CustomerId,
 
 func ValidateState(o *Order) error {
 	if o.id == "" || o.customerId == "" || o.productId == "" {
-		return InvalidValueError
+		return ErrInvalidValue
 	}
 	return nil
 }
@@ -59,7 +59,7 @@ func (o *Order) Cancel() {
 func (o *Order) Ship() error {
 
 	if o.status != Paid {
-		return OrderNotPaidError
+		return ErrOrderNotPaid
 	}
 
 	o.status = Shipped

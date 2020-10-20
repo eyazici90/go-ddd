@@ -5,7 +5,7 @@ type Config struct {
 		Address string `json:"address"`
 	} `json:"server"`
 	MongoDb struct {
-		Url      string `json:"url"`
+		URL      string `json:"url"`
 		Database string `json:"database"`
 	} `json:"mongoDb"`
 	Context struct {

@@ -39,7 +39,7 @@ func (o *orderQueryController) getOrders(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /orders/{id} [get]
 func (o *orderQueryController) getOrder(c echo.Context) error {
-	return getById(c, func(ctx context.Context, id string) interface{} {
+	return getByID(c, func(ctx context.Context, id string) interface{} {
 		return o.orderservice.GetOrder(ctx, id)
 	})
 }

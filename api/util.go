@@ -8,13 +8,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-var InvalidRequestError = errors.New("Invalid Request params")
+var ErrInvalidRequest = errors.New("invalid Request params")
 
 func update(c echo.Context, action func(ctx context.Context, identifier string) error) error {
 	id := c.Param("id")
 
 	if id == "" {
-		return c.JSON(http.StatusBadRequest, InvalidRequestError)
+		return c.JSON(http.StatusBadRequest, ErrInvalidRequest)
 	}
 	err := action(c.Request().Context(), id)
 	if err != nil {
@@ -35,7 +35,7 @@ func get(c echo.Context, result interface{}) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-func getById(c echo.Context, action func(ctx context.Context, id string) interface{}) error {
+func getByID(c echo.Context, action func(ctx context.Context, id string) interface{}) error {
 	id := c.Param("id")
 	result := action(c.Request().Context(), id)
 	return c.JSON(http.StatusOK, result)

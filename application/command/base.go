@@ -32,7 +32,7 @@ func (handler commandHandlerBase) update(ctx context.Context,
 	}
 
 	if existingOrder == nil {
-		return order.AggregateNotFound
+		return order.ErrAggregateNotFound
 	}
 	when(existingOrder)
 

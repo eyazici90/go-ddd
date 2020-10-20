@@ -48,7 +48,7 @@ func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
 
 	err := o.Ship()
 
-	assert.Equal(t, OrderNotPaidError, err)
+	assert.Equal(t, ErrOrderNotPaid, err)
 }
 
 func fakeOrder() *Order {

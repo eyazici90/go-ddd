@@ -44,9 +44,10 @@ require (
 	github.com/urfave/cli/v2 v2.2.0 // indirect
 	go.mongodb.org/mongo-driver v1.4.2
 	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee // indirect
+	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
 	golang.org/x/net v0.0.0-20201010224723-4f7140c49acb // indirect
 	golang.org/x/sys v0.0.0-20201015000850-e3ed0017c211 // indirect
-	golang.org/x/tools v0.0.0-20201014231627-1610a49f37af // indirect
+	golang.org/x/tools v0.0.0-20201020161133-226fd2f889ca // indirect
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
