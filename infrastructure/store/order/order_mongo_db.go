@@ -1,24 +1,24 @@
-package infrastructure
+package order
 
 import (
 	"context"
 	"time"
 
-	"orderContext/domain/customer"
-	"orderContext/domain/order"
-	"orderContext/domain/product"
-	"orderContext/infrastructure/store"
-	"orderContext/shared/aggregate"
-
 	"gopkg.in/mgo.v2/bson"
+
+	"ordercontext/domain/customer"
+	"ordercontext/domain/order"
+	"ordercontext/domain/product"
+	"ordercontext/infrastructure"
+	"ordercontext/shared/aggregate"
 )
 
 const collectionName = "orders"
 
 type orderBson struct {
 	ID          string    `bson:"id"`
-	CustomerId  string    `bson:"customerId"`
-	ProductId   string    `bson:"productId"`
+	CustomerID  string    `bson:"customerId"`
+	ProductID   string    `bson:"productId"`
 	CreatedTime time.Time `bson:"createdTime"`
 	Status      int       `bson:"status"`
 	Version     string    `bson:"version"`
@@ -28,16 +28,16 @@ func FromOrder(o *order.Order) *orderBson {
 	return &orderBson{
 		ID:         o.ID(),
 		Status:     order.FromStatus(o.Status()),
-		ProductId:  o.ProductId(),
-		CustomerId: o.CustomerId(),
+		CustomerID: o.CustomerID(),
+		ProductID:  o.ProductID(),
 		Version:    o.Version(),
 	}
 }
 
 func FromBson(o *orderBson) *order.Order {
-	ord, _ := order.NewOrder(order.OrderId(o.ID),
-		customer.CustomerId(o.CustomerId),
-		product.ProductId(o.ProductId),
+	ord, _ := order.NewOrder(order.OrderID(o.ID),
+		customer.ID(o.CustomerID),
+		product.ID(o.ProductID),
 		func() time.Time { return time.Now() },
 		order.ToStatus(o.Status),
 		aggregate.ToVersion(o.Version))
@@ -47,10 +47,10 @@ func FromBson(o *orderBson) *order.Order {
 }
 
 type OrderMongoRepository struct {
-	mStore *store.MongoStore
+	mStore *infrastructure.MongoStore
 }
 
-func NewOrderMongoRepository(mongoStore *store.MongoStore) *OrderMongoRepository {
+func NewMongoRepository(mongoStore *infrastructure.MongoStore) *OrderMongoRepository {
 	return &OrderMongoRepository{mStore: mongoStore}
 }
 

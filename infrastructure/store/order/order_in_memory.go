@@ -1,8 +1,8 @@
-package infrastructure
+package order
 
 import (
 	"context"
-	"orderContext/domain/order"
+	"ordercontext/domain/order"
 	"sync"
 )
 

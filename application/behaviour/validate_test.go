@@ -2,7 +2,7 @@ package behaviour
 
 import (
 	"context"
-	"orderContext/application/command"
+	"ordercontext/application/command"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

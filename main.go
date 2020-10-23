@@ -1,12 +1,12 @@
 package main
 
 import (
-	"orderContext/api"
+	"ordercontext/api"
 
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 
-	_ "orderContext/docs"
+	_ "ordercontext/docs"
 
 	echoSwagger "github.com/swaggo/echo-swagger"
 )

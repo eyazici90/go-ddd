@@ -3,28 +3,28 @@ package order
 import (
 	"time"
 
-	"orderContext/domain/customer"
-	"orderContext/domain/product"
-	"orderContext/shared/aggregate"
+	"ordercontext/domain/customer"
+	"ordercontext/domain/product"
+	"ordercontext/shared/aggregate"
 )
 
 type Order struct {
-	aggregate.AggregateRoot
-	id          OrderId
-	customerId  customer.CustomerId
-	productId   product.ProductId
+	aggregate.Root
+	id          OrderID
+	customerID  customer.ID
+	productID   product.ID
 	createdTime time.Time
 	status      Status
 	version     aggregate.Version
 }
 
-func NewOrder(id OrderId, customerId customer.CustomerId,
-	productId product.ProductId, now aggregate.Now,
+func NewOrder(id OrderID, customerId customer.ID,
+	productId product.ID, now aggregate.Now,
 	status Status, version aggregate.Version) (*Order, error) {
 	o := &Order{
 		id:          id,
-		customerId:  customerId,
-		productId:   productId,
+		customerID:  customerId,
+		productID:   productId,
 		createdTime: now(),
 		status:      status,
 		version:     version,
@@ -34,13 +34,13 @@ func NewOrder(id OrderId, customerId customer.CustomerId,
 		return nil, err
 	}
 
-	o.AddEvent(OrderCreatedEvent{id: string(id)})
+	o.AddEvent(CreatedEvent{id: string(id)})
 
 	return o, nil
 }
 
 func ValidateState(o *Order) error {
-	if o.id == "" || o.customerId == "" || o.productId == "" {
+	if o.id == "" || o.customerID == "" || o.productID == "" {
 		return ErrInvalidValue
 	}
 	return nil
@@ -48,12 +48,12 @@ func ValidateState(o *Order) error {
 
 func (o *Order) Pay() {
 	o.status = Paid
-	o.AddEvent(OrderPaidEvent{id: string(o.id)})
+	o.AddEvent(PaidEvent{id: string(o.id)})
 }
 
 func (o *Order) Cancel() {
 	o.status = Cancelled
-	o.AddEvent(OrderCancelledEvent{id: string(o.id)})
+	o.AddEvent(CancelledEvent{id: string(o.id)})
 }
 
 func (o *Order) Ship() error {
@@ -68,9 +68,9 @@ func (o *Order) Ship() error {
 
 func (o *Order) ID() string { return string(o.id) }
 
-func (o *Order) ProductId() string { return o.productId.String() }
+func (o *Order) ProductID() string { return o.productID.String() }
 
-func (o *Order) CustomerId() string { return o.customerId.String() }
+func (o *Order) CustomerID() string { return o.customerID.String() }
 
 func (o *Order) Version() string { return o.version.String() }
 

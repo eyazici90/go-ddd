@@ -2,11 +2,11 @@ package command
 
 import (
 	"context"
-	"orderContext/domain/customer"
-	"orderContext/domain/order"
-	"orderContext/domain/product"
-	"orderContext/infrastructure"
-	"orderContext/shared/aggregate"
+	"ordercontext/domain/customer"
+	"ordercontext/domain/order"
+	"ordercontext/domain/product"
+	"ordercontext/infrastructure"
+	"ordercontext/shared/aggregate"
 	"testing"
 	"time"
 

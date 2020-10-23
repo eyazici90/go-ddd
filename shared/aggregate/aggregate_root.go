@@ -6,12 +6,12 @@ type EventRecorder interface {
 	Clear()
 }
 
-type AggregateRoot struct {
+type Root struct {
 	eventRecorder eventRecorder
 }
 
-func (root *AggregateRoot) AddEvent(event interface{}) { root.eventRecorder.Record(event) }
+func (root *Root) AddEvent(event interface{}) { root.eventRecorder.Record(event) }
 
-func (root *AggregateRoot) Clear() { root.eventRecorder.Clear() }
+func (root *Root) Clear() { root.eventRecorder.Clear() }
 
-func (root *AggregateRoot) Events() []interface{} { return root.eventRecorder.Events() }
+func (root *Root) Events() []interface{} { return root.eventRecorder.Events() }

@@ -1,13 +1,13 @@
 package order
 
 type (
-	OrderCreatedEvent struct {
+	CreatedEvent struct {
 		id string
 	}
-	OrderPaidEvent struct {
+	PaidEvent struct {
 		id string
 	}
-	OrderCancelledEvent struct {
+	CancelledEvent struct {
 		id string
 	}
 )

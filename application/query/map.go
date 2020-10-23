@@ -1,9 +1,9 @@
 package query
 
-import "orderContext/domain/order"
+import "ordercontext/domain/order"
 
 func mapTo(o *order.Order) OrderView {
-	return OrderView{Id: o.ID(), Status: int(o.Status()), ProductId: o.ProductId(), CustomerId: o.CustomerId()}
+	return OrderView{Id: o.ID(), Status: int(o.Status()), ProductId: o.ProductID(), CustomerId: o.CustomerID()}
 }
 
 func mapToAll(orders []*order.Order) []OrderView {

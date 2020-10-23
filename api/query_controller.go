@@ -2,7 +2,7 @@ package api
 
 import (
 	"context"
-	"orderContext/application/query"
+	"ordercontext/application/query"
 
 	"github.com/labstack/echo/v4"
 )

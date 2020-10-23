@@ -1,10 +1,10 @@
 package application
 
 import (
-	"orderContext/application/behaviour"
-	"orderContext/application/command"
-	"orderContext/domain/order"
-	"orderContext/infrastructure"
+	"ordercontext/application/behaviour"
+	"ordercontext/application/command"
+	"ordercontext/domain/order"
+	"ordercontext/infrastructure"
 
 	"github.com/eyazici90/go-mediator"
 )

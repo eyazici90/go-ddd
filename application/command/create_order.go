@@ -2,12 +2,12 @@ package command
 
 import (
 	"context"
-	"orderContext/shared/aggregate"
+	"ordercontext/shared/aggregate"
 	"time"
 
-	"orderContext/domain/customer"
-	"orderContext/domain/order"
-	"orderContext/domain/product"
+	"ordercontext/domain/customer"
+	"ordercontext/domain/order"
+	"ordercontext/domain/product"
 )
 
 type CreateOrderCommand struct {
@@ -24,7 +24,7 @@ func NewCreateOrderCommandHandler(createOrder CreateOrder) CreateOrderCommandHan
 
 func (handler CreateOrderCommandHandler) Handle(ctx context.Context, request interface{}) error {
 	cmd := request.(CreateOrderCommand)
-	order, err := order.NewOrder(order.OrderId(cmd.Id), customer.New(), product.New(), func() time.Time { return time.Now() },
+	order, err := order.NewOrder(order.OrderID(cmd.Id), customer.New(), product.New(), func() time.Time { return time.Now() },
 		order.Submitted, aggregate.NewVersion())
 
 	if err != nil {

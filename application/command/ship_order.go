@@ -2,8 +2,8 @@ package command
 
 import (
 	"context"
-	"orderContext/domain/order"
-	"orderContext/infrastructure"
+	"ordercontext/domain/order"
+	"ordercontext/infrastructure"
 )
 
 type ShipOrderCommand struct {

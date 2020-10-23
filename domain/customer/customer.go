@@ -4,10 +4,10 @@ import (
 	"github.com/google/uuid"
 )
 
-type CustomerId string
+type ID string
 
-func New() CustomerId {
-	return CustomerId(uuid.New().String())
+func New() ID {
+	return ID(uuid.New().String())
 }
 
-func (id CustomerId) String() string { return string(id) }
+func (id ID) String() string { return string(id) }

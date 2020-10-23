@@ -2,7 +2,7 @@ package command
 
 import (
 	"context"
-	"orderContext/domain/order"
+	"ordercontext/domain/order"
 )
 
 type (

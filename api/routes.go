@@ -5,9 +5,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 
-	"orderContext/application/query"
-	"orderContext/infrastructure"
-	"orderContext/infrastructure/store"
+	"ordercontext/application/query"
+	"ordercontext/infrastructure"
+	"ordercontext/infrastructure/store/order"
 )
 
 const orderBaseURL string = "/orders"
@@ -17,9 +17,9 @@ func RegisterHandlers(e *echo.Echo, cfg Config) {
 
 	v1 := e.Group("/api/" + version)
 	{
-		mStore := store.NewMongoStore(cfg.MongoDb.URL, cfg.MongoDb.Database, time.Duration(cfg.Context.Timeout)*time.Second)
+		mStore := infrastructure.NewMongoStore(cfg.MongoDb.URL, cfg.MongoDb.Database, time.Duration(cfg.Context.Timeout)*time.Second)
 
-		repository := infrastructure.NewOrderMongoRepository(mStore)
+		repository := order.NewMongoRepository(mStore)
 
 		service := query.NewOrderQueryService(repository)
 		eventBus := infrastructure.NewNoBus()

@@ -2,11 +2,11 @@ package api
 
 import (
 	"context"
-	"orderContext/application"
-	"orderContext/domain/order"
-	"orderContext/infrastructure"
+	"ordercontext/application"
+	"ordercontext/domain/order"
+	"ordercontext/infrastructure"
 
-	"orderContext/application/command"
+	"ordercontext/application/command"
 
 	"github.com/eyazici90/go-mediator"
 	"github.com/google/uuid"
