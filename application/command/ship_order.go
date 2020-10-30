@@ -4,11 +4,15 @@ import (
 	"context"
 	"ordercontext/domain/order"
 	"ordercontext/infrastructure"
+
+	"github.com/eyazici90/go-mediator"
 )
 
 type ShipOrderCommand struct {
 	OrderId string `validate:"required,min=10"`
 }
+
+func (ShipOrderCommand) Key() string { return "ShipOrderCommand" }
 
 type ShipOrderCommandHandler struct {
 	repository     order.Repository
@@ -22,7 +26,7 @@ func NewShipOrderCommandHandler(r order.Repository, e infrastructure.EventPublis
 	}
 }
 
-func (handler ShipOrderCommandHandler) Handle(ctx context.Context, request interface{}) error {
+func (handler ShipOrderCommandHandler) Handle(ctx context.Context, request mediator.Message) error {
 	cmd := request.(ShipOrderCommand)
 	order, err := handler.repository.Get(ctx, cmd.OrderId)
 	if err != nil {

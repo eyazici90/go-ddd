@@ -14,7 +14,7 @@ type Cancellator struct {
 
 func NewCancellator(timeout int) *Cancellator { return &Cancellator{timeout} }
 
-func (c *Cancellator) Process(ctx context.Context, _ interface{}, next mediator.Next) error {
+func (c *Cancellator) Process(ctx context.Context, _ mediator.Message, next mediator.Next) error {
 
 	timeoutContext, cancel := context.WithTimeout(ctx, time.Duration(time.Duration(c.timeout)*time.Second))
 	defer cancel()

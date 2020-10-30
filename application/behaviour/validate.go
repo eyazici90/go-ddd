@@ -9,7 +9,7 @@ import (
 
 var validate *validator.Validate = validator.New()
 
-func Validate(ctx context.Context, cmd interface{}, next mediator.Next) error {
+func Validate(ctx context.Context, cmd mediator.Message, next mediator.Next) error {
 
 	if err := validate.Struct(cmd); err != nil {
 		return err

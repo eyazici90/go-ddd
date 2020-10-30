@@ -7,7 +7,7 @@ import (
 	"github.com/eyazici90/go-mediator"
 )
 
-func Log(ctx context.Context, cmd interface{}, next mediator.Next) error {
+func Log(ctx context.Context, cmd mediator.Message, next mediator.Next) error {
 
 	log.Println("Pre Process of the command!")
 

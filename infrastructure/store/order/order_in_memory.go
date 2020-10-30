@@ -2,8 +2,9 @@ package order
 
 import (
 	"context"
-	"ordercontext/domain/order"
 	"sync"
+
+	"ordercontext/domain/order"
 )
 
 var fakeOrders = make(map[string]*order.Order)

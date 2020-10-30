@@ -33,8 +33,6 @@ func main() {
 
 	e := echo.New()
 
-	e.GET("/", api.Health())
-
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	api.RegisterHandlers(e, cfg)

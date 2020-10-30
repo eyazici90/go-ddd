@@ -7,7 +7,7 @@ import (
 	"github.com/eyazici90/go-mediator"
 )
 
-func Retry(ctx context.Context, cmd interface{}, next mediator.Next) error {
+func Retry(ctx context.Context, cmd mediator.Message, next mediator.Next) error {
 
 	err := retry.Do(func() error {
 		return next(ctx)

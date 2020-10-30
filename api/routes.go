@@ -15,11 +15,14 @@ const version string = "v1"
 
 func RegisterHandlers(e *echo.Echo, cfg Config) {
 
+	e.GET("/", Health())
+
 	v1 := e.Group("/api/" + version)
 	{
 		mStore := infrastructure.NewMongoStore(cfg.MongoDb.URL, cfg.MongoDb.Database, time.Duration(cfg.Context.Timeout)*time.Second)
-
 		repository := order.NewMongoRepository(mStore)
+
+		// repository := order.InMemoryRepository
 
 		service := query.NewOrderQueryService(repository)
 		eventBus := infrastructure.NewNoBus()
