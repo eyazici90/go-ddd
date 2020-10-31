@@ -4,6 +4,7 @@
 
 
 
+
 # go-ddd
 Practical DDD(*Domain Driven Design*) & CQRS implementation on order bounded context
 
@@ -58,12 +59,14 @@ locate =>  http://localhost:8080/swagger/index.html
     type  CreateOrderCommandHandler  struct { 
 	    repository order.Repository 
     }
-     
+    
+     func (CreateOrderCommand) Key() string { return "CreateOrderCommand"}
+
     func  NewCreateOrderCommandHandler(r order.Repository) CreateOrderCommandHandler { 
 	    return CreateOrderCommandHandler{repository: r} 
     } 
     
-    func (handler CreateOrderCommandHandler) Handle(ctx context.Context, request interface{}) error {
+    func (handler CreateOrderCommandHandler) Handle(ctx context.Context, request mediator.Message) error {
 	    cmd := request.(CreateOrderCommand)
 	    order, err := order.NewOrder(order.OrderId(cmd.Id), customer.New(), product.New(), func() time.Time { return time.Now() })
 	     
@@ -84,7 +87,7 @@ locate =>  http://localhost:8080/swagger/index.html
     
     func  NewValidator() *Validator { return &Validator{} }
     
-    func (v *Validator) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
+    func (v *Validator) Process(ctx context.Context, cmd mediator.Message, next mediator.Next) error {
     
 	    if  err := validate.Struct(cmd); err != nil { 
 		    return err 
@@ -101,7 +104,7 @@ locate =>  http://localhost:8080/swagger/index.html
     
     func  NewCancellator(timeout int) *Cancellator { return &Cancellator{timeout} }
      
-    func (c *Cancellator) Process(ctx context.Context, cmd interface{}, next mediator.Next) error {
+    func (c *Cancellator) Process(ctx context.Context, cmd mediator.Message, next mediator.Next) error {
      
 	    timeoutContext, cancel := context.WithTimeout(ctx, time.Duration(time.Duration(c.timeout)*time.Second))
 	    
