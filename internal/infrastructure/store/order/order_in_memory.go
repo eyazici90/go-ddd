@@ -4,7 +4,7 @@ import (
 	"context"
 	"sync"
 
-	"ordercontext/domain/order"
+	"ordercontext/internal/domain/order"
 )
 
 var fakeOrders = make(map[string]*order.Order)

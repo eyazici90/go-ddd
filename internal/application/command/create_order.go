@@ -2,12 +2,12 @@ package command
 
 import (
 	"context"
-	"ordercontext/shared/aggregate"
 	"time"
 
-	"ordercontext/domain/customer"
-	"ordercontext/domain/order"
-	"ordercontext/domain/product"
+	"ordercontext/internal/domain/customer"
+	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain/product"
+	"ordercontext/pkg/aggregate"
 
 	"github.com/eyazici90/go-mediator"
 )

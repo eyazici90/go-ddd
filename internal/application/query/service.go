@@ -2,7 +2,8 @@ package query
 
 import (
 	"context"
-	"ordercontext/domain/order"
+
+	"ordercontext/internal/domain/order"
 )
 
 type OrderQueryService interface {

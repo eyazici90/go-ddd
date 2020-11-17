@@ -1,13 +1,11 @@
 package api
 
 import (
-	"time"
-
 	"github.com/labstack/echo/v4"
 
-	"ordercontext/application/query"
-	"ordercontext/infrastructure"
-	"ordercontext/infrastructure/store/order"
+	"ordercontext/internal/application/query"
+	"ordercontext/internal/infrastructure"
+	"ordercontext/internal/infrastructure/store/order"
 )
 
 const orderBaseURL string = "/orders"
@@ -19,10 +17,10 @@ func RegisterHandlers(e *echo.Echo, cfg Config) {
 
 	v1 := e.Group("/api/" + version)
 	{
-		mStore := infrastructure.NewMongoStore(cfg.MongoDb.URL, cfg.MongoDb.Database, time.Duration(cfg.Context.Timeout)*time.Second)
-		repository := order.NewMongoRepository(mStore)
+		//mStore := infrastructure.NewMongoStore(cfg.MongoDb.URL, cfg.MongoDb.Database, time.Duration(cfg.Context.Timeout)*time.Second)
+		//repository := order.NewMongoRepository(mStore)
 
-		// repository := order.InMemoryRepository
+		repository := order.InMemoryRepository
 
 		service := query.NewOrderQueryService(repository)
 		eventBus := infrastructure.NewNoBus()

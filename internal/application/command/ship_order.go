@@ -2,8 +2,9 @@ package command
 
 import (
 	"context"
-	"ordercontext/domain/order"
-	"ordercontext/infrastructure"
+
+	"ordercontext/internal/domain/order"
+	"ordercontext/internal/infrastructure"
 
 	"github.com/eyazici90/go-mediator"
 )

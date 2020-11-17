@@ -6,11 +6,11 @@ import (
 
 	"gopkg.in/mgo.v2/bson"
 
-	"ordercontext/domain/customer"
-	"ordercontext/domain/order"
-	"ordercontext/domain/product"
-	"ordercontext/infrastructure"
-	"ordercontext/shared/aggregate"
+	"ordercontext/internal/domain/customer"
+	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain/product"
+	"ordercontext/internal/infrastructure"
+	"ordercontext/pkg/aggregate"
 )
 
 const collectionName = "orders"

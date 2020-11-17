@@ -1,6 +1,6 @@
 package query
 
-import "ordercontext/domain/order"
+import "ordercontext/internal/domain/order"
 
 func mapTo(o *order.Order) OrderView {
 	return OrderView{Id: o.ID(), Status: int(o.Status()), ProductId: o.ProductID(), CustomerId: o.CustomerID()}

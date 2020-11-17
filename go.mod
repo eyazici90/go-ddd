@@ -5,19 +5,20 @@ go 1.14
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/avast/retry-go v3.0.0+incompatible
-	github.com/aws/aws-sdk-go v1.35.18 // indirect
+	github.com/aws/aws-sdk-go v1.35.28 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/eyazici90/go-mediator v0.0.0-20201030122311-d5df4bbb142a
+	github.com/eyazici90/go-mediator v0.0.0-20201031121030-f3cd75d7cf11
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-chi/chi v4.1.2+incompatible
-	github.com/go-openapi/spec v0.19.12 // indirect
+	github.com/go-openapi/jsonpointer v0.19.5 // indirect
+	github.com/go-openapi/spec v0.19.13 // indirect
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/golangci/golangci-lint v1.31.0 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/gopherjs/gopherjs v0.0.0-20200217142428-fce0ec30dd00 // indirect
 	github.com/hashicorp/consul/api v1.1.0
-	github.com/klauspost/compress v1.11.2 // indirect
+	github.com/klauspost/compress v1.11.3 // indirect
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/labstack/echo v3.3.10+incompatible
@@ -44,13 +45,13 @@ require (
 	github.com/swaggo/swag v1.6.9
 	github.com/urfave/cli v1.22.4 // indirect
 	github.com/urfave/cli/v2 v2.2.0 // indirect
-	go.mongodb.org/mongo-driver v1.4.2
-	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897 // indirect
+	go.mongodb.org/mongo-driver v1.4.3
+	golang.org/x/crypto v0.0.0-20201112155050-0c6587e931a9 // indirect
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
-	golang.org/x/net v0.0.0-20201029221708-28c70e62bb1d // indirect
-	golang.org/x/sys v0.0.0-20201029080932-201ba4db2418 // indirect
+	golang.org/x/net v0.0.0-20201110031124-69a78807bb2b // indirect
+	golang.org/x/sys v0.0.0-20201113233024-12cec1faf1ba // indirect
 	golang.org/x/text v0.3.4 // indirect
-	golang.org/x/tools v0.0.0-20201030010431-2feb2bb1ff51 // indirect
+	golang.org/x/tools v0.0.0-20201116002733-ac45abd4c88c // indirect
 	gopkg.in/check.v1 v1.0.0-20200902074654-038fdea0a05b // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22

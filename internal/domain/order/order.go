@@ -3,9 +3,9 @@ package order
 import (
 	"time"
 
-	"ordercontext/domain/customer"
-	"ordercontext/domain/product"
-	"ordercontext/shared/aggregate"
+	"ordercontext/internal/domain/customer"
+	"ordercontext/internal/domain/product"
+	"ordercontext/pkg/aggregate"
 )
 
 type Order struct {
