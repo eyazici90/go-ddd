@@ -10,7 +10,7 @@ import (
 )
 
 type ShipOrderCommand struct {
-	OrderId string `validate:"required,min=10"`
+	OrderID string `validate:"required,min=10"`
 }
 
 func (ShipOrderCommand) Key() string { return "ShipOrderCommand" }
@@ -29,7 +29,7 @@ func NewShipOrderCommandHandler(r order.Repository, e infrastructure.EventPublis
 
 func (handler ShipOrderCommandHandler) Handle(ctx context.Context, request mediator.Message) error {
 	cmd := request.(ShipOrderCommand)
-	order, err := handler.repository.Get(ctx, cmd.OrderId)
+	order, err := handler.repository.Get(ctx, cmd.OrderID)
 	if err != nil {
 		return nil
 	}

@@ -35,7 +35,7 @@ func FromOrder(o *order.Order) *orderBson {
 }
 
 func FromBson(o *orderBson) *order.Order {
-	ord, _ := order.NewOrder(order.OrderID(o.ID),
+	ord, _ := order.NewOrder(order.ID(o.ID),
 		customer.ID(o.CustomerID),
 		product.ID(o.ProductID),
 		func() time.Time { return time.Now() },
@@ -46,15 +46,15 @@ func FromBson(o *orderBson) *order.Order {
 	return ord
 }
 
-type OrderMongoRepository struct {
+type MongoRepository struct {
 	mStore *infrastructure.MongoStore
 }
 
-func NewMongoRepository(mongoStore *infrastructure.MongoStore) *OrderMongoRepository {
-	return &OrderMongoRepository{mStore: mongoStore}
+func NewMongoRepository(mongoStore *infrastructure.MongoStore) *MongoRepository {
+	return &MongoRepository{mStore: mongoStore}
 }
 
-func (r *OrderMongoRepository) GetOrders(ctx context.Context) ([]*order.Order, error) {
+func (r *MongoRepository) GetOrders(ctx context.Context) ([]*order.Order, error) {
 
 	var result []*orderBson
 
@@ -71,7 +71,7 @@ func (r *OrderMongoRepository) GetOrders(ctx context.Context) ([]*order.Order, e
 	return orders, nil
 }
 
-func (r *OrderMongoRepository) Get(ctx context.Context, id string) (*order.Order, error) {
+func (r *MongoRepository) Get(ctx context.Context, id string) (*order.Order, error) {
 	var (
 		bsonResult = &orderBson{}
 		query      = bson.M{"id": id}
@@ -84,7 +84,7 @@ func (r *OrderMongoRepository) Get(ctx context.Context, id string) (*order.Order
 	return FromBson(bsonResult), nil
 }
 
-func (r *OrderMongoRepository) Update(ctx context.Context, o *order.Order) error {
+func (r *MongoRepository) Update(ctx context.Context, o *order.Order) error {
 	var (
 		query  = bson.M{"id": o.ID(), "version": o.Version()}
 		update = bson.M{"$set": bson.M{"status": o.Status(), "version": aggregate.NewVersion().String()}}
@@ -96,7 +96,7 @@ func (r *OrderMongoRepository) Update(ctx context.Context, o *order.Order) error
 	return nil
 }
 
-func (r *OrderMongoRepository) Create(ctx context.Context, o *order.Order) error {
+func (r *MongoRepository) Create(ctx context.Context, o *order.Order) error {
 	bson := FromOrder(o)
 	if bson.Version == "" {
 		bson.Version = aggregate.NewVersion().String()

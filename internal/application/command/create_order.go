@@ -13,7 +13,7 @@ import (
 )
 
 type CreateOrderCommand struct {
-	Id string `validate:"required,min=10"`
+	ID string `validate:"required,min=10"`
 }
 
 func (CreateOrderCommand) Key() string { return "CreateOrderCommand " }
@@ -28,7 +28,7 @@ func NewCreateOrderCommandHandler(createOrder CreateOrder) CreateOrderCommandHan
 
 func (handler CreateOrderCommandHandler) Handle(ctx context.Context, request mediator.Message) error {
 	cmd := request.(CreateOrderCommand)
-	order, err := order.NewOrder(order.OrderID(cmd.Id), customer.New(), product.New(), func() time.Time { return time.Now() },
+	order, err := order.NewOrder(order.ID(cmd.ID), customer.New(), product.New(), func() time.Time { return time.Now() },
 		order.Submitted, aggregate.NewVersion())
 
 	if err != nil {

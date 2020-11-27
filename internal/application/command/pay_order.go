@@ -9,7 +9,7 @@ import (
 )
 
 type PayOrderCommand struct {
-	OrderId string `validate:"required,min=10"`
+	OrderID string `validate:"required,min=10"`
 }
 
 func (PayOrderCommand) Key() string { return "PayOrderCommand" }
@@ -26,7 +26,7 @@ func NewPayOrderCommandHandler(getOrder GetOrder, updateOrder UpdateOrder) PayOr
 
 func (handler PayOrderCommandHandler) Handle(ctx context.Context, request mediator.Message) error {
 	cmd := request.(PayOrderCommand)
-	return handler.update(ctx, cmd.OrderId, func(order *order.Order) {
+	return handler.update(ctx, cmd.OrderID, func(order *order.Order) {
 		order.Pay()
 	})
 }

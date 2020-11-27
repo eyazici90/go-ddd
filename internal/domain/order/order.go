@@ -6,11 +6,19 @@ import (
 	"ordercontext/internal/domain/customer"
 	"ordercontext/internal/domain/product"
 	"ordercontext/pkg/aggregate"
+
+	"github.com/google/uuid"
 )
+
+type ID string
+
+func NewID() ID {
+	return ID(uuid.New().String())
+}
 
 type Order struct {
 	aggregate.Root
-	id          OrderID
+	id          ID
 	customerID  customer.ID
 	productID   product.ID
 	createdTime time.Time
@@ -18,7 +26,7 @@ type Order struct {
 	version     aggregate.Version
 }
 
-func NewOrder(id OrderID, customerId customer.ID,
+func NewOrder(id ID, customerId customer.ID,
 	productId product.ID, now aggregate.Now,
 	status Status, version aggregate.Version) (*Order, error) {
 	o := &Order{

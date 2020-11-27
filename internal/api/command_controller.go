@@ -35,7 +35,7 @@ func newOrderCommandController(r order.Repository,
 // @Router /orders [post]
 func (o *orderCommandController) create(c echo.Context) error {
 	return create(c, func(ctx context.Context) error {
-		return o.mediator.Send(ctx, command.CreateOrderCommand{Id: uuid.New().String()})
+		return o.mediator.Send(ctx, command.CreateOrderCommand{ID: uuid.New().String()})
 	})
 }
 
@@ -50,7 +50,7 @@ func (o *orderCommandController) create(c echo.Context) error {
 // @Router /orders/pay/{id} [put]
 func (o *orderCommandController) pay(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
-		return o.mediator.Send(ctx, command.PayOrderCommand{OrderId: id})
+		return o.mediator.Send(ctx, command.PayOrderCommand{OrderID: id})
 	})
 }
 
@@ -65,7 +65,7 @@ func (o *orderCommandController) pay(c echo.Context) error {
 // @Router /orders/cancel/{id} [put]
 func (o *orderCommandController) cancel(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
-		return o.mediator.Send(ctx, command.CancelOrderCommand{OrderId: id})
+		return o.mediator.Send(ctx, command.CancelOrderCommand{OrderID: id})
 	})
 }
 
@@ -80,6 +80,6 @@ func (o *orderCommandController) cancel(c echo.Context) error {
 // @Router /orders/ship/{id} [put]
 func (o *orderCommandController) ship(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
-		return o.mediator.Send(ctx, command.ShipOrderCommand{OrderId: id})
+		return o.mediator.Send(ctx, command.ShipOrderCommand{OrderID: id})
 	})
 }

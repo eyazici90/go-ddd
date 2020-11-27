@@ -2,16 +2,17 @@ package behaviour
 
 import (
 	"context"
-	"ordercontext/application/command"
 	"testing"
+
+	"ordercontext/internal/application/command"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestValidator(t *testing.T) {
-	invalidId := "123"
+	invalidID := "123"
 
-	cmd := command.CreateOrderCommand{Id: invalidId}
+	cmd := command.CreateOrderCommand{Id: invalidID}
 
 	next := func(context.Context) error {
 		return nil
