@@ -24,9 +24,9 @@ func NewPayOrderCommandHandler(getOrder GetOrder, updateOrder UpdateOrder) PayOr
 	}
 }
 
-func (handler PayOrderCommandHandler) Handle(ctx context.Context, request mediator.Message) error {
-	cmd := request.(PayOrderCommand)
-	return handler.update(ctx, cmd.OrderID, func(order *order.Order) {
-		order.Pay()
+func (h PayOrderCommandHandler) Handle(ctx context.Context, req mediator.Message) error {
+	cmd := req.(PayOrderCommand)
+	return h.update(ctx, cmd.OrderID, func(o *order.Order) {
+		o.Pay()
 	})
 }

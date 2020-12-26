@@ -1,12 +1,12 @@
 package order
 
 import (
-	"ordercontext/shared/aggregate"
 	"testing"
 	"time"
 
-	"ordercontext/domain/customer"
-	"ordercontext/domain/product"
+	"ordercontext/internal/domain/customer"
+	"ordercontext/internal/domain/product"
+	"ordercontext/pkg/aggregate"
 
 	"github.com/stretchr/testify/assert"
 )

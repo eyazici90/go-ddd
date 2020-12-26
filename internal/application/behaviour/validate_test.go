@@ -12,7 +12,7 @@ import (
 func TestValidator(t *testing.T) {
 	invalidID := "123"
 
-	cmd := command.CreateOrderCommand{Id: invalidID}
+	cmd := command.CreateOrderCommand{ID: invalidID}
 
 	next := func(context.Context) error {
 		return nil

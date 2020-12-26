@@ -10,21 +10,21 @@ import (
 
 var ErrInvalidRequest = errors.New("invalid Request params")
 
-func update(c echo.Context, action func(ctx context.Context, identifier string) error) error {
+func update(c echo.Context, fn func(ctx context.Context, identifier string) error) error {
 	id := c.Param("id")
 
 	if id == "" {
 		return c.JSON(http.StatusBadRequest, ErrInvalidRequest)
 	}
-	err := action(c.Request().Context(), id)
+	err := fn(c.Request().Context(), id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusAccepted, "")
 }
 
-func create(c echo.Context, action func(ctx context.Context) error) error {
-	if err := action(c.Request().Context()); err != nil {
+func create(c echo.Context, fn func(ctx context.Context) error) error {
+	if err := fn(c.Request().Context()); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
@@ -35,8 +35,8 @@ func get(c echo.Context, result interface{}) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-func getByID(c echo.Context, action func(ctx context.Context, id string) interface{}) error {
+func getByID(c echo.Context, fn func(ctx context.Context, id string) interface{}) error {
 	id := c.Param("id")
-	result := action(c.Request().Context(), id)
+	result := fn(c.Request().Context(), id)
 	return c.JSON(http.StatusOK, result)
 }

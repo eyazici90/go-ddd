@@ -27,22 +27,22 @@ func NewShipOrderCommandHandler(r order.Repository, e infrastructure.EventPublis
 	}
 }
 
-func (handler ShipOrderCommandHandler) Handle(ctx context.Context, request mediator.Message) error {
-	cmd := request.(ShipOrderCommand)
-	order, err := handler.repository.Get(ctx, cmd.OrderID)
+func (h ShipOrderCommandHandler) Handle(ctx context.Context, req mediator.Message) error {
+	cmd := req.(ShipOrderCommand)
+	o, err := h.repository.Get(ctx, cmd.OrderID)
 	if err != nil {
 		return nil
 	}
 
-	err = order.Ship()
+	err = o.Ship()
 
 	if err != nil {
 		return err
 	}
 
-	handler.repository.Update(ctx, order)
+	h.repository.Update(ctx, o)
 
-	handler.eventPublisher.PublishAll(order.Events())
+	h.eventPublisher.PublishAll(o.Events())
 
 	return nil
 }

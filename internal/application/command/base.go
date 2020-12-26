@@ -26,18 +26,18 @@ func (handler commandHandlerBase) update(ctx context.Context,
 	identifier string,
 	when func(*order.Order)) error {
 
-	existingOrder, err := handler.getOrder(ctx, identifier)
+	o, err := handler.getOrder(ctx, identifier)
 
 	if err != nil {
 		return err
 	}
 
-	if existingOrder == nil {
+	if o == nil {
 		return order.ErrAggregateNotFound
 	}
-	when(existingOrder)
+	when(o)
 
-	handler.updateOrder(ctx, existingOrder)
+	handler.updateOrder(ctx, o)
 
 	return nil
 }

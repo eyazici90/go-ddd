@@ -2,21 +2,21 @@ package command
 
 import (
 	"context"
-	"ordercontext/domain/customer"
-	"ordercontext/domain/order"
-	"ordercontext/domain/product"
-	"ordercontext/infrastructure"
-	"ordercontext/shared/aggregate"
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
+	"ordercontext/internal/domain/customer"
+	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain/product"
+	store "ordercontext/internal/infrastructure/store/order"
+	"ordercontext/pkg/aggregate"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateOrder(t *testing.T) {
-	handler := NewCreateOrderCommandHandler(infrastructure.InMemoryRepository.Create)
+	handler := NewCreateOrderCommandHandler(store.InMemoryRepository.Create)
 
 	orderId := uuid.New().String()
 
@@ -33,11 +33,11 @@ func TestPayOrder(t *testing.T) {
 
 	cmd := PayOrderCommand{orderId}
 
-	newOrder, _ := order.NewOrder(order.OrderId(cmd.OrderId), customer.New(), product.New(), func() time.Time { return time.Now() }, order.Submitted, aggregate.NewVersion())
+	newOrder, _ := order.NewOrder(order.ID(cmd.OrderID), customer.New(), product.New(), func() time.Time { return time.Now() }, order.Submitted, aggregate.NewVersion())
 
 	handler := NewPayOrderCommandHandler(func(context.Context, string) (*order.Order, error) {
 		return newOrder, nil
-	}, infrastructure.InMemoryRepository.Update)
+	}, store.InMemoryRepository.Update)
 
 	err := handler.Handle(nil, cmd)
 

@@ -9,14 +9,14 @@ import (
 	"github.com/eyazici90/go-mediator"
 )
 
-func Measure(ctx context.Context, cmd mediator.Message, next mediator.Next) error {
+func Measure(ctx context.Context, msg mediator.Message, next mediator.Next) error {
 	start := time.Now()
 
 	err := next(ctx)
 
 	elapsed := time.Since(start)
 
-	log.Printf("Execution for the command (%s) took %s", reflect.TypeOf(cmd), elapsed)
+	log.Printf("Execution for the command (%s) took %s", reflect.TypeOf(msg), elapsed)
 
 	return err
 }
