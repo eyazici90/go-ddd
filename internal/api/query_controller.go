@@ -8,12 +8,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type orderQueryController struct {
+type OrderQueryController struct {
 	orderservice query.OrderQueryService
 }
 
-func newOrderQueryController(s query.OrderQueryService) orderQueryController {
-	return orderQueryController{
+func NewOrderQueryController(s query.OrderQueryService) *OrderQueryController {
+	return &OrderQueryController{
 		orderservice: s,
 	}
 }
@@ -26,7 +26,7 @@ func newOrderQueryController(s query.OrderQueryService) orderQueryController {
 // @Produce json
 // @Success 200 {object} query.GetOrdersDto
 // @Router /orders [get]
-func (o *orderQueryController) getOrders(c echo.Context) error {
+func (o *OrderQueryController) getOrders(c echo.Context) error {
 	return get(c, o.orderservice.GetOrders(c.Request().Context()))
 }
 
@@ -39,7 +39,7 @@ func (o *orderQueryController) getOrders(c echo.Context) error {
 // @Success 200 {object} query.GetOrderDto
 // @Param id path string true "id"
 // @Router /orders/{id} [get]
-func (o *orderQueryController) getOrder(c echo.Context) error {
+func (o *OrderQueryController) getOrder(c echo.Context) error {
 	return getByID(c, func(ctx context.Context, id string) interface{} {
 		return o.orderservice.GetOrder(ctx, id)
 	})

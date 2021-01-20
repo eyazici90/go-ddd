@@ -4,7 +4,7 @@
     "appName":"order",
   
     "server": {
-      "address": ":8080"
+      "port": ":8080"
     },
     "context":{
       "timeout":20

@@ -31,7 +31,7 @@ func (h ShipOrderCommandHandler) Handle(ctx context.Context, req mediator.Messag
 	cmd := req.(ShipOrderCommand)
 	o, err := h.repository.Get(ctx, cmd.OrderID)
 	if err != nil {
-		return nil
+		return err
 	}
 
 	err = o.Ship()

@@ -43,5 +43,4 @@ func TestPayOrder(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, order.Paid, newOrder.Status())
-
 }

@@ -1,41 +1,20 @@
 package api
 
-import (
-	"github.com/labstack/echo/v4"
-
-	"ordercontext/internal/application/query"
-	"ordercontext/internal/infrastructure"
-	"ordercontext/internal/infrastructure/store/order"
-)
-
 const orderBaseURL string = "/orders"
 const version string = "v1"
 
-func RegisterHandlers(e *echo.Echo, cfg Config) {
+func (a *App) routes() {
 
-	e.GET("/", Health())
+	a.echo.GET("/", Health())
 
-	v1 := e.Group("/api/" + version)
+	v1 := a.echo.Group("/api/" + version)
 	{
-		//mStore := infrastructure.NewMongoStore(cfg.MongoDb.URL, cfg.MongoDb.Database, time.Duration(cfg.Context.Timeout)*time.Second)
-		//repository := order.NewMongoRepository(mStore)
+		v1.GET(orderBaseURL, a.orderQueryController.getOrders)
+		v1.GET(orderBaseURL+"/:id", a.orderQueryController.getOrder)
 
-		repository := order.InMemoryRepository
+		v1.POST(orderBaseURL, a.orderCommandController.create)
 
-		service := query.NewOrderQueryService(repository)
-		eventBus := infrastructure.NewNoBus()
-
-		commandController := newOrderCommandController(repository, eventBus, cfg.Context.Timeout)
-		queryController := newOrderQueryController(service)
-
-		v1.GET(orderBaseURL, queryController.getOrders)
-		v1.GET(orderBaseURL+"/:id", queryController.getOrder)
-
-		v1.POST(orderBaseURL, commandController.create)
-
-		v1.PUT(orderBaseURL+"/pay"+"/:id", commandController.pay)
-		v1.PUT(orderBaseURL+"/ship"+"/:id", commandController.ship)
-
+		v1.PUT(orderBaseURL+"/pay"+"/:id", a.orderCommandController.pay)
+		v1.PUT(orderBaseURL+"/ship"+"/:id", a.orderCommandController.ship)
 	}
-
 }

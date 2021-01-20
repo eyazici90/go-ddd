@@ -9,7 +9,9 @@ import (
 	"github.com/eyazici90/go-mediator"
 )
 
-func NewMediator(r order.Repository, e infrastructure.EventPublisher, timeout int) mediator.Mediator {
+func NewMediator(r order.Repository,
+	e infrastructure.EventPublisher,
+	timeout int) mediator.Mediator {
 	m, _ := mediator.New().
 		Use(behaviour.Measure).
 		Use(behaviour.Log).

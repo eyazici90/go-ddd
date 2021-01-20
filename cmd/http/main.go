@@ -1,9 +1,14 @@
 package main
 
 import (
+	"fmt"
 	_ "ordercontext/docs"
+	"os"
 
 	"ordercontext/internal/api"
+	"ordercontext/internal/application/query"
+	"ordercontext/internal/infrastructure"
+	"ordercontext/internal/infrastructure/store/order"
 
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -13,7 +18,6 @@ import (
 var cfg api.Config
 
 func init() {
-
 	viper.SetConfigFile(`config.json`)
 
 	must(viper.ReadInConfig)
@@ -29,14 +33,35 @@ func init() {
 // @host localhost:8080
 // @BasePath /api/v1
 func main() {
+	err, cleanup := run()
+	defer cleanup()
+
+	if err != nil {
+		fmt.Printf("%v", err)
+		os.Exit(1)
+	}
+}
+
+func run() (error, func()) {
+	repository := order.InMemoryRepository
+
+	service := query.NewOrderQueryService(repository)
+	eventBus := infrastructure.NewNoBus()
+
+	commandController := api.NewOrderCommandController(repository, eventBus, cfg.Context.Timeout)
+	queryController := api.NewOrderQueryController(service)
 
 	e := echo.New()
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	api.RegisterHandlers(e, cfg)
+	app := api.NewApp(cfg, e, commandController, queryController)
 
-	e.Logger.Fatal(e.Start(cfg.Server.Address))
+	err := app.Start()
+
+	return err, func() {
+		e.Close()
+	}
 }
 
 func must(fn func() error) {

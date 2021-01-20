@@ -13,14 +13,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type orderCommandController struct {
+type OrderCommandController struct {
 	mediator mediator.Mediator
 }
 
-func newOrderCommandController(r order.Repository,
+func NewOrderCommandController(r order.Repository,
 	e infrastructure.EventPublisher,
-	timeout int) orderCommandController {
-	return orderCommandController{
+	timeout int) *OrderCommandController {
+	return &OrderCommandController{
 		mediator: application.NewMediator(r, e, timeout),
 	}
 }
@@ -33,7 +33,7 @@ func newOrderCommandController(r order.Repository,
 // @Produce json
 // @Success 201 {object} string
 // @Router /orders [post]
-func (o *orderCommandController) create(c echo.Context) error {
+func (o *OrderCommandController) create(c echo.Context) error {
 	return create(c, func(ctx context.Context) error {
 		return o.mediator.Send(ctx, command.CreateOrderCommand{ID: uuid.New().String()})
 	})
@@ -48,7 +48,7 @@ func (o *orderCommandController) create(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/pay/{id} [put]
-func (o *orderCommandController) pay(c echo.Context) error {
+func (o *OrderCommandController) pay(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.PayOrderCommand{OrderID: id})
 	})
@@ -63,7 +63,7 @@ func (o *orderCommandController) pay(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/cancel/{id} [put]
-func (o *orderCommandController) cancel(c echo.Context) error {
+func (o *OrderCommandController) cancel(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.CancelOrderCommand{OrderID: id})
 	})
@@ -78,7 +78,7 @@ func (o *orderCommandController) cancel(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/ship/{id} [put]
-func (o *orderCommandController) ship(c echo.Context) error {
+func (o *OrderCommandController) ship(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
 		return o.mediator.Send(ctx, command.ShipOrderCommand{OrderID: id})
 	})

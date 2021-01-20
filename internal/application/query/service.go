@@ -8,7 +8,6 @@ import (
 
 type OrderQueryService interface {
 	GetOrders(context.Context) GetOrdersDto
-
 	GetOrder(ctx context.Context, id string) GetOrderDto
 }
 
