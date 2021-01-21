@@ -3,7 +3,7 @@ package api
 const orderBaseURL string = "/orders"
 const version string = "v1"
 
-func (a *App) routes() {
+func (a *Server) routes() {
 
 	a.echo.GET("/", Health())
 

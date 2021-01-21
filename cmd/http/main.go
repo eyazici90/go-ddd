@@ -55,9 +55,9 @@ func run() (error, func()) {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	app := api.NewApp(cfg, e, commandController, queryController)
+	server := api.NewServer(cfg, e, commandController, queryController)
 
-	err := app.Start()
+	err := server.Start()
 
 	return err, func() {
 		e.Close()

@@ -17,18 +17,18 @@ type Config struct {
 	} `json:"context"`
 }
 
-type App struct {
+type Server struct {
 	cfg                    Config
 	echo                   *echo.Echo
 	orderCommandController *OrderCommandController
 	orderQueryController   *OrderQueryController
 }
 
-func NewApp(cfg Config,
+func NewServer(cfg Config,
 	echo *echo.Echo,
 	cmdController *OrderCommandController,
-	querycontroller *OrderQueryController) *App {
-	app := &App{
+	querycontroller *OrderQueryController) *Server {
+	app := &Server{
 		cfg:                    cfg,
 		echo:                   echo,
 		orderCommandController: cmdController,
@@ -39,7 +39,7 @@ func NewApp(cfg Config,
 	return app
 }
 
-func (a *App) Start() error {
+func (a *Server) Start() error {
 	port := a.cfg.Server.Port
 	return a.echo.Start(port)
 }
