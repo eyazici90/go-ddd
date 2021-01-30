@@ -3,7 +3,7 @@ package order
 type Status int
 
 const (
-	Submitted Status = iota + 1
+	Submitted Status = iota
 	Paid
 	Shipped
 	Cancelled
