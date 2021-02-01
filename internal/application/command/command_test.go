@@ -16,7 +16,7 @@ import (
 )
 
 func TestCreateOrder(t *testing.T) {
-	handler := NewCreateOrderCommandHandler(store.InMemoryRepository.Create)
+	handler := NewCreateOrderCommandHandler(store.NewInMemoryRepository().Create)
 
 	orderId := uuid.New().String()
 
@@ -37,7 +37,7 @@ func TestPayOrder(t *testing.T) {
 
 	handler := NewPayOrderCommandHandler(func(context.Context, string) (*order.Order, error) {
 		return newOrder, nil
-	}, store.InMemoryRepository.Update)
+	}, store.NewInMemoryRepository().Update)
 
 	err := handler.Handle(nil, cmd)
 

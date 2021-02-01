@@ -43,7 +43,7 @@ func main() {
 }
 
 func run() (error, func()) {
-	repository := order.InMemoryRepository
+	repository := order.NewInMemoryRepository()
 
 	service := query.NewOrderQueryService(repository)
 	eventBus := infrastructure.NewNoBus()

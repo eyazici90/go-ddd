@@ -7,46 +7,49 @@ import (
 	"ordercontext/internal/domain/order"
 )
 
-var fakeOrders = make(map[string]*order.Order)
+type InMemoryRepository struct {
+	data  map[string]*order.Order
+	mutex sync.RWMutex
+}
 
-var lockMutex = &sync.RWMutex{}
+func NewInMemoryRepository() *InMemoryRepository {
+	return &InMemoryRepository{
+		data: make(map[string]*order.Order),
+	}
+}
 
-type repository struct{}
-
-var InMemoryRepository order.Repository = &repository{}
-
-func (r *repository) GetOrders(_ context.Context) ([]*order.Order, error) {
-	lockMutex.RLock()
-	defer lockMutex.RUnlock()
+func (i *InMemoryRepository) GetOrders(_ context.Context) ([]*order.Order, error) {
+	i.mutex.RLock()
+	defer i.mutex.RUnlock()
 
 	var result []*order.Order
 
-	for _, v := range fakeOrders {
+	for _, v := range i.data {
 		result = append(result, v)
 	}
 
 	return result, nil
 }
 
-func (r *repository) Get(_ context.Context, id string) (*order.Order, error) {
-	lockMutex.RLock()
-	defer lockMutex.RUnlock()
+func (i *InMemoryRepository) Get(_ context.Context, id string) (*order.Order, error) {
+	i.mutex.RLock()
+	defer i.mutex.RUnlock()
 
-	return fakeOrders[id], nil
+	return i.data[id], nil
 }
 
-func (r *repository) Update(_ context.Context, o *order.Order) error {
-	lockMutex.Lock()
-	defer lockMutex.Unlock()
+func (i *InMemoryRepository) Update(_ context.Context, o *order.Order) error {
+	i.mutex.Lock()
+	defer i.mutex.Unlock()
 
-	fakeOrders[string(o.ID())] = o
+	i.data[string(o.ID())] = o
 	return nil
 }
 
-func (r *repository) Create(_ context.Context, o *order.Order) error {
-	lockMutex.Lock()
-	defer lockMutex.Unlock()
+func (i *InMemoryRepository) Create(_ context.Context, o *order.Order) error {
+	i.mutex.Lock()
+	defer i.mutex.Unlock()
 
-	fakeOrders[string(o.ID())] = o
+	i.data[string(o.ID())] = o
 	return nil
 }
