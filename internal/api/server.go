@@ -28,18 +28,20 @@ func NewServer(cfg Config,
 	echo *echo.Echo,
 	cmdController *OrderCommandController,
 	querycontroller *OrderQueryController) *Server {
-	app := &Server{
+	server := &Server{
 		cfg:                    cfg,
 		echo:                   echo,
 		orderCommandController: cmdController,
 		orderQueryController:   querycontroller,
 	}
-	app.routes()
 
-	return app
+	server.health()
+	server.routes()
+
+	return server
 }
 
-func (a *Server) Start() error {
-	port := a.cfg.Server.Port
-	return a.echo.Start(port)
+func (s *Server) Start() error {
+	port := s.cfg.Server.Port
+	return s.echo.Start(port)
 }
