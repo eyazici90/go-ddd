@@ -5,7 +5,7 @@ import (
 
 	"ordercontext/internal/domain/order"
 
-	"github.com/eyazici90/go-mediator"
+	"github.com/eyazici90/go-mediator/mediator"
 )
 
 type PayOrderCommand struct {

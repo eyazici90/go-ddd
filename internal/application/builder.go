@@ -6,13 +6,13 @@ import (
 	"ordercontext/internal/domain/order"
 	"ordercontext/internal/infrastructure"
 
-	"github.com/eyazici90/go-mediator"
+	"github.com/eyazici90/go-mediator/mediator"
 )
 
 func NewMediator(r order.Repository,
 	e infrastructure.EventPublisher,
-	timeout int) mediator.Mediator {
-	m, _ := mediator.New().
+	timeout int) mediator.Sender {
+	sender, _ := mediator.NewContext().
 		Use(behaviour.Measure).
 		Use(behaviour.Log).
 		Use(behaviour.Validate).
@@ -23,6 +23,6 @@ func NewMediator(r order.Repository,
 		RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(r, e)).
 		Build()
 
-	return m
+	return sender
 
 }

@@ -8,20 +8,20 @@ import (
 	"ordercontext/internal/domain/order"
 	"ordercontext/internal/infrastructure"
 
-	"github.com/eyazici90/go-mediator"
+	"github.com/eyazici90/go-mediator/mediator"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
 type OrderCommandController struct {
-	mediator mediator.Mediator
+	sender mediator.Sender
 }
 
 func NewOrderCommandController(r order.Repository,
 	e infrastructure.EventPublisher,
 	timeout int) *OrderCommandController {
 	return &OrderCommandController{
-		mediator: application.NewMediator(r, e, timeout),
+		sender: application.NewMediator(r, e, timeout),
 	}
 }
 
@@ -35,7 +35,7 @@ func NewOrderCommandController(r order.Repository,
 // @Router /orders [post]
 func (o *OrderCommandController) create(c echo.Context) error {
 	return create(c, func(ctx context.Context) error {
-		return o.mediator.Send(ctx, command.CreateOrderCommand{ID: uuid.New().String()})
+		return o.sender.Send(ctx, command.CreateOrderCommand{ID: uuid.New().String()})
 	})
 }
 
@@ -50,7 +50,7 @@ func (o *OrderCommandController) create(c echo.Context) error {
 // @Router /orders/pay/{id} [put]
 func (o *OrderCommandController) pay(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
-		return o.mediator.Send(ctx, command.PayOrderCommand{OrderID: id})
+		return o.sender.Send(ctx, command.PayOrderCommand{OrderID: id})
 	})
 }
 
@@ -65,7 +65,7 @@ func (o *OrderCommandController) pay(c echo.Context) error {
 // @Router /orders/cancel/{id} [put]
 func (o *OrderCommandController) cancel(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
-		return o.mediator.Send(ctx, command.CancelOrderCommand{OrderID: id})
+		return o.sender.Send(ctx, command.CancelOrderCommand{OrderID: id})
 	})
 }
 
@@ -80,6 +80,6 @@ func (o *OrderCommandController) cancel(c echo.Context) error {
 // @Router /orders/ship/{id} [put]
 func (o *OrderCommandController) ship(c echo.Context) error {
 	return update(c, func(ctx context.Context, id string) error {
-		return o.mediator.Send(ctx, command.ShipOrderCommand{OrderID: id})
+		return o.sender.Send(ctx, command.ShipOrderCommand{OrderID: id})
 	})
 }

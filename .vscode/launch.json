@@ -9,7 +9,7 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceRoot}",
+            "program": "${workspaceRoot}\\cmd\\http",
             "env": {},
             "args": []
         }

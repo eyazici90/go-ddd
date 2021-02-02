@@ -1,5 +1,11 @@
 package aggregate
 
+type EventRecorder interface {
+	AddEvent(event interface{})
+	Events() []interface{}
+	Clear()
+}
+
 type eventRecorder struct {
 	events []interface{}
 }

@@ -5,7 +5,7 @@ import (
 
 	"time"
 
-	"github.com/eyazici90/go-mediator"
+	"github.com/eyazici90/go-mediator/mediator"
 )
 
 type Cancellator struct {

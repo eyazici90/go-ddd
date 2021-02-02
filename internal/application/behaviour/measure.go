@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/eyazici90/go-mediator"
+	"github.com/eyazici90/go-mediator/mediator"
 )
 
 func Measure(ctx context.Context, msg mediator.Message, next mediator.Next) error {

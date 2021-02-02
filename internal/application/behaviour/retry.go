@@ -4,7 +4,8 @@ import (
 	"context"
 
 	"github.com/avast/retry-go"
-	"github.com/eyazici90/go-mediator"
+
+	"github.com/eyazici90/go-mediator/mediator"
 )
 
 func Retry(ctx context.Context, msg mediator.Message, next mediator.Next) error {

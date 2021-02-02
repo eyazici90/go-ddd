@@ -9,7 +9,7 @@ import (
 	"ordercontext/internal/domain/product"
 	"ordercontext/pkg/aggregate"
 
-	"github.com/eyazici90/go-mediator"
+	"github.com/eyazici90/go-mediator/mediator"
 )
 
 type CreateOrderCommand struct {

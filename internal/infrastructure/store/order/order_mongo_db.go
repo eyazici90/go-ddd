@@ -85,10 +85,8 @@ func (r *MongoRepository) Get(ctx context.Context, id string) (*order.Order, err
 }
 
 func (r *MongoRepository) Update(ctx context.Context, o *order.Order) error {
-	var (
-		query  = bson.M{"id": o.ID(), "version": o.Version()}
-		update = bson.M{"$set": bson.M{"status": o.Status(), "version": aggregate.NewVersion().String()}}
-	)
+	query := bson.M{"id": o.ID(), "version": o.Version()}
+	update := bson.M{"$set": bson.M{"status": o.Status(), "version": aggregate.NewVersion().String()}}
 
 	if err := r.mStore.Update(ctx, collectionName, query, update); err != nil {
 		return err
