@@ -36,7 +36,7 @@ locate =>  http://localhost:8080/swagger/index.html
 
    
 
-    m, err := mediator.New(). 
+    m, err := mediator.NewContext(). 
 		      Use(behaviour.Measure). 
 		      Use(behaviour.Log). 
 		      Use(behaviour.Validate). 
@@ -66,8 +66,8 @@ locate =>  http://localhost:8080/swagger/index.html
 	    return CreateOrderCommandHandler{repository: r} 
     } 
     
-    func (handler CreateOrderCommandHandler) Handle(ctx context.Context, request mediator.Message) error {
-	    cmd := request.(CreateOrderCommand)
+    func (handler CreateOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
+	    cmd := msg.(CreateOrderCommand)
 	    order, err := order.NewOrder(order.OrderId(cmd.Id), customer.New(), product.New(), func() time.Time { return time.Now() })
 	     
 	    if err != nil { 
@@ -87,9 +87,9 @@ locate =>  http://localhost:8080/swagger/index.html
     
     func  NewValidator() *Validator { return &Validator{} }
     
-    func (v *Validator) Process(ctx context.Context, cmd mediator.Message, next mediator.Next) error {
+    func (v *Validator) Process(ctx context.Context, msg mediator.Message, next mediator.Next) error {
     
-	    if  err := validate.Struct(cmd); err != nil { 
+	    if  err := validate.Struct(msg); err != nil { 
 		    return err 
 	    } 
 	    
@@ -104,7 +104,7 @@ locate =>  http://localhost:8080/swagger/index.html
     
     func  NewCancellator(timeout int) *Cancellator { return &Cancellator{timeout} }
      
-    func (c *Cancellator) Process(ctx context.Context, cmd mediator.Message, next mediator.Next) error {
+    func (c *Cancellator) Process(ctx context.Context, msg mediator.Message, next mediator.Next) error {
      
 	    timeoutContext, cancel := context.WithTimeout(ctx, time.Duration(time.Duration(c.timeout)*time.Second))
 	    
