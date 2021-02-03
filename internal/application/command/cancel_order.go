@@ -18,8 +18,8 @@ type CancelOrderCommandHandler struct {
 	commandHandlerBase
 }
 
-func (h CancelOrderCommandHandler) Handle(ctx context.Context, req mediator.Message) error {
-	cmd := req.(CancelOrderCommand)
+func (h CancelOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
+	cmd := msg.(CancelOrderCommand)
 	return h.update(ctx, cmd.OrderID, func(o *order.Order) {
 		o.Cancel()
 	})

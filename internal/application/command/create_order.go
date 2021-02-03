@@ -26,16 +26,16 @@ func NewCreateOrderCommandHandler(createOrder CreateOrder) CreateOrderCommandHan
 	return CreateOrderCommandHandler{createOrder}
 }
 
-func (h CreateOrderCommandHandler) Handle(ctx context.Context, req mediator.Message) error {
-	cmd := req.(CreateOrderCommand)
-	o, err := order.NewOrder(order.ID(cmd.ID), customer.New(), product.New(), func() time.Time { return time.Now() },
+func (h CreateOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
+	cmd := msg.(CreateOrderCommand)
+	ordr, err := order.NewOrder(order.ID(cmd.ID), customer.New(), product.New(), func() time.Time { return time.Now() },
 		order.Submitted, aggregate.NewVersion())
 
 	if err != nil {
 		return err
 	}
 
-	h.createOrder(ctx, o)
+	h.createOrder(ctx, ordr)
 
 	return nil
 }
