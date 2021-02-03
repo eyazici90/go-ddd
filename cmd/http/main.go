@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	_ "ordercontext/docs"
+	"ordercontext/pkg/must"
 	"os"
 
 	"ordercontext/internal/api"
@@ -20,7 +21,7 @@ var cfg api.Config
 func init() {
 	viper.SetConfigFile(`config.json`)
 
-	must(viper.ReadInConfig)
+	must.NotFailF(viper.ReadInConfig)
 
 	if err := viper.Unmarshal(&cfg); err != nil {
 		panic(err)
@@ -61,12 +62,5 @@ func run() (error, func()) {
 
 	return err, func() {
 		e.Close()
-	}
-}
-
-func must(fn func() error) {
-	err := fn()
-	if err != nil {
-		panic(err)
 	}
 }
