@@ -34,7 +34,7 @@ func init() {
 // @host localhost:8080
 // @BasePath /api/v1
 func main() {
-	err, cleanup := run()
+	cleanup, err := run()
 	defer cleanup()
 
 	if err != nil {
@@ -43,7 +43,7 @@ func main() {
 	}
 }
 
-func run() (error, func()) {
+func run() (func(), error) {
 	repository := order.NewInMemoryRepository()
 
 	service := query.NewOrderQueryService(repository)
@@ -60,7 +60,7 @@ func run() (error, func()) {
 
 	err := server.Start()
 
-	return err, func() {
+	return func() {
 		e.Close()
-	}
+	}, err
 }
