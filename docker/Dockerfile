@@ -15,6 +15,7 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 
 COPY --from=build-env /src/cmd/http/app /app/main 
+COPY --from=build-env /src/cmd/http/config.json /app/config.json 
 
 WORKDIR /app
 
