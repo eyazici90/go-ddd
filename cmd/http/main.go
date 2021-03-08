@@ -19,7 +19,7 @@ import (
 var cfg api.Config
 
 func init() {
-	viper.SetConfigFile(`config.json`)
+	viper.SetConfigFile(`./config.json`)
 
 	must.NotFailF(viper.ReadInConfig)
 
