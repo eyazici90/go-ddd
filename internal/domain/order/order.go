@@ -38,7 +38,7 @@ func NewOrder(id ID, customerId customer.ID,
 		version:     version,
 	}
 
-	if err := valid(o); err != nil {
+	if err := o.valid(); err != nil {
 		return nil, err
 	}
 
@@ -47,7 +47,7 @@ func NewOrder(id ID, customerId customer.ID,
 	return o, nil
 }
 
-func valid(o *Order) error {
+func (o *Order) valid() error {
 	if o.id == "" || o.customerID == "" || o.productID == "" {
 		return ErrInvalidValue
 	}
