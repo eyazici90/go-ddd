@@ -40,7 +40,7 @@ func FromBson(o *orderBson) *order.Order {
 		product.ID(o.ProductID),
 		func() time.Time { return time.Now() },
 		order.ToStatus(o.Status),
-		aggregate.ToVersion(o.Version))
+		aggregate.Version(o.Version))
 
 	ord.Clear()
 	return ord
