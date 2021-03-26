@@ -5,10 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"ordercontext/internal/domain/customer"
-	"ordercontext/internal/domain/order"
-	"ordercontext/internal/domain/product"
-	store "ordercontext/internal/infrastructure/store/order"
+	"ordercontext/internal/domain"
+	"ordercontext/internal/infrastructure/store/order"
 	"ordercontext/pkg/aggregate"
 
 	"github.com/google/uuid"
@@ -16,7 +14,7 @@ import (
 )
 
 func TestCreateOrder(t *testing.T) {
-	handler := NewCreateOrderCommandHandler(store.NewInMemoryRepository().Create)
+	handler := NewCreateOrderCommandHandler(order.NewInMemoryRepository().Create)
 
 	orderId := uuid.New().String()
 
@@ -33,14 +31,19 @@ func TestPayOrder(t *testing.T) {
 
 	cmd := PayOrderCommand{orderId}
 
-	newOrder, _ := order.NewOrder(order.ID(cmd.OrderID), customer.New(), product.New(), func() time.Time { return time.Now() }, order.Submitted, aggregate.NewVersion())
+	newOrder, _ := domain.NewOrder(domain.OrderID(cmd.OrderID),
+		domain.NewCustomerID(),
+		domain.NewProductID(),
+		func() time.Time { return time.Now() },
+		domain.Submitted,
+		aggregate.NewVersion())
 
-	handler := NewPayOrderCommandHandler(func(context.Context, string) (*order.Order, error) {
+	handler := NewPayOrderCommandHandler(func(context.Context, string) (*domain.Order, error) {
 		return newOrder, nil
-	}, store.NewInMemoryRepository().Update)
+	}, order.NewInMemoryRepository().Update)
 
 	err := handler.Handle(nil, cmd)
 
 	assert.Nil(t, err)
-	assert.Equal(t, order.Paid, newOrder.Status())
+	assert.Equal(t, domain.Paid, newOrder.Status())
 }

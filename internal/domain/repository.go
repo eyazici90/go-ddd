@@ -1,9 +1,9 @@
-package order
+package domain
 
 import "context"
 
-type Repository interface {
-	GetOrders(context.Context) ([]*Order, error)
+type OrderRepository interface {
+	GetAll(context.Context) ([]*Order, error)
 	Get(ctx context.Context, id string) (*Order, error)
 	Create(ctx context.Context, o *Order) error
 	Update(ctx context.Context, o *Order) error

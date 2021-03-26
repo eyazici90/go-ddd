@@ -3,7 +3,7 @@ package command
 import (
 	"context"
 
-	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain"
 
 	"github.com/eyazici90/go-mediator/mediator"
 )
@@ -26,7 +26,7 @@ func NewPayOrderCommandHandler(getOrder GetOrder, updateOrder UpdateOrder) PayOr
 
 func (h PayOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
 	cmd := msg.(PayOrderCommand)
-	return h.update(ctx, cmd.OrderID, func(o *order.Order) {
+	return h.update(ctx, cmd.OrderID, func(o *domain.Order) {
 		o.Pay()
 	})
 }

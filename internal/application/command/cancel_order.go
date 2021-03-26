@@ -2,8 +2,7 @@ package command
 
 import (
 	"context"
-
-	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain"
 
 	"github.com/eyazici90/go-mediator/mediator"
 )
@@ -20,7 +19,7 @@ type CancelOrderCommandHandler struct {
 
 func (h CancelOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
 	cmd := msg.(CancelOrderCommand)
-	return h.update(ctx, cmd.OrderID, func(o *order.Order) {
+	return h.update(ctx, cmd.OrderID, func(o *domain.Order) {
 		o.Cancel()
 	})
 }

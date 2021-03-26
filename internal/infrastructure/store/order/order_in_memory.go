@@ -4,25 +4,25 @@ import (
 	"context"
 	"sync"
 
-	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain"
 )
 
 type InMemoryRepository struct {
-	data  map[string]*order.Order
+	data  map[string]*domain.Order
 	mutex sync.RWMutex
 }
 
 func NewInMemoryRepository() *InMemoryRepository {
 	return &InMemoryRepository{
-		data: make(map[string]*order.Order),
+		data: make(map[string]*domain.Order),
 	}
 }
 
-func (i *InMemoryRepository) GetOrders(_ context.Context) ([]*order.Order, error) {
+func (i *InMemoryRepository) GetAll(_ context.Context) ([]*domain.Order, error) {
 	i.mutex.RLock()
 	defer i.mutex.RUnlock()
 
-	var result []*order.Order
+	var result []*domain.Order
 
 	for _, v := range i.data {
 		result = append(result, v)
@@ -31,14 +31,14 @@ func (i *InMemoryRepository) GetOrders(_ context.Context) ([]*order.Order, error
 	return result, nil
 }
 
-func (i *InMemoryRepository) Get(_ context.Context, id string) (*order.Order, error) {
+func (i *InMemoryRepository) Get(_ context.Context, id string) (*domain.Order, error) {
 	i.mutex.RLock()
 	defer i.mutex.RUnlock()
 
 	return i.data[id], nil
 }
 
-func (i *InMemoryRepository) Update(_ context.Context, o *order.Order) error {
+func (i *InMemoryRepository) Update(_ context.Context, o *domain.Order) error {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
 
@@ -46,7 +46,7 @@ func (i *InMemoryRepository) Update(_ context.Context, o *order.Order) error {
 	return nil
 }
 
-func (i *InMemoryRepository) Create(_ context.Context, o *order.Order) error {
+func (i *InMemoryRepository) Create(_ context.Context, o *domain.Order) error {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
 

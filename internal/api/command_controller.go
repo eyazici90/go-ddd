@@ -5,7 +5,7 @@ import (
 
 	"ordercontext/internal/application"
 	"ordercontext/internal/application/command"
-	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain"
 	"ordercontext/internal/infrastructure"
 
 	"github.com/eyazici90/go-mediator/mediator"
@@ -17,7 +17,7 @@ type OrderCommandController struct {
 	sender mediator.Sender
 }
 
-func NewOrderCommandController(r order.Repository,
+func NewOrderCommandController(r domain.OrderRepository,
 	e infrastructure.EventPublisher,
 	timeout int) *OrderCommandController {
 	return &OrderCommandController{

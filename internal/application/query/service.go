@@ -3,7 +3,7 @@ package query
 import (
 	"context"
 
-	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain"
 )
 
 type OrderQueryService interface {
@@ -12,15 +12,15 @@ type OrderQueryService interface {
 }
 
 type Service struct {
-	repository order.Repository
+	repository domain.OrderRepository
 }
 
-func NewOrderQueryService(r order.Repository) *Service {
+func NewOrderQueryService(r domain.OrderRepository) *Service {
 	return &Service{r}
 }
 
 func (s *Service) GetOrders(ctx context.Context) GetOrdersDto {
-	orders, err := s.repository.GetOrders(ctx)
+	orders, err := s.repository.GetAll(ctx)
 	if err != nil {
 		return GetOrdersDto{}
 	}

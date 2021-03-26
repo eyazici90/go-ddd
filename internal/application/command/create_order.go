@@ -4,9 +4,7 @@ import (
 	"context"
 	"time"
 
-	"ordercontext/internal/domain/customer"
-	"ordercontext/internal/domain/order"
-	"ordercontext/internal/domain/product"
+	"ordercontext/internal/domain"
 	"ordercontext/pkg/aggregate"
 
 	"github.com/eyazici90/go-mediator/mediator"
@@ -28,8 +26,8 @@ func NewCreateOrderCommandHandler(createOrder CreateOrder) CreateOrderCommandHan
 
 func (h CreateOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
 	cmd := msg.(CreateOrderCommand)
-	ordr, err := order.NewOrder(order.ID(cmd.ID), customer.New(), product.New(), func() time.Time { return time.Now() },
-		order.Submitted, aggregate.NewVersion())
+	ordr, err := domain.NewOrder(domain.OrderID(cmd.ID), domain.NewCustomerID(), domain.NewProductID(), func() time.Time { return time.Now() },
+		domain.Submitted, aggregate.NewVersion())
 
 	if err != nil {
 		return err

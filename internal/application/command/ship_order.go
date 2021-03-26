@@ -3,7 +3,7 @@ package command
 import (
 	"context"
 
-	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain"
 	"ordercontext/internal/infrastructure"
 
 	"github.com/eyazici90/go-mediator/mediator"
@@ -16,11 +16,11 @@ type ShipOrderCommand struct {
 func (ShipOrderCommand) Key() string { return "ShipOrderCommand" }
 
 type ShipOrderCommandHandler struct {
-	repository     order.Repository
+	repository     domain.OrderRepository
 	eventPublisher infrastructure.EventPublisher
 }
 
-func NewShipOrderCommandHandler(r order.Repository, e infrastructure.EventPublisher) ShipOrderCommandHandler {
+func NewShipOrderCommandHandler(r domain.OrderRepository, e infrastructure.EventPublisher) ShipOrderCommandHandler {
 	return ShipOrderCommandHandler{
 		repository:     r,
 		eventPublisher: e,

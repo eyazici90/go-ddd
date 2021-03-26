@@ -3,14 +3,14 @@ package command
 import (
 	"context"
 
-	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain"
 )
 
 type (
-	GetOrder    func(context.Context, string) (*order.Order, error)
-	GetOrders   func(context.Context) ([]*order.Order, error)
-	CreateOrder func(context.Context, *order.Order) error
-	UpdateOrder func(context.Context, *order.Order) error
+	GetOrder    func(context.Context, string) (*domain.Order, error)
+	GetOrders   func(context.Context) ([]*domain.Order, error)
+	CreateOrder func(context.Context, *domain.Order) error
+	UpdateOrder func(context.Context, *domain.Order) error
 
 	commandHandlerBase struct {
 		getOrder    GetOrder
@@ -24,7 +24,7 @@ func newcommandHandlerBase(getOrder GetOrder, updateOrder UpdateOrder) commandHa
 
 func (handler commandHandlerBase) update(ctx context.Context,
 	identifier string,
-	when func(*order.Order)) error {
+	when func(*domain.Order)) error {
 
 	o, err := handler.getOrder(ctx, identifier)
 
@@ -33,7 +33,7 @@ func (handler commandHandlerBase) update(ctx context.Context,
 	}
 
 	if o == nil {
-		return order.ErrAggregateNotFound
+		return domain.ErrAggregateNotFound
 	}
 	when(o)
 

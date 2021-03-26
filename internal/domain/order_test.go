@@ -1,11 +1,9 @@
-package order
+package domain
 
 import (
 	"testing"
 	"time"
 
-	"ordercontext/internal/domain/customer"
-	"ordercontext/internal/domain/product"
 	"ordercontext/pkg/aggregate"
 
 	"github.com/stretchr/testify/assert"
@@ -52,6 +50,7 @@ func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
 }
 
 func fakeOrder() *Order {
-	o, _ := NewOrder("123", customer.New(), product.New(), func() time.Time { return time.Now() }, Submitted, aggregate.NewVersion())
+	o, _ := NewOrder("123", NewCustomerID(), NewProductID(),
+		func() time.Time { return time.Now() }, Submitted, aggregate.NewVersion())
 	return o
 }
