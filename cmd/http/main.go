@@ -1,8 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 	"os"
+	"os/signal"
+	"time"
 
 	"ordercontext/internal/api"
 	"ordercontext/internal/application/query"
@@ -32,13 +36,17 @@ func init() {
 // @host localhost:8080
 // @BasePath /api/v1
 func main() {
-	cleanup, err := run()
-	defer cleanup()
+	shutdown, err := run()
+	defer shutdown()
 
 	if err != nil {
 		fmt.Printf("%v", err)
 		os.Exit(1)
 	}
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
 }
 
 func run() (func(), error) {
@@ -56,9 +64,18 @@ func run() (func(), error) {
 
 	server := api.NewServer(cfg, e, commandController, queryController)
 
-	err := server.Start()
+	go func() {
+		if err := server.Start(); err != nil && err != http.ErrServerClosed {
+			e.Logger.Fatal("shutting down the server")
+		}
+	}()
 
 	return func() {
-		e.Close()
-	}, err
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		if err := e.Shutdown(ctx); err != nil {
+			e.Logger.Fatal(err)
+		}
+	}, nil
 }
