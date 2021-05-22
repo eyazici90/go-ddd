@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	_ "ordercontext/docs"
-	"ordercontext/pkg/must"
 	"os"
 
 	"ordercontext/internal/api"
 	"ordercontext/internal/application/query"
 	"ordercontext/internal/infrastructure"
 	"ordercontext/internal/infrastructure/store/order"
+	"ordercontext/pkg/must"
+
+	_ "ordercontext/docs"
 
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -22,10 +23,7 @@ func init() {
 	viper.SetConfigFile(`./config.json`)
 
 	must.NotFailF(viper.ReadInConfig)
-
-	if err := viper.Unmarshal(&cfg); err != nil {
-		panic(err)
-	}
+	must.NotFail(viper.Unmarshal(&cfg))
 }
 
 // @title Order Application

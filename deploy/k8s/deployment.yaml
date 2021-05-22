@@ -17,7 +17,7 @@ spec:
       containers:
         - image: go-ddd
           name: go-ddd
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           readinessProbe:
