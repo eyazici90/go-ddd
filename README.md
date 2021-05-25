@@ -5,6 +5,7 @@
 
 
 
+
 # go-ddd
 Practical DDD(*Domain Driven Design*) & CQRS implementation on order bounded context
 
@@ -27,7 +28,17 @@ locate =>  http://localhost:8080/swagger/index.html
  - swaggo https://github.com/swaggo/echo-swagger
  - retry-go https://github.com/avast/retry-go
  - testify https://github.com/stretchr/testify
-
+ 
+ ## Futures
+ 
+ -  Health checks
+-   Graceful shutdown on interrupt signals
+-  Swagger docs
+- Graceful config management by viper
+- Mediator usage for command dispatching
+- DDD structure
+- Optimistic concurrency.
+- Docker, K8s
 
  
 
