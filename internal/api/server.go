@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type Config struct {
@@ -38,9 +39,16 @@ func NewServer(cfg Config,
 	}
 
 	server.health()
-	server.routes()
+	server.setRoutes()
+	server.setMiddlewares()
 
 	return server
+}
+
+func (s *Server) setMiddlewares() {
+	s.echo.Use(middleware.Logger())
+	s.echo.Use(middleware.Recover())
+	s.echo.Use(middleware.RequestID())
 }
 
 func (s *Server) Start() error {
@@ -52,5 +60,4 @@ func (s *Server) Shutdown(ctx context.Context) error {
 	return s.echo.Shutdown(ctx)
 }
 
-func (s *Server) Echo() *echo.Echo { return s.echo }
-func (s *Server) Config() Config   { return s.cfg }
+func (s *Server) Fatal(err error) { s.echo.Logger.Fatal(err) }

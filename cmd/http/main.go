@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -54,7 +55,7 @@ func run() (func(), error) {
 
 	go func() {
 		if err := server.Start(); err != nil && err != http.ErrServerClosed {
-			server.Echo().Logger.Fatal("shutting down the server")
+			server.Fatal(errors.New("server could not be started"))
 		}
 	}()
 
@@ -63,7 +64,7 @@ func run() (func(), error) {
 		defer cancel()
 
 		if err := server.Shutdown(ctx); err != nil {
-			server.Echo().Logger.Fatal(err)
+			server.Fatal(err)
 		}
 
 	}, nil
