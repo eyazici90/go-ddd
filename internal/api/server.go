@@ -48,8 +48,9 @@ func (s *Server) Start() error {
 	return s.echo.Start(port)
 }
 
-func (s *Server) Shutdown(ctx context.Context) {
-	if err := s.echo.Shutdown(ctx); err != nil {
-		s.echo.Logger.Fatal(err)
-	}
+func (s *Server) Shutdown(ctx context.Context) error {
+	return s.echo.Shutdown(ctx)
 }
+
+func (s *Server) Echo() *echo.Echo { return s.echo }
+func (s *Server) Config() Config   { return s.cfg }

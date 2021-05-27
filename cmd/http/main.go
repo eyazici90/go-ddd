@@ -50,6 +50,26 @@ func main() {
 }
 
 func run() (func(), error) {
+	server := buildServer()
+
+	go func() {
+		if err := server.Start(); err != nil && err != http.ErrServerClosed {
+			server.Echo().Logger.Fatal("shutting down the server")
+		}
+	}()
+
+	return func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		if err := server.Shutdown(ctx); err != nil {
+			server.Echo().Logger.Fatal(err)
+		}
+
+	}, nil
+}
+
+func buildServer() *api.Server {
 	repository := order.NewInMemoryRepository()
 
 	service := query.NewOrderQueryService(repository)
@@ -62,18 +82,5 @@ func run() (func(), error) {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	server := api.NewServer(cfg, e, commandController, queryController)
-
-	go func() {
-		if err := server.Start(); err != nil && err != http.ErrServerClosed {
-			e.Logger.Fatal("shutting down the server")
-		}
-	}()
-
-	return func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-
-		server.Shutdown(ctx)
-	}, nil
+	return api.NewServer(cfg, e, commandController, queryController)
 }
