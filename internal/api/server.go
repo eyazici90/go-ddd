@@ -1,6 +1,8 @@
 package api
 
 import (
+	"context"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -44,4 +46,10 @@ func NewServer(cfg Config,
 func (s *Server) Start() error {
 	port := s.cfg.Server.Port
 	return s.echo.Start(port)
+}
+
+func (s *Server) Shutdown(ctx context.Context) {
+	if err := s.echo.Shutdown(ctx); err != nil {
+		s.echo.Logger.Fatal(err)
+	}
 }
