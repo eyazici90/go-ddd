@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"log"
 
 	"ordercontext/internal/application/query"
 
@@ -27,6 +28,9 @@ func NewOrderQueryController(s query.OrderQueryService) *OrderQueryController {
 // @Success 200 {object} query.GetOrdersDto
 // @Router /orders [get]
 func (o *OrderQueryController) getOrders(c echo.Context) error {
+	reqID := c.Response().Header().Get("X-REQUEST-ID")
+
+	log.Println("request id is :" + reqID)
 	return get(c, o.orderservice.GetOrders(c.Request().Context()))
 }
 

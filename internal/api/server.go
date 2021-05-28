@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -9,7 +10,8 @@ import (
 
 type Config struct {
 	Server struct {
-		Port string `json:"port"`
+		Port    string `json:"port"`
+		Timeout int    `json:"timeout"`
 	} `json:"server"`
 	MongoDb struct {
 		URL      string `json:"url"`
@@ -49,6 +51,13 @@ func (s *Server) setMiddlewares() {
 	s.echo.Use(middleware.Logger())
 	s.echo.Use(middleware.Recover())
 	s.echo.Use(middleware.RequestID())
+	s.setTimeout()
+}
+
+func (s *Server) setTimeout() {
+	s.echo.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
+		Timeout: time.Second * time.Duration(s.cfg.Server.Timeout),
+	}))
 }
 
 func (s *Server) Start() error {
