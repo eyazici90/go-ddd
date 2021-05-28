@@ -1,21 +1,21 @@
 FROM golang:1.14-alpine AS build-env
 
-ENV CGO_ENABLED=0
-ENV GOOS=linux
-ENV GOARCH=amd64
+ENV CGO_ENABLED=0\
+    GOOS=linux\
+    GOARCH=amd64
 
-COPY . /src
+WORKDIR /build
 
-WORKDIR /src
+COPY . .
 
-RUN go build -o /src/cmd/http/app /src/cmd/http/main.go
+RUN go build -o /build/cmd/http/app /build/cmd/http/main.go
 
 #
 FROM alpine:latest  
 RUN apk --no-cache add ca-certificates
 
-COPY --from=build-env /src/cmd/http/app /app/main 
-COPY --from=build-env /src/cmd/http/config.json /app/config.json 
+COPY --from=build-env /build/cmd/http/app /app/main 
+COPY --from=build-env /build/cmd/http/config.json /app/config.json 
 
 WORKDIR /app
 
