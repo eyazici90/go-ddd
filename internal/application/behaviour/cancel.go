@@ -9,14 +9,14 @@ import (
 )
 
 type Cancellator struct {
-	timeout int
+	timeout time.Duration
 }
 
-func NewCancellator(timeout int) *Cancellator { return &Cancellator{timeout} }
+func NewCancellator(timeout time.Duration) *Cancellator { return &Cancellator{timeout} }
 
 func (c *Cancellator) Process(ctx context.Context, _ mediator.Message, next mediator.Next) error {
 
-	timeoutContext, cancel := context.WithTimeout(ctx, time.Duration(time.Duration(c.timeout)*time.Second))
+	timeoutContext, cancel := context.WithTimeout(ctx, c.timeout)
 	defer cancel()
 
 	return next(timeoutContext)

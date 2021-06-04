@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"time"
 
 	"ordercontext/internal/application"
 	"ordercontext/internal/application/command"
@@ -19,7 +20,7 @@ type OrderCommandController struct {
 
 func NewOrderCommandController(r domain.OrderRepository,
 	e infrastructure.EventPublisher,
-	timeout int) *OrderCommandController {
+	timeout time.Duration) *OrderCommandController {
 	return &OrderCommandController{
 		sender: application.NewMediator(r, e, timeout),
 	}

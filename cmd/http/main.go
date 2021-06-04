@@ -76,7 +76,7 @@ func buildServer() *api.Server {
 	service := query.NewOrderQueryService(repository)
 	eventBus := infrastructure.NewNoBus()
 
-	commandController := api.NewOrderCommandController(repository, eventBus, cfg.Context.Timeout)
+	commandController := api.NewOrderCommandController(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
 	queryController := api.NewOrderQueryController(service)
 
 	e := echo.New()

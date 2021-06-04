@@ -5,13 +5,14 @@ import (
 	"ordercontext/internal/application/command"
 	"ordercontext/internal/domain"
 	"ordercontext/internal/infrastructure"
+	"time"
 
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
 func NewMediator(repository domain.OrderRepository,
 	ePublisher infrastructure.EventPublisher,
-	timeout int) mediator.Sender {
+	timeout time.Duration) mediator.Sender {
 	sender, _ := mediator.NewContext().
 		Use(behaviour.Measure).
 		Use(behaviour.Log).
