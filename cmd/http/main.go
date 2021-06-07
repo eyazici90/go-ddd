@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"os/signal"
 	"time"
 
 	"ordercontext/internal/api"
@@ -14,6 +13,7 @@ import (
 	"ordercontext/internal/infrastructure"
 	"ordercontext/internal/infrastructure/store/order"
 	"ordercontext/pkg/must"
+	"ordercontext/pkg/shutdown"
 
 	_ "ordercontext/docs"
 
@@ -37,17 +37,15 @@ func init() {
 // @host localhost:8080
 // @BasePath /api/v1
 func main() {
-	shutdown, err := run()
-	defer shutdown()
+	cleanup, err := run()
+	defer cleanup()
 
 	if err != nil {
 		fmt.Printf("%v", err)
 		os.Exit(1)
 	}
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
+	shutdown.Gracefully()
 }
 
 func run() (func(), error) {
