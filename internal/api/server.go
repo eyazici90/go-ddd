@@ -2,10 +2,8 @@ package api
 
 import (
 	"context"
-	"time"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
 type Config struct {
@@ -41,23 +39,10 @@ func NewServer(cfg Config,
 	}
 
 	server.health()
-	server.setRoutes()
-	server.setMiddlewares()
+	server.useRoutes()
+	server.useMiddlewares()
 
 	return server
-}
-
-func (s *Server) setMiddlewares() {
-	s.echo.Use(middleware.Logger())
-	s.echo.Use(middleware.Recover())
-	s.echo.Use(middleware.RequestID())
-	s.setTimeout()
-}
-
-func (s *Server) setTimeout() {
-	s.echo.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
-		Timeout: time.Second * time.Duration(s.cfg.Server.Timeout),
-	}))
 }
 
 func (s *Server) Start() error {

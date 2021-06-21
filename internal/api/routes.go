@@ -9,7 +9,7 @@ import (
 const orderBaseURL string = "/orders"
 const version string = "v1"
 
-func (s *Server) setRoutes() {
+func (s *Server) useRoutes() {
 
 	v1 := s.echo.Group("/api/" + version)
 	{
