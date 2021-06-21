@@ -2,7 +2,7 @@ package api
 
 import (
 	"context"
-	"log"
+	"net/http"
 
 	"ordercontext/internal/application/query"
 
@@ -28,10 +28,9 @@ func NewOrderQueryController(s query.OrderQueryService) *OrderQueryController {
 // @Success 200 {object} query.GetOrdersDto
 // @Router /orders [get]
 func (o *OrderQueryController) getOrders(c echo.Context) error {
-	reqID := c.Response().Header().Get("X-REQUEST-ID")
-
-	log.Println("request id is :" + reqID)
-	return get(c, o.orderservice.GetOrders(c.Request().Context()))
+	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
+		return o.orderservice.GetOrders(ctx), nil
+	})
 }
 
 // GetOrder godoc
@@ -44,7 +43,9 @@ func (o *OrderQueryController) getOrders(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /orders/{id} [get]
 func (o *OrderQueryController) getOrder(c echo.Context) error {
-	return getByID(c, func(ctx context.Context, id string) interface{} {
-		return o.orderservice.GetOrder(ctx, id)
+	id := c.Param("id")
+
+	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
+		return o.orderservice.GetOrder(ctx, id), nil
 	})
 }

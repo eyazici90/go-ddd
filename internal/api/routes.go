@@ -20,6 +20,7 @@ func (s *Server) useRoutes() {
 
 		v1.PUT(orderBaseURL+"/pay"+"/:id", s.orderCommandController.pay)
 		v1.PUT(orderBaseURL+"/ship"+"/:id", s.orderCommandController.ship)
+		v1.PUT(orderBaseURL+"/cancel"+"/:id", s.orderCommandController.cancel)
 	}
 }
 

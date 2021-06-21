@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"net/http"
 	"time"
 
 	"ordercontext/internal/application"
@@ -35,9 +36,11 @@ func NewOrderCommandController(r domain.OrderRepository,
 // @Success 201 {object} string
 // @Router /orders [post]
 func (o *OrderCommandController) create(c echo.Context) error {
-	return create(c, func(ctx context.Context) error {
-		return o.sender.Send(ctx, command.CreateOrderCommand{ID: uuid.New().String()})
-	})
+	return handle(c,
+		http.StatusCreated,
+		func(ctx context.Context) error {
+			return o.sender.Send(ctx, command.CreateOrderCommand{ID: uuid.New().String()})
+		})
 }
 
 // PayOrder godoc
@@ -50,7 +53,9 @@ func (o *OrderCommandController) create(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /orders/pay/{id} [put]
 func (o *OrderCommandController) pay(c echo.Context) error {
-	return update(c, func(ctx context.Context, id string) error {
+	id := c.Param("id")
+
+	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
 		return o.sender.Send(ctx, command.PayOrderCommand{OrderID: id})
 	})
 }
@@ -65,7 +70,9 @@ func (o *OrderCommandController) pay(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /orders/cancel/{id} [put]
 func (o *OrderCommandController) cancel(c echo.Context) error {
-	return update(c, func(ctx context.Context, id string) error {
+	id := c.Param("id")
+
+	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
 		return o.sender.Send(ctx, command.CancelOrderCommand{OrderID: id})
 	})
 }
@@ -80,7 +87,9 @@ func (o *OrderCommandController) cancel(c echo.Context) error {
 // @Param id path string true "id"
 // @Router /orders/ship/{id} [put]
 func (o *OrderCommandController) ship(c echo.Context) error {
-	return update(c, func(ctx context.Context, id string) error {
+	id := c.Param("id")
+
+	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
 		return o.sender.Send(ctx, command.ShipOrderCommand{OrderID: id})
 	})
 }

@@ -3,40 +3,28 @@ package api
 import (
 	"context"
 	"errors"
-	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
 var ErrInvalidRequest = errors.New("invalid Request params")
 
-func update(c echo.Context, fn func(ctx context.Context, identifier string) error) error {
-	id := c.Param("id")
-
-	if id == "" {
-		return c.JSON(http.StatusBadRequest, ErrInvalidRequest)
-	}
-	err := fn(c.Request().Context(), id)
+func handle(c echo.Context,
+	statusCode int,
+	fn func(ctx context.Context) error) error {
+	err := fn(c.Request().Context())
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return err
 	}
-	return c.JSON(http.StatusAccepted, "")
+	return c.JSON(statusCode, "")
 }
 
-func create(c echo.Context, fn func(ctx context.Context) error) error {
-	if err := fn(c.Request().Context()); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+func handleR(c echo.Context,
+	statusCode int,
+	fn func(ctx context.Context) (interface{}, error)) error {
+	result, err := fn(c.Request().Context())
+	if err != nil {
+		return err
 	}
-
-	return c.JSON(http.StatusCreated, "")
-}
-
-func get(c echo.Context, result interface{}) error {
-	return c.JSON(http.StatusOK, result)
-}
-
-func getByID(c echo.Context, fn func(ctx context.Context, id string) interface{}) error {
-	id := c.Param("id")
-	result := fn(c.Request().Context(), id)
-	return c.JSON(http.StatusOK, result)
+	return c.JSON(statusCode, result)
 }
