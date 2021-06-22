@@ -1,20 +1,51 @@
 package api
 
 import (
+	"errors"
+	"net/http"
+	"ordercontext/internal/domain"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func (s *Server) useMiddlewares() {
-	s.echo.Use(middleware.Logger())
-	s.echo.Use(middleware.Recover())
-	s.echo.Use(middleware.RequestID())
+	s.useLogger()
+	s.useRecover()
+	s.useRequestID()
 	s.useTimeout()
+
+	s.useErrorHandler(NewHttpErrHandler(
+		HttpErrMappings{
+			func(err error) (int, bool) {
+				return http.StatusBadRequest,
+					errors.Is(err, domain.ErrAggregateNotFound) ||
+						errors.Is(err, domain.ErrOrderNotPaid) ||
+						errors.Is(err, domain.ErrInvalidValue)
+			},
+			func(err error) (int, bool) {
+				_, ok := err.(validator.ValidationErrors)
+				return http.StatusBadRequest, ok
+			},
+		},
+	))
 }
 
 func (s *Server) useTimeout() {
 	s.echo.Use(middleware.TimeoutWithConfig(middleware.TimeoutConfig{
 		Timeout: time.Second * time.Duration(s.cfg.Server.Timeout),
 	}))
+}
+
+func (s *Server) useLogger() {
+	s.echo.Use(middleware.Logger())
+}
+
+func (s *Server) useRecover() {
+	s.echo.Use(middleware.Recover())
+}
+
+func (s *Server) useRequestID() {
+	s.echo.Use(middleware.RequestID())
 }
