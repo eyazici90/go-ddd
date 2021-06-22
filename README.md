@@ -37,6 +37,7 @@ go 1.14
 
 - Health checks
 - Graceful shutdown on interrupt signals
+- Global http error handling with Problem Details rfc7807 (https://datatracker.ietf.org/doc/html/rfc7807) 
 - Swagger docs (/swagger/index.html)
 - Graceful config management by viper
 - Mediator usage for command dispatching
