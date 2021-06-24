@@ -97,6 +97,7 @@ linters:
     - unused
     - varcheck
     - whitespace
+    - revive
 
   # don't enable:
   # - asciicheck

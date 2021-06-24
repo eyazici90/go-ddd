@@ -85,10 +85,7 @@ func (r *MongoRepository) Update(ctx context.Context, o *domain.Order) error {
 	query := bson.M{"id": o.ID(), "version": o.Version()}
 	update := bson.M{"$set": bson.M{"status": o.Status(), "version": aggregate.NewVersion().String()}}
 
-	if err := r.mStore.Update(ctx, collectionName, query, update); err != nil {
-		return err
-	}
-	return nil
+	return r.mStore.Update(ctx, collectionName, query, update)
 }
 
 func (r *MongoRepository) Create(ctx context.Context, o *domain.Order) error {
@@ -96,8 +93,5 @@ func (r *MongoRepository) Create(ctx context.Context, o *domain.Order) error {
 	if bson.Version == "" {
 		bson.Version = aggregate.NewVersion().String()
 	}
-	if err := r.mStore.Store(ctx, collectionName, bson); err != nil {
-		return err
-	}
-	return nil
+	return r.mStore.Store(ctx, collectionName, bson)
 }

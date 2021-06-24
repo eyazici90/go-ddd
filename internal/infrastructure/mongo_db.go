@@ -52,11 +52,7 @@ func (store *MongoStore) FindAll(ctx context.Context, collection string, query, 
 		return err
 	}
 
-	if err := cur.Err(); err != nil {
-		return err
-	}
-
-	return nil
+	return cur.Err()
 }
 
 func (store *MongoStore) FindOne(
@@ -65,13 +61,9 @@ func (store *MongoStore) FindOne(
 	query interface{},
 	projection interface{},
 	result interface{}) error {
-	if err := store.db.Collection(collection).
+	return store.db.Collection(collection).
 		FindOne(
 			ctx,
 			query,
-			options.FindOne().SetProjection(projection)).Decode(result); err != nil {
-		return err
-	}
-
-	return nil
+			options.FindOne().SetProjection(projection)).Decode(result)
 }

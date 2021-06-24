@@ -42,7 +42,7 @@ func (i *InMemoryRepository) Update(_ context.Context, o *domain.Order) error {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
 
-	i.data[string(o.ID())] = o
+	i.data[o.ID()] = o
 	return nil
 }
 
@@ -50,6 +50,6 @@ func (i *InMemoryRepository) Create(_ context.Context, o *domain.Order) error {
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
 
-	i.data[string(o.ID())] = o
+	i.data[o.ID()] = o
 	return nil
 }

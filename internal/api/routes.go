@@ -10,7 +10,6 @@ const orderBaseURL string = "/orders"
 const version string = "v1"
 
 func (s *Server) useRoutes() {
-
 	v1 := s.echo.Group("/api/" + version)
 
 	v1.GET(orderBaseURL, s.orderQueryController.getOrders)

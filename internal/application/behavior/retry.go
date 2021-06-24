@@ -9,7 +9,6 @@ import (
 )
 
 func Retry(ctx context.Context, msg mediator.Message, next mediator.Next) error {
-
 	err := retry.Do(func() error {
 		return next(ctx)
 	}, retry.Attempts(2))

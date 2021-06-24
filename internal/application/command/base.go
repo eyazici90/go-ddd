@@ -25,7 +25,6 @@ func newcommandHandlerBase(getOrder GetOrder, updateOrder UpdateOrder) commandHa
 func (handler commandHandlerBase) update(ctx context.Context,
 	identifier string,
 	when func(*domain.Order)) error {
-
 	o, err := handler.getOrder(ctx, identifier)
 
 	if err != nil {
