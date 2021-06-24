@@ -40,7 +40,9 @@ func (h ShipOrderCommandHandler) Handle(ctx context.Context, msg mediator.Messag
 		return err
 	}
 
-	h.repository.Update(ctx, o)
+	if err := h.repository.Update(ctx, o); err != nil {
+		return err
+	}
 
 	h.eventPublisher.PublishAll(o.Events())
 

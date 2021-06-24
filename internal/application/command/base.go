@@ -37,7 +37,5 @@ func (handler commandHandlerBase) update(ctx context.Context,
 	}
 	when(o)
 
-	handler.updateOrder(ctx, o)
-
-	return nil
+	return handler.updateOrder(ctx, o)
 }

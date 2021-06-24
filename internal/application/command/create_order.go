@@ -33,7 +33,5 @@ func (h CreateOrderCommandHandler) Handle(ctx context.Context, msg mediator.Mess
 		return err
 	}
 
-	h.createOrder(ctx, ordr)
-
-	return nil
+	return h.createOrder(ctx, ordr)
 }

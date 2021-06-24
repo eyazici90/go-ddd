@@ -20,7 +20,7 @@ func TestCreateOrder(t *testing.T) {
 
 	cmd := CreateOrderCommand{orderId}
 
-	err := handler.Handle(nil, cmd)
+	err := handler.Handle(context.TODO(), cmd)
 
 	assert.Nil(t, err)
 }
@@ -42,7 +42,7 @@ func TestPayOrder(t *testing.T) {
 		return newOrder, nil
 	}, order.NewInMemoryRepository().Update)
 
-	err := handler.Handle(nil, cmd)
+	err := handler.Handle(context.TODO(), cmd)
 
 	assert.Nil(t, err)
 	assert.Equal(t, domain.Paid, newOrder.Status())
