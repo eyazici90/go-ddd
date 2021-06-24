@@ -24,13 +24,13 @@ type Order struct {
 	version     aggregate.Version
 }
 
-func NewOrder(id OrderID, customerId CustomerID,
-	productId ProductID, now aggregate.Now,
+func NewOrder(id OrderID, customerID CustomerID,
+	productID ProductID, now aggregate.Now,
 	status Status, version aggregate.Version) (*Order, error) {
 	o := &Order{
 		id:          id,
-		customerID:  customerId,
-		productID:   productId,
+		customerID:  customerID,
+		productID:   productID,
 		createdTime: now(),
 		status:      status,
 		version:     version,
@@ -58,7 +58,7 @@ func (o *Order) Pay() {
 }
 
 func (o *Order) Cancel() {
-	o.status = Cancelled
+	o.status = Canceled
 	o.AddEvent(CancelledEvent{id: string(o.id)})
 }
 

@@ -64,7 +64,6 @@ func run() (func(), error) {
 		if err := server.Shutdown(ctx); err != nil {
 			server.Fatal(err)
 		}
-
 	}, nil
 }
 

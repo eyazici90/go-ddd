@@ -53,7 +53,6 @@ func NewMongoRepository(mongoStore *infrastructure.MongoStore) *MongoRepository 
 }
 
 func (r *MongoRepository) GetAll(ctx context.Context) ([]*domain.Order, error) {
-
 	var result []*orderBson
 
 	if err := r.mStore.FindAll(ctx, collectionName, bson.M{}, &result); err != nil {

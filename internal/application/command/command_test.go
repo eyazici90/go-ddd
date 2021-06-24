@@ -16,9 +16,9 @@ import (
 func TestCreateOrder(t *testing.T) {
 	handler := NewCreateOrderCommandHandler(order.NewInMemoryRepository().Create)
 
-	orderId := uuid.New().String()
+	orderID := uuid.New().String()
 
-	cmd := CreateOrderCommand{orderId}
+	cmd := CreateOrderCommand{orderID}
 
 	err := handler.Handle(context.TODO(), cmd)
 
@@ -27,9 +27,9 @@ func TestCreateOrder(t *testing.T) {
 
 func TestPayOrder(t *testing.T) {
 
-	orderId := uuid.New().String()
+	orderID := uuid.New().String()
 
-	cmd := PayOrderCommand{orderId}
+	cmd := PayOrderCommand{orderID}
 
 	newOrder, _ := domain.NewOrder(domain.OrderID(cmd.OrderID),
 		domain.NewCustomerID(),

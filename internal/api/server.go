@@ -11,7 +11,7 @@ type Config struct {
 		Port    string `json:"port"`
 		Timeout int    `json:"timeout"`
 	} `json:"server"`
-	MongoDb struct {
+	MongoDB struct {
 		URL      string `json:"url"`
 		Database string `json:"database"`
 	} `json:"mongoDb"`

@@ -17,11 +17,11 @@ type ProblemDetails struct {
 }
 
 type (
-	HttpErrMap      func(err error) (int, bool)
-	HttpErrMappings []HttpErrMap
+	HTTPErrMap      func(err error) (int, bool)
+	HTTPErrMappings []HTTPErrMap
 )
 
-func (h HttpErrMappings) find(err error) (int, bool) {
+func (h HTTPErrMappings) find(err error) (int, bool) {
 	for _, v := range h {
 		if status, ok := v(err); ok {
 			return status, true
@@ -30,20 +30,20 @@ func (h HttpErrMappings) find(err error) (int, bool) {
 	return 0, false
 }
 
-type HttpErrHandler struct {
-	httpErrMappings HttpErrMappings
+type HTTPErrHandler struct {
+	httpErrMappings HTTPErrMappings
 	handle          func(err error, c echo.Context)
 }
 
-func NewHttpErrHandler(httpErrMappings HttpErrMappings) *HttpErrHandler {
-	errHandler := &HttpErrHandler{
+func NewHTTPErrHandler(httpErrMappings HTTPErrMappings) *HTTPErrHandler {
+	errHandler := &HTTPErrHandler{
 		httpErrMappings: httpErrMappings,
 	}
 	errHandler.setDefaultProblemDetailsHandle()
 	return errHandler
 }
 
-func (h *HttpErrHandler) setDefaultProblemDetailsHandle() {
+func (h *HTTPErrHandler) setDefaultProblemDetailsHandle() {
 	problemDetailsHandle := func(err error, c echo.Context) {
 		code := defaultStatusCode
 
@@ -61,7 +61,7 @@ func (h *HttpErrHandler) setDefaultProblemDetailsHandle() {
 	h.handle = problemDetailsHandle
 }
 
-func (s *Server) useErrorHandler(httpErrHandler *HttpErrHandler) {
+func (s *Server) useErrorHandler(httpErrHandler *HTTPErrHandler) {
 	s.echo.HTTPErrorHandler = httpErrHandler.handle
 }
 

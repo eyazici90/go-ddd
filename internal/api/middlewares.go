@@ -16,8 +16,8 @@ func (s *Server) useMiddlewares() {
 	s.useRequestID()
 	s.useTimeout()
 
-	s.useErrorHandler(NewHttpErrHandler(
-		HttpErrMappings{
+	s.useErrorHandler(NewHTTPErrHandler(
+		HTTPErrMappings{
 			func(err error) (int, bool) {
 				return http.StatusBadRequest,
 					errors.Is(err, domain.ErrAggregateNotFound) ||

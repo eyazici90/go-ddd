@@ -1,4 +1,4 @@
-package behaviour
+package behavior
 
 import (
 	"context"
@@ -9,7 +9,6 @@ import (
 )
 
 func TestRetrier(t *testing.T) {
-
 	retrier := Retry
 
 	retryCount := 0

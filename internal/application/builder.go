@@ -1,7 +1,7 @@
 package application
 
 import (
-	"ordercontext/internal/application/behaviour"
+	"ordercontext/internal/application/behavior"
 	"ordercontext/internal/application/command"
 	"ordercontext/internal/domain"
 	"ordercontext/internal/infrastructure"
@@ -14,16 +14,15 @@ func NewMediator(repository domain.OrderRepository,
 	ePublisher infrastructure.EventPublisher,
 	timeout time.Duration) mediator.Sender {
 	sender, _ := mediator.NewContext().
-		Use(behaviour.Measure).
-		Use(behaviour.Log).
-		Use(behaviour.Validate).
-		UseBehaviour(behaviour.NewCancellator(timeout)).
-		Use(behaviour.Retry).
+		Use(behavior.Measure).
+		Use(behavior.Log).
+		Use(behavior.Validate).
+		UseBehaviour(behavior.NewCancellator(timeout)).
+		Use(behavior.Retry).
 		RegisterHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(repository.Create)).
 		RegisterHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(repository.Get, repository.Update)).
 		RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(repository, ePublisher)).
 		Build()
 
 	return sender
-
 }

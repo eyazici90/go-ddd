@@ -3,7 +3,7 @@ package query
 import "ordercontext/internal/domain"
 
 func mapTo(o *domain.Order) OrderView {
-	return OrderView{Id: o.ID(), Status: int(o.Status()), ProductId: o.ProductID(), CustomerId: o.CustomerID()}
+	return OrderView{ID: o.ID(), Status: int(o.Status()), ProductID: o.ProductID(), CustomerID: o.CustomerID()}
 }
 
 func mapToAll(orders []*domain.Order) []OrderView {

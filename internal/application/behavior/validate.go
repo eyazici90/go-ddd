@@ -1,4 +1,4 @@
-package behaviour
+package behavior
 
 import (
 	"context"

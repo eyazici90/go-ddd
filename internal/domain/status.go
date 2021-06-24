@@ -6,7 +6,7 @@ const (
 	Submitted Status = iota
 	Paid
 	Shipped
-	Cancelled
+	Canceled
 )
 
 func ToStatus(i int) Status { return Status(i) }

@@ -33,7 +33,7 @@ func (store *MongoStore) Store(ctx context.Context, collection string, data inte
 	return nil
 }
 
-func (store *MongoStore) Update(ctx context.Context, collection string, query interface{}, update interface{}) error {
+func (store *MongoStore) Update(ctx context.Context, collection string, query, update interface{}) error {
 	if _, err := store.db.Collection(collection).UpdateOne(ctx, query, update); err != nil {
 		return err
 	}
@@ -41,14 +41,14 @@ func (store *MongoStore) Update(ctx context.Context, collection string, query in
 	return nil
 }
 
-func (store *MongoStore) FindAll(ctx context.Context, collection string, query interface{}, result interface{}) error {
+func (store *MongoStore) FindAll(ctx context.Context, collection string, query, result interface{}) error {
 	cur, err := store.db.Collection(collection).Find(ctx, query)
 	if err != nil {
 		return err
 	}
 
 	defer cur.Close(ctx)
-	if err = cur.All(ctx, result); err != nil {
+	if err := cur.All(ctx, result); err != nil {
 		return err
 	}
 

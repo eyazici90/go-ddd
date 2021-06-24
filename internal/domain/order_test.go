@@ -28,7 +28,7 @@ func TestCancelOrder(t *testing.T) {
 
 	o.Cancel()
 
-	assert.Equal(t, Cancelled, o.Status())
+	assert.Equal(t, Canceled, o.Status())
 }
 
 func TestShipOrder(t *testing.T) {
