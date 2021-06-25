@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"ordercontext/internal/domain"
+	"ordercontext/pkg/httperr"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -16,8 +17,8 @@ func (s *Server) useMiddlewares() {
 	s.useRequestID()
 	s.useTimeout()
 
-	s.useErrorHandler(NewHTTPErrHandler(
-		HTTPErrMappings{
+	s.useErrorHandler(httperr.NewHandler(
+		httperr.Mappings{
 			func(err error) (int, bool) {
 				return http.StatusBadRequest,
 					errors.Is(err, domain.ErrAggregateNotFound) ||
@@ -48,4 +49,8 @@ func (s *Server) useRecover() {
 
 func (s *Server) useRequestID() {
 	s.echo.Use(middleware.RequestID())
+}
+
+func (s *Server) useErrorHandler(httpErrHandler *httperr.Handler) {
+	s.echo.HTTPErrorHandler = httpErrHandler.Handle()
 }
