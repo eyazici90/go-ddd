@@ -15,16 +15,15 @@ import (
 func NewMediator(repository domain.OrderRepository,
 	ep event.Publisher,
 	timeout time.Duration) mediator.Sender {
-	sender, err := mediator.NewContext().
-		Use(behavior.Measure).
-		Use(behavior.Log).
-		Use(behavior.Validate).
-		UseBehaviour(behavior.NewCancellator(timeout)).
-		Use(behavior.Retry).
-		RegisterHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(repository.Create)).
-		RegisterHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(repository.Get, repository.Update)).
-		RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(repository, ep)).
-		Build()
+	sender, err := mediator.NewContext(
+		mediator.WithBehaviourFunc(behavior.Measure),
+		mediator.WithBehaviourFunc(behavior.Validate),
+		mediator.WithBehaviour(behavior.NewCancellator(timeout)),
+		mediator.WithBehaviourFunc(behavior.Retry),
+		mediator.WithHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(repository.Create)),
+		mediator.WithHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(repository.Get, repository.Update)),
+		mediator.WithHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(repository, ep)),
+	).Build()
 
 	must.NotFail(err)
 	return sender
