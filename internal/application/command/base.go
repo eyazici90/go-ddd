@@ -4,37 +4,36 @@ import (
 	"context"
 
 	"ordercontext/internal/domain"
+
+	"github.com/pkg/errors"
 )
 
 type (
 	GetOrder    func(context.Context, string) (*domain.Order, error)
-	GetOrders   func(context.Context) ([]*domain.Order, error)
-	CreateOrder func(context.Context, *domain.Order) error
 	UpdateOrder func(context.Context, *domain.Order) error
 
-	commandHandlerBase struct {
+	commandHandler struct {
 		getOrder    GetOrder
 		updateOrder UpdateOrder
 	}
 )
 
-func newcommandHandlerBase(getOrder GetOrder, updateOrder UpdateOrder) commandHandlerBase {
-	return commandHandlerBase{getOrder, updateOrder}
+func newcommandHandlerBase(getOrder GetOrder, updateOrder UpdateOrder) commandHandler {
+	return commandHandler{getOrder, updateOrder}
 }
 
-func (handler commandHandlerBase) update(ctx context.Context,
+func (handler commandHandler) update(ctx context.Context,
 	identifier string,
-	when func(*domain.Order)) error {
-	o, err := handler.getOrder(ctx, identifier)
+	fn func(*domain.Order)) error {
+	order, err := handler.getOrder(ctx, identifier)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "get order failed")
+	}
+	if order == nil {
+		return errors.Wrapf(domain.ErrAggregateNotFound, "identifier : (%s)", identifier)
 	}
 
-	if o == nil {
-		return domain.ErrAggregateNotFound
-	}
-	when(o)
-
-	return handler.updateOrder(ctx, o)
+	fn(order)
+	return handler.updateOrder(ctx, order)
 }

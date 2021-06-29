@@ -14,11 +14,14 @@ type CancelOrderCommand struct {
 func (CancelOrderCommand) Key() string { return "CancelOrderCommand" }
 
 type CancelOrderCommandHandler struct {
-	commandHandlerBase
+	commandHandler
 }
 
 func (h CancelOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
-	cmd := msg.(CancelOrderCommand)
+	cmd, ok := msg.(CancelOrderCommand)
+	if err := checkType(ok); err != nil {
+		return err
+	}
 	return h.update(ctx, cmd.OrderID, func(o *domain.Order) {
 		o.Cancel()
 	})

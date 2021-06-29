@@ -15,17 +15,20 @@ type PayOrderCommand struct {
 func (PayOrderCommand) Key() string { return "PayOrderCommand" }
 
 type PayOrderCommandHandler struct {
-	commandHandlerBase
+	commandHandler
 }
 
 func NewPayOrderCommandHandler(getOrder GetOrder, updateOrder UpdateOrder) PayOrderCommandHandler {
 	return PayOrderCommandHandler{
-		commandHandlerBase: newcommandHandlerBase(getOrder, updateOrder),
+		commandHandler: newcommandHandlerBase(getOrder, updateOrder),
 	}
 }
 
 func (h PayOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
-	cmd := msg.(PayOrderCommand)
+	cmd, ok := msg.(PayOrderCommand)
+	if err := checkType(ok); err != nil {
+		return err
+	}
 	return h.update(ctx, cmd.OrderID, func(o *domain.Order) {
 		o.Pay()
 	})
