@@ -58,7 +58,7 @@ func run() (func(), error) {
 	}()
 
 	return func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cfg.Context.Timeout)*time.Second)
 		defer cancel()
 
 		if err := server.Shutdown(ctx); err != nil {

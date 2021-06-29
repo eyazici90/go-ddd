@@ -26,7 +26,6 @@ func TestCreateOrder(t *testing.T) {
 }
 
 func TestPayOrder(t *testing.T) {
-
 	orderID := uuid.New().String()
 
 	cmd := PayOrderCommand{orderID}

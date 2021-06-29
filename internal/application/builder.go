@@ -1,19 +1,21 @@
 package application
 
 import (
+	"time"
+
 	"ordercontext/internal/application/behavior"
 	"ordercontext/internal/application/command"
+	"ordercontext/internal/application/event"
 	"ordercontext/internal/domain"
-	"ordercontext/internal/infrastructure"
-	"time"
+	"ordercontext/pkg/must"
 
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
 func NewMediator(repository domain.OrderRepository,
-	ePublisher infrastructure.EventPublisher,
+	ep event.Publisher,
 	timeout time.Duration) mediator.Sender {
-	sender, _ := mediator.NewContext().
+	sender, err := mediator.NewContext().
 		Use(behavior.Measure).
 		Use(behavior.Log).
 		Use(behavior.Validate).
@@ -21,8 +23,9 @@ func NewMediator(repository domain.OrderRepository,
 		Use(behavior.Retry).
 		RegisterHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(repository.Create)).
 		RegisterHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(repository.Get, repository.Update)).
-		RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(repository, ePublisher)).
+		RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(repository, ep)).
 		Build()
 
+	must.NotFail(err)
 	return sender
 }

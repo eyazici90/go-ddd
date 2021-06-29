@@ -22,10 +22,10 @@ type orderBson struct {
 	Version     string    `bson:"version"`
 }
 
-func FromOrder(o *domain.Order) *orderBson {
+func fromOrder(o *domain.Order) *orderBson {
 	return &orderBson{
 		ID:         o.ID(),
-		Status:     domain.FromStatus(o.Status()),
+		Status:     int(o.Status()),
 		CustomerID: o.CustomerID(),
 		ProductID:  o.ProductID(),
 		Version:    o.Version(),
@@ -37,7 +37,7 @@ func FromBson(o *orderBson) *domain.Order {
 		domain.CustomerID(o.CustomerID),
 		domain.ProductID(o.ProductID),
 		func() time.Time { return time.Now() },
-		domain.ToStatus(o.Status),
+		domain.Status(o.Status),
 		aggregate.Version(o.Version))
 
 	ord.Clear()
@@ -89,9 +89,9 @@ func (r *MongoRepository) Update(ctx context.Context, o *domain.Order) error {
 }
 
 func (r *MongoRepository) Create(ctx context.Context, o *domain.Order) error {
-	bson := FromOrder(o)
-	if bson.Version == "" {
-		bson.Version = aggregate.NewVersion().String()
+	bOrder := fromOrder(o)
+	if bOrder.Version == "" {
+		bOrder.Version = aggregate.NewVersion().String()
 	}
-	return r.mStore.Store(ctx, collectionName, bson)
+	return r.mStore.Store(ctx, collectionName, bOrder)
 }

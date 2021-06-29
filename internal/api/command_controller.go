@@ -7,8 +7,8 @@ import (
 
 	"ordercontext/internal/application"
 	"ordercontext/internal/application/command"
+	"ordercontext/internal/application/event"
 	"ordercontext/internal/domain"
-	"ordercontext/internal/infrastructure"
 
 	"github.com/eyazici90/go-mediator/mediator"
 	"github.com/google/uuid"
@@ -20,7 +20,7 @@ type OrderCommandController struct {
 }
 
 func NewOrderCommandController(r domain.OrderRepository,
-	e infrastructure.EventPublisher,
+	e event.Publisher,
 	timeout time.Duration) *OrderCommandController {
 	return &OrderCommandController{
 		sender: application.NewMediator(r, e, timeout),

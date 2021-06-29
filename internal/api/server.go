@@ -28,12 +28,12 @@ type Server struct {
 }
 
 func NewServer(cfg Config,
-	echo *echo.Echo,
+	e *echo.Echo,
 	cmdController *OrderCommandController,
 	querycontroller *OrderQueryController) *Server {
 	server := &Server{
 		cfg:                    cfg,
-		echo:                   echo,
+		echo:                   e,
 		orderCommandController: cmdController,
 		orderQueryController:   querycontroller,
 	}

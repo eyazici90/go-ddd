@@ -7,11 +7,6 @@ import (
 
 //
 
-type EventPublisher interface {
-	Publish(event interface{})
-	PublishAll(events ...interface{})
-}
-
 type NoBus struct{}
 
 func NewNoBus() *NoBus {

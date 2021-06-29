@@ -3,12 +3,9 @@ package domain
 type Status int
 
 const (
-	Submitted Status = iota
+	Unknown Status = iota
+	Submitted
 	Paid
 	Shipped
 	Canceled
 )
-
-func ToStatus(i int) Status { return Status(i) }
-
-func FromStatus(s Status) int { return int(s) }
