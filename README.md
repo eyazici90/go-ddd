@@ -37,7 +37,7 @@ go 1.14
 
 - Health checks
 - Graceful shutdown on interrupt signals
-- Global http error handling with Problem Details rfc7807 (https://datatracker.ietf.org/doc/html/rfc7807) 
+- Global http error handling with Problem Details rfc7807 (https://datatracker.ietf.org/doc/html/rfc7807)
 - Swagger docs (/swagger/index.html)
 - Graceful config management by viper
 - Mediator usage for command dispatching
@@ -49,19 +49,18 @@ go 1.14
 
 **_Mediator with pipeline behaviours_** (order matters for pipeline behaviours)
 
-    m, err := mediator.NewContext().
-    	      Use(behaviour.Measure).
-    	      Use(behaviour.Log).
-    	      Use(behaviour.Validate).
-    	      UseBehaviour(behaviour.NewCancellator(timeout)).
-    	      Use(behaviour.Retry).
-    	      RegisterHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(r.Create)).
-    	      RegisterHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(r.Get, r.Update)).
-    	      RegisterHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(r, e)).
-    	    Build()
+    sender, err := mediator.NewContext(
+    	mediator.WithBehaviourFunc(behavior.Measure),
+    	mediator.WithBehaviourFunc(behavior.Validate),
+    	mediator.WithBehaviour(behavior.NewCancellator(timeout)),
+    	mediator.WithBehaviourFunc(behavior.Retry),
+    	mediator.WithHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(repository.Create)),
+    	mediator.WithHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(repository.Get, repository.Update)),
+    	mediator.WithHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(repository, ep)),
+    ).Build()
 
 
-    err = m.Send(ctx, cmd)
+    err = sender.Send(ctx, cmd)
 
 **_Command & Command handler_**
 
