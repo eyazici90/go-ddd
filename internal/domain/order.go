@@ -36,20 +36,13 @@ func NewOrder(id OrderID, customerID CustomerID,
 		version:     version,
 	}
 
-	if err := o.valid(); err != nil {
+	if err := valid(o); err != nil {
 		return nil, err
 	}
 
 	o.AddEvent(CreatedEvent{id: string(id)})
 
 	return o, nil
-}
-
-func (o *Order) valid() error {
-	if o.id == "" || o.customerID == "" || o.productID == "" {
-		return ErrInvalidValue
-	}
-	return nil
 }
 
 func (o *Order) Pay() {
@@ -80,3 +73,10 @@ func (o *Order) CustomerID() string { return o.customerID.String() }
 func (o *Order) Version() string { return o.version.String() }
 
 func (o *Order) Status() Status { return o.status }
+
+func valid(o *Order) error {
+	if o.id == "" || o.customerID == "" || o.productID == "" {
+		return ErrInvalidValue
+	}
+	return nil
+}
