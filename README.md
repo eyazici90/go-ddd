@@ -31,7 +31,7 @@ go 1.14
 - swaggo https://github.com/swaggo/echo-swagger
 - retry-go https://github.com/avast/retry-go
 - testify https://github.com/stretchr/testify
-- golint https://github.com/golang/lint
+- golangci https://github.com/golangci/golangci-lint
 
 ## Futures
 
