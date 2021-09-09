@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"ordercontext/internal/application/event"
+	"ordercontext/internal/domain"
 
 	"github.com/eyazici90/go-mediator/mediator"
-	"github.com/pkg/errors"
 )
 
 type ShipOrderCommand struct {
@@ -34,18 +34,12 @@ func (h ShipOrderCommandHandler) Handle(ctx context.Context, msg mediator.Messag
 	if err := checkType(ok); err != nil {
 		return err
 	}
-	order, err := h.getOrder(ctx, cmd.OrderID)
-	if err != nil {
-		return err
-	}
 
-	err = order.Ship()
-
-	if err != nil {
-		return errors.Wrap(err, "ship handle failed")
-	}
-
-	if err := h.updateOrder(ctx, order); err != nil {
+	var order *domain.Order
+	if err := h.updateErr(ctx, cmd.OrderID, func(o *domain.Order) error {
+		order = o
+		return order.Ship()
+	}); err != nil {
 		return err
 	}
 
