@@ -1,6 +1,7 @@
 package application
 
 import (
+	"context"
 	"time"
 
 	"ordercontext/internal/application/behavior"
@@ -12,7 +13,14 @@ import (
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
-func NewMediator(repository domain.OrderRepository,
+type OrderStore interface {
+	GetAll(context.Context) ([]*domain.Order, error)
+	Get(ctx context.Context, id string) (*domain.Order, error)
+	Create(ctx context.Context, o *domain.Order) error
+	Update(ctx context.Context, o *domain.Order) error
+}
+
+func NewMediator(store OrderStore,
 	ep event.Publisher,
 	timeout time.Duration) mediator.Sender {
 	sender, err := mediator.NewContext(
@@ -20,9 +28,9 @@ func NewMediator(repository domain.OrderRepository,
 		mediator.WithBehaviourFunc(behavior.Validate),
 		mediator.WithBehaviour(behavior.NewCancellator(timeout)),
 		mediator.WithBehaviourFunc(behavior.Retry),
-		mediator.WithHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(repository.Create)),
-		mediator.WithHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(repository.Get, repository.Update)),
-		mediator.WithHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(repository, ep)),
+		mediator.WithHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(store.Create)),
+		mediator.WithHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(store.Get, store.Update)),
+		mediator.WithHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(store.Get, store.Update, ep)),
 	).Build()
 
 	must.NotFail(err)

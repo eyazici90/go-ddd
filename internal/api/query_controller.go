@@ -9,11 +9,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type OrderQueryController struct {
-	orderservice query.OrderQueryService
+type OrderQueryService interface {
+	GetOrders(context.Context) *query.GetOrdersDto
+	GetOrder(ctx context.Context, id string) *query.GetOrderDto
 }
 
-func NewOrderQueryController(s query.OrderQueryService) *OrderQueryController {
+type OrderQueryController struct {
+	orderservice OrderQueryService
+}
+
+func NewOrderQueryController(s OrderQueryService) *OrderQueryController {
 	return &OrderQueryController{
 		orderservice: s,
 	}
