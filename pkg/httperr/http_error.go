@@ -19,6 +19,7 @@ type ProblemDetails struct {
 type (
 	Map      func(err error) (int, bool)
 	Mappings []Map
+	Option   func(h *Handler)
 )
 
 func (h Mappings) find(err error) (int, bool) {
@@ -37,12 +38,19 @@ type Handler struct {
 	handle          func(err error, c echo.Context)
 }
 
-func NewHandler(httpErrMappings Mappings) *Handler {
-	errHandler := &Handler{
-		httpErrMappings: httpErrMappings,
+func NewHandler(opts ...Option) *Handler {
+	errHandler := &Handler{}
+	for _, v := range opts {
+		v(errHandler)
 	}
 	errHandler.setDefaultProblemDetailsHandle()
 	return errHandler
+}
+
+func (h *Handler) WithMap(m Map) Option {
+	return func(h *Handler) {
+		h.httpErrMappings = append(h.httpErrMappings, m)
+	}
 }
 
 func (h *Handler) Handle() func(err error, c echo.Context) {

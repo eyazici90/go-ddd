@@ -18,18 +18,18 @@ func (s *Server) useMiddlewares() {
 	s.useTimeout()
 
 	s.useErrorHandler(httperr.NewHandler(
-		httperr.Mappings{
+		httperr.DefaultHandler.WithMap(
 			func(err error) (int, bool) {
 				return http.StatusBadRequest,
 					errors.Is(err, domain.ErrAggregateNotFound) ||
 						errors.Is(err, domain.ErrOrderNotPaid) ||
 						errors.Is(err, domain.ErrInvalidValue)
-			},
+			}),
+		httperr.DefaultHandler.WithMap(
 			func(err error) (int, bool) {
 				_, ok := err.(validator.ValidationErrors)
 				return http.StatusBadRequest, ok
-			},
-		},
+			}),
 	))
 }
 
