@@ -22,7 +22,7 @@ func (s *Server) useRoutes() {
 	v1.PUT(orderBaseURL+"/cancel"+"/:id", s.orderCommandController.cancel)
 }
 
-func (s *Server) health() {
+func (s *Server) useHealth() {
 	s.echo.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Healthy")
 	})

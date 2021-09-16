@@ -38,7 +38,7 @@ func NewServer(cfg Config,
 		orderQueryController:   querycontroller,
 	}
 
-	server.health()
+	server.useHealth()
 	server.useRoutes()
 	server.useMiddlewares()
 
