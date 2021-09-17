@@ -1,6 +1,7 @@
 package httperr
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -47,7 +48,20 @@ func NewHandler(opts ...Option) *Handler {
 	return errHandler
 }
 
-func (h *Handler) WithMap(m Map) Option {
+func (h *Handler) WithMap(statusCode int, errs ...error) Option {
+	return func(h *Handler) {
+		h.httpErrMappings = append(h.httpErrMappings, func(err error) (int, bool) {
+			for _, v := range errs {
+				if errors.Is(err, v) {
+					return statusCode, true
+				}
+			}
+			return statusCode, false
+		})
+	}
+}
+
+func (h *Handler) WithMapFunc(m Map) Option {
 	return func(h *Handler) {
 		h.httpErrMappings = append(h.httpErrMappings, m)
 	}

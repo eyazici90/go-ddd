@@ -1,7 +1,6 @@
 package api
 
 import (
-	"errors"
 	"net/http"
 	"ordercontext/internal/domain"
 	"ordercontext/pkg/httperr"
@@ -18,14 +17,12 @@ func (s *Server) useMiddlewares() {
 	s.useTimeout()
 
 	s.useErrorHandler(httperr.NewHandler(
-		httperr.DefaultHandler.WithMap(
-			func(err error) (int, bool) {
-				return http.StatusBadRequest,
-					errors.Is(err, domain.ErrAggregateNotFound) ||
-						errors.Is(err, domain.ErrOrderNotPaid) ||
-						errors.Is(err, domain.ErrInvalidValue)
-			}),
-		httperr.DefaultHandler.WithMap(
+		httperr.DefaultHandler.WithMap(http.StatusBadRequest,
+			domain.ErrAggregateNotFound,
+			domain.ErrOrderNotPaid,
+			domain.ErrInvalidValue,
+		),
+		httperr.DefaultHandler.WithMapFunc(
 			func(err error) (int, bool) {
 				_, ok := err.(validator.ValidationErrors)
 				return http.StatusBadRequest, ok
