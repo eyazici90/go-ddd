@@ -9,28 +9,28 @@ import (
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
-type ShipOrderCommand struct {
+type ShipOrder struct {
 	OrderID string `validate:"required,min=10"`
 }
 
-func (ShipOrderCommand) Key() string { return "ShipOrderCommand" }
+func (ShipOrder) Key() string { return "ShipOrder" }
 
-type ShipOrderCommandHandler struct {
-	commandHandler
+type ShipOrderHandler struct {
+	orderHandler
 	eventPublisher event.Publisher
 }
 
-func NewShipOrderCommandHandler(getOrder GetOrder,
+func NewShipOrderHandler(getOrder GetOrder,
 	updateOrder UpdateOrder,
-	e event.Publisher) ShipOrderCommandHandler {
-	return ShipOrderCommandHandler{
-		commandHandler: newcommandHandlerBase(getOrder, updateOrder),
+	e event.Publisher) ShipOrderHandler {
+	return ShipOrderHandler{
+		orderHandler:   newOrderHandler(getOrder, updateOrder),
 		eventPublisher: e,
 	}
 }
 
-func (h ShipOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
-	cmd, ok := msg.(ShipOrderCommand)
+func (h ShipOrderHandler) Handle(ctx context.Context, msg mediator.Message) error {
+	cmd, ok := msg.(ShipOrder)
 	if err := checkType(ok); err != nil {
 		return err
 	}

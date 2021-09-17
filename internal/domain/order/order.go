@@ -57,7 +57,7 @@ func (o *Order) Cancel() {
 
 func (o *Order) Ship() error {
 	if o.status != Paid {
-		return ErrOrderNotPaid
+		return ErrNotPaid
 	}
 
 	o.status = Shipped

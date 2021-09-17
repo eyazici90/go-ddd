@@ -29,9 +29,9 @@ func NewMediator(store OrderStore,
 		mediator.WithBehaviourFunc(behavior.Validate),
 		mediator.WithBehaviour(behavior.NewCancellator(timeout)),
 		// Handlers
-		mediator.WithHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(store.Create)),
-		mediator.WithHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(store.Get, store.Update)),
-		mediator.WithHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(store.Get, store.Update, ep)),
+		mediator.WithHandler(command.CreateOrder{}, command.NewCreateOrderHandler(store.Create)),
+		mediator.WithHandler(command.PayOrder{}, command.NewPayOrderHandler(store.Get, store.Update)),
+		mediator.WithHandler(command.ShipOrder{}, command.NewShipOrderHandler(store.Get, store.Update, ep)),
 	).Build()
 
 	must.NotFail(err)

@@ -20,7 +20,7 @@ func (s *Server) useMiddlewares() {
 	s.useErrorHandler(httperr.NewHandler(
 		httperr.DefaultHandler.WithMap(http.StatusBadRequest,
 			aggregate.ErrNotFound,
-			order.ErrOrderNotPaid,
+			order.ErrNotPaid,
 			order.ErrInvalidValue,
 		),
 		httperr.DefaultHandler.WithMapFunc(

@@ -11,34 +11,34 @@ import (
 	"github.com/pkg/errors"
 )
 
-type CreateOrder func(context.Context, *order.Order) error
+type CreateOrderFn func(context.Context, *order.Order) error
 
-type CreateOrderCommand struct {
+type CreateOrder struct {
 	ID string `validate:"required,min=10"`
 }
 
-func (CreateOrderCommand) Key() string { return "CreateOrderCommand " }
+func (CreateOrder) Key() string { return "CreateOrder" }
 
-type CreateOrderCommandHandler struct {
-	createOrder CreateOrder
+type CreateOrderHandler struct {
+	createOrderFn CreateOrderFn
 }
 
-func NewCreateOrderCommandHandler(createOrder CreateOrder) CreateOrderCommandHandler {
-	return CreateOrderCommandHandler{createOrder}
+func NewCreateOrderHandler(createOrderFn CreateOrderFn) CreateOrderHandler {
+	return CreateOrderHandler{createOrderFn}
 }
 
-func (h CreateOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
-	cmd, ok := msg.(CreateOrderCommand)
+func (h CreateOrderHandler) Handle(ctx context.Context, msg mediator.Message) error {
+	cmd, ok := msg.(CreateOrder)
 	if err := checkType(ok); err != nil {
 		return err
 	}
 
-	ordr, err := order.NewOrder(order.ID(cmd.ID), order.NewCustomerID(), order.NewProductID(), func() time.Time { return time.Now() },
+	ordr, err := order.NewOrder(order.ID(cmd.ID), order.NewCustomerID(), order.NewProductID(), time.Now,
 		order.Submitted, aggregate.NewVersion())
 
 	if err != nil {
 		return errors.Wrap(err, "create order handle failed")
 	}
 
-	return h.createOrder(ctx, ordr)
+	return h.createOrderFn(ctx, ordr)
 }

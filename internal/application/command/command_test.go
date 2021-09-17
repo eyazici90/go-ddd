@@ -16,11 +16,11 @@ import (
 )
 
 func TestCreateOrder(t *testing.T) {
-	handler := command.NewCreateOrderCommandHandler(store.NewOrderInMemoryRepository().Create)
+	handler := command.NewCreateOrderHandler(store.NewOrderInMemoryRepository().Create)
 
 	orderID := uuid.New().String()
 
-	cmd := command.CreateOrderCommand{orderID}
+	cmd := command.CreateOrder{orderID}
 
 	err := handler.Handle(context.TODO(), cmd)
 
@@ -30,17 +30,17 @@ func TestCreateOrder(t *testing.T) {
 func TestPayOrder(t *testing.T) {
 	orderID := uuid.New().String()
 
-	cmd := command.PayOrderCommand{orderID}
+	cmd := command.PayOrder{orderID}
 
-	newOrder, err := order.NewOrder(order.OrderID(cmd.OrderID),
+	newOrder, err := order.NewOrder(order.ID(cmd.OrderID),
 		order.NewCustomerID(),
 		order.NewProductID(),
-		func() time.Time { return time.Now() },
+		time.Now,
 		order.Submitted,
 		aggregate.NewVersion())
 	require.NoError(t, err)
 
-	handler := command.NewPayOrderCommandHandler(func(context.Context, string) (*order.Order, error) {
+	handler := command.NewPayOrderHandler(func(context.Context, string) (*order.Order, error) {
 		return newOrder, nil
 	}, store.NewOrderInMemoryRepository().Update)
 

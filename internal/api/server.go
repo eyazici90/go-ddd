@@ -55,3 +55,5 @@ func (s *Server) Shutdown(ctx context.Context) error {
 }
 
 func (s *Server) Fatal(err error) { s.echo.Logger.Fatal(err) }
+
+func (s *Server) Config() Config { return s.cfg }

@@ -26,7 +26,7 @@ func FromBson(o *orderBson) *order.Order {
 	ord, _ := order.NewOrder(order.ID(o.ID),
 		order.CustomerID(o.CustomerID),
 		order.ProductID(o.ProductID),
-		func() time.Time { return time.Now() },
+		time.Now,
 		order.Status(o.Status),
 		aggregate.Version(o.Version))
 

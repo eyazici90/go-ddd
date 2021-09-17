@@ -5,6 +5,6 @@ import (
 )
 
 var (
-	ErrOrderNotPaid = errors.New("order has not paid yet")
+	ErrNotPaid      = errors.New("order has not paid yet")
 	ErrInvalidValue = errors.New("invalid value")
 )

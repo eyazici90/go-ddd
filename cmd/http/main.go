@@ -22,15 +22,6 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-var cfg api.Config
-
-func init() {
-	viper.SetConfigFile(`./config.json`)
-
-	must.NotFailF(viper.ReadInConfig)
-	must.NotFail(viper.Unmarshal(&cfg))
-}
-
 // @title Order Application
 // @description order context
 // @version 1.0
@@ -58,7 +49,7 @@ func run() (func(), error) {
 	}()
 
 	return func() {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(cfg.Context.Timeout)*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(server.Config().Context.Timeout)*time.Second)
 		defer cancel()
 
 		if err := server.Shutdown(ctx); err != nil {
@@ -68,8 +59,13 @@ func run() (func(), error) {
 }
 
 func buildServer() *api.Server {
-	repository := store.NewOrderInMemoryRepository()
+	var cfg api.Config
+	viper.SetConfigFile(`./config.json`)
 
+	must.NotFailF(viper.ReadInConfig)
+	must.NotFail(viper.Unmarshal(&cfg))
+
+	repository := store.NewOrderInMemoryRepository()
 	service := query.NewOrderQueryService(repository)
 	eventBus := infra.NewNoBus()
 

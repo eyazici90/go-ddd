@@ -13,29 +13,29 @@ type (
 	GetOrder    func(context.Context, string) (*order.Order, error)
 	UpdateOrder func(context.Context, *order.Order) error
 
-	commandHandler struct {
+	orderHandler struct {
 		getOrder    GetOrder
 		updateOrder UpdateOrder
 	}
 )
 
-func newcommandHandlerBase(getOrder GetOrder, updateOrder UpdateOrder) commandHandler {
-	return commandHandler{getOrder, updateOrder}
+func newOrderHandler(getOrder GetOrder, updateOrder UpdateOrder) orderHandler {
+	return orderHandler{getOrder, updateOrder}
 }
 
-func (handler commandHandler) update(ctx context.Context,
+func (h orderHandler) update(ctx context.Context,
 	identifier string,
 	fn func(*order.Order)) error {
-	return handler.updateErr(ctx, identifier, func(o *order.Order) error {
+	return h.updateErr(ctx, identifier, func(o *order.Order) error {
 		fn(o)
 		return nil
 	})
 }
 
-func (handler commandHandler) updateErr(ctx context.Context,
+func (h orderHandler) updateErr(ctx context.Context,
 	identifier string,
 	fn func(*order.Order) error) error {
-	o, err := handler.getOrder(ctx, identifier)
+	o, err := h.getOrder(ctx, identifier)
 
 	if err != nil {
 		return errors.Wrap(err, "get order failed")
@@ -47,5 +47,5 @@ func (handler commandHandler) updateErr(ctx context.Context,
 	if err := fn(o); err != nil {
 		return err
 	}
-	return handler.updateOrder(ctx, o)
+	return h.updateOrder(ctx, o)
 }

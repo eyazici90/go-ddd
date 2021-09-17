@@ -2,23 +2,24 @@ package command
 
 import (
 	"context"
+
 	"ordercontext/internal/domain/order"
 
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
-type CancelOrderCommand struct {
+type CancelOrder struct {
 	OrderID string `validate:"required,min=10"`
 }
 
-func (CancelOrderCommand) Key() string { return "CancelOrderCommand" }
+func (CancelOrder) Key() string { return "CancelOrder" }
 
-type CancelOrderCommandHandler struct {
-	commandHandler
+type CancelOrderHandler struct {
+	orderHandler
 }
 
-func (h CancelOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
-	cmd, ok := msg.(CancelOrderCommand)
+func (h CancelOrderHandler) Handle(ctx context.Context, msg mediator.Message) error {
+	cmd, ok := msg.(CancelOrder)
 	if err := checkType(ok); err != nil {
 		return err
 	}

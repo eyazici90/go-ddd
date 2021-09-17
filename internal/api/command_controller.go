@@ -38,7 +38,7 @@ func (o *OrderCommandController) create(c echo.Context) error {
 	return handle(c,
 		http.StatusCreated,
 		func(ctx context.Context) error {
-			return o.sender.Send(ctx, command.CreateOrderCommand{ID: uuid.New().String()})
+			return o.sender.Send(ctx, command.CreateOrder{ID: uuid.New().String()})
 		})
 }
 
@@ -55,7 +55,7 @@ func (o *OrderCommandController) pay(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
-		return o.sender.Send(ctx, command.PayOrderCommand{OrderID: id})
+		return o.sender.Send(ctx, command.PayOrder{OrderID: id})
 	})
 }
 
@@ -72,7 +72,7 @@ func (o *OrderCommandController) cancel(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
-		return o.sender.Send(ctx, command.CancelOrderCommand{OrderID: id})
+		return o.sender.Send(ctx, command.CancelOrder{OrderID: id})
 	})
 }
 
@@ -89,6 +89,6 @@ func (o *OrderCommandController) ship(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
-		return o.sender.Send(ctx, command.ShipOrderCommand{OrderID: id})
+		return o.sender.Send(ctx, command.ShipOrder{OrderID: id})
 	})
 }
