@@ -7,7 +7,7 @@ import (
 	"ordercontext/internal/domain/order"
 	"ordercontext/pkg/aggregate"
 
-	"github.com/eyazici90/go-mediator/mediator"
+	"github.com/eyazici90/go-mediator/pkg/mediator"
 	"github.com/pkg/errors"
 )
 

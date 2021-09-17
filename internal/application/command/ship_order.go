@@ -6,7 +6,7 @@ import (
 	"ordercontext/internal/application/event"
 	"ordercontext/internal/domain/order"
 
-	"github.com/eyazici90/go-mediator/mediator"
+	"github.com/eyazici90/go-mediator/pkg/mediator"
 )
 
 type ShipOrder struct {

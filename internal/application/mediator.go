@@ -10,7 +10,7 @@ import (
 	"ordercontext/internal/domain/order"
 	"ordercontext/pkg/must"
 
-	"github.com/eyazici90/go-mediator/mediator"
+	"github.com/eyazici90/go-mediator/pkg/mediator"
 )
 
 type OrderStore interface {
@@ -23,7 +23,7 @@ type OrderStore interface {
 func NewMediator(store OrderStore,
 	ep event.Publisher,
 	timeout time.Duration) mediator.Sender {
-	sender, err := mediator.NewContext(
+	sender, err := mediator.New(
 		// Behaviors
 		mediator.WithBehaviourFunc(behavior.Measure),
 		mediator.WithBehaviourFunc(behavior.Validate),
@@ -32,7 +32,7 @@ func NewMediator(store OrderStore,
 		mediator.WithHandler(command.CreateOrder{}, command.NewCreateOrderHandler(store.Create)),
 		mediator.WithHandler(command.PayOrder{}, command.NewPayOrderHandler(store.Get, store.Update)),
 		mediator.WithHandler(command.ShipOrder{}, command.NewShipOrderHandler(store.Get, store.Update, ep)),
-	).Build()
+	)
 
 	must.NotFail(err)
 	return sender

@@ -9,7 +9,7 @@ import (
 	"ordercontext/internal/application/command"
 	"ordercontext/internal/application/event"
 
-	"github.com/eyazici90/go-mediator/mediator"
+	"github.com/eyazici90/go-mediator/pkg/mediator"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
