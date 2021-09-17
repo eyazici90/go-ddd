@@ -1,4 +1,4 @@
-package domain
+package order_test
 
 import (
 	"testing"

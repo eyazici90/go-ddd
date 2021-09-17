@@ -10,8 +10,8 @@ import (
 
 	"ordercontext/internal/api"
 	"ordercontext/internal/application/query"
-	"ordercontext/internal/infrastructure"
-	"ordercontext/internal/infrastructure/store/order"
+	"ordercontext/internal/infra"
+	"ordercontext/internal/infra/store"
 	"ordercontext/pkg/must"
 	"ordercontext/pkg/shutdown"
 
@@ -68,10 +68,10 @@ func run() (func(), error) {
 }
 
 func buildServer() *api.Server {
-	repository := order.NewInMemoryRepository()
+	repository := store.NewOrderInMemoryRepository()
 
 	service := query.NewOrderQueryService(repository)
-	eventBus := infrastructure.NewNoBus()
+	eventBus := infra.NewNoBus()
 
 	commandController := api.NewOrderCommandController(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
 	queryController := api.NewOrderQueryController(service)

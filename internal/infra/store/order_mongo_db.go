@@ -1,4 +1,4 @@
-package order
+package store
 
 import (
 	"context"
@@ -6,8 +6,8 @@ import (
 
 	"gopkg.in/mgo.v2/bson"
 
-	"ordercontext/internal/domain"
-	"ordercontext/internal/infrastructure"
+	"ordercontext/internal/domain/order"
+	"ordercontext/internal/infra"
 	"ordercontext/pkg/aggregate"
 )
 
@@ -22,44 +22,34 @@ type orderBson struct {
 	Version     string    `bson:"version"`
 }
 
-func fromOrder(o *domain.Order) *orderBson {
-	return &orderBson{
-		ID:         o.ID(),
-		Status:     int(o.Status()),
-		CustomerID: o.CustomerID(),
-		ProductID:  o.ProductID(),
-		Version:    o.Version(),
-	}
-}
-
-func FromBson(o *orderBson) *domain.Order {
-	ord, _ := domain.NewOrder(domain.OrderID(o.ID),
-		domain.CustomerID(o.CustomerID),
-		domain.ProductID(o.ProductID),
+func FromBson(o *orderBson) *order.Order {
+	ord, _ := order.NewOrder(order.ID(o.ID),
+		order.CustomerID(o.CustomerID),
+		order.ProductID(o.ProductID),
 		func() time.Time { return time.Now() },
-		domain.Status(o.Status),
+		order.Status(o.Status),
 		aggregate.Version(o.Version))
 
 	ord.Clear()
 	return ord
 }
 
-type MongoRepository struct {
-	mStore *infrastructure.MongoStore
+type OrderMongoRepository struct {
+	mStore *infra.MongoStore
 }
 
-func NewMongoRepository(mongoStore *infrastructure.MongoStore) *MongoRepository {
-	return &MongoRepository{mStore: mongoStore}
+func NewOrderMongoRepository(mongoStore *infra.MongoStore) *OrderMongoRepository {
+	return &OrderMongoRepository{mStore: mongoStore}
 }
 
-func (r *MongoRepository) GetAll(ctx context.Context) ([]*domain.Order, error) {
+func (r *OrderMongoRepository) GetAll(ctx context.Context) ([]*order.Order, error) {
 	var result []*orderBson
 
 	if err := r.mStore.FindAll(ctx, collectionName, bson.M{}, &result); err != nil {
 		return nil, err
 	}
 
-	var orders []*domain.Order
+	var orders []*order.Order
 
 	for _, o := range result {
 		orders = append(orders, FromBson(o))
@@ -68,7 +58,7 @@ func (r *MongoRepository) GetAll(ctx context.Context) ([]*domain.Order, error) {
 	return orders, nil
 }
 
-func (r *MongoRepository) Get(ctx context.Context, id string) (*domain.Order, error) {
+func (r *OrderMongoRepository) Get(ctx context.Context, id string) (*order.Order, error) {
 	var (
 		bsonResult = &orderBson{}
 		query      = bson.M{"id": id}
@@ -81,17 +71,27 @@ func (r *MongoRepository) Get(ctx context.Context, id string) (*domain.Order, er
 	return FromBson(bsonResult), nil
 }
 
-func (r *MongoRepository) Update(ctx context.Context, o *domain.Order) error {
+func (r *OrderMongoRepository) Update(ctx context.Context, o *order.Order) error {
 	query := bson.M{"id": o.ID(), "version": o.Version()}
 	update := bson.M{"$set": bson.M{"status": o.Status(), "version": aggregate.NewVersion().String()}}
 
 	return r.mStore.Update(ctx, collectionName, query, update)
 }
 
-func (r *MongoRepository) Create(ctx context.Context, o *domain.Order) error {
+func (r *OrderMongoRepository) Create(ctx context.Context, o *order.Order) error {
 	bOrder := fromOrder(o)
 	if bOrder.Version == "" {
 		bOrder.Version = aggregate.NewVersion().String()
 	}
 	return r.mStore.Store(ctx, collectionName, bOrder)
+}
+
+func fromOrder(o *order.Order) *orderBson {
+	return &orderBson{
+		ID:         o.ID(),
+		Status:     int(o.Status()),
+		CustomerID: o.CustomerID(),
+		ProductID:  o.ProductID(),
+		Version:    o.Version(),
+	}
 }

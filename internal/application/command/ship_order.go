@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"ordercontext/internal/application/event"
-	"ordercontext/internal/domain"
+	"ordercontext/internal/domain/order"
 
 	"github.com/eyazici90/go-mediator/mediator"
 )
@@ -35,15 +35,15 @@ func (h ShipOrderCommandHandler) Handle(ctx context.Context, msg mediator.Messag
 		return err
 	}
 
-	var order *domain.Order
-	if err := h.updateErr(ctx, cmd.OrderID, func(o *domain.Order) error {
-		order = o
-		return order.Ship()
+	var ord *order.Order
+	if err := h.updateErr(ctx, cmd.OrderID, func(o *order.Order) error {
+		ord = o
+		return ord.Ship()
 	}); err != nil {
 		return err
 	}
 
-	h.eventPublisher.PublishAll(order.Events())
+	h.eventPublisher.PublishAll(ord.Events())
 
 	return nil
 }

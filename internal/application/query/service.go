@@ -2,12 +2,12 @@ package query
 
 import (
 	"context"
-	"ordercontext/internal/domain"
+	"ordercontext/internal/domain/order"
 )
 
 type OrderQueryStore interface {
-	GetAll(context.Context) ([]*domain.Order, error)
-	Get(ctx context.Context, id string) (*domain.Order, error)
+	GetAll(context.Context) ([]*order.Order, error)
+	Get(ctx context.Context, id string) (*order.Order, error)
 }
 
 type Service struct {
@@ -31,11 +31,11 @@ func (s *Service) GetOrders(ctx context.Context) *GetOrdersDto {
 }
 
 func (s *Service) GetOrder(ctx context.Context, id string) *GetOrderDto {
-	order, err := s.store.Get(ctx, id)
+	ord, err := s.store.Get(ctx, id)
 	if err != nil {
 		return nil
 	}
-	oView := mapTo(order)
+	oView := mapTo(ord)
 
 	result := &GetOrderDto{oView}
 	return result

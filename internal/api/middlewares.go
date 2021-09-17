@@ -2,7 +2,8 @@ package api
 
 import (
 	"net/http"
-	"ordercontext/internal/domain"
+	"ordercontext/internal/domain/order"
+	"ordercontext/pkg/aggregate"
 	"ordercontext/pkg/httperr"
 	"time"
 
@@ -18,9 +19,9 @@ func (s *Server) useMiddlewares() {
 
 	s.useErrorHandler(httperr.NewHandler(
 		httperr.DefaultHandler.WithMap(http.StatusBadRequest,
-			domain.ErrAggregateNotFound,
-			domain.ErrOrderNotPaid,
-			domain.ErrInvalidValue,
+			aggregate.ErrNotFound,
+			order.ErrOrderNotPaid,
+			order.ErrInvalidValue,
 		),
 		httperr.DefaultHandler.WithMapFunc(
 			func(err error) (int, bool) {
