@@ -23,14 +23,14 @@ type Config struct {
 type Server struct {
 	cfg                    Config
 	echo                   *echo.Echo
-	orderCommandController *OrderCommandController
-	orderQueryController   *OrderQueryController
+	orderCommandController OrderCommandController
+	orderQueryController   OrderQueryController
 }
 
 func NewServer(cfg Config,
 	e *echo.Echo,
-	cmdController *OrderCommandController,
-	querycontroller *OrderQueryController) *Server {
+	cmdController OrderCommandController,
+	querycontroller OrderQueryController) *Server {
 	server := &Server{
 		cfg:                    cfg,
 		echo:                   e,

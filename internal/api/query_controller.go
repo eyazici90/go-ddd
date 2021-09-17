@@ -18,8 +18,8 @@ type OrderQueryController struct {
 	orderservice OrderQueryService
 }
 
-func NewOrderQueryController(s OrderQueryService) *OrderQueryController {
-	return &OrderQueryController{
+func NewOrderQueryController(s OrderQueryService) OrderQueryController {
+	return OrderQueryController{
 		orderservice: s,
 	}
 }
@@ -32,7 +32,7 @@ func NewOrderQueryController(s OrderQueryService) *OrderQueryController {
 // @Produce json
 // @Success 200 {object} query.GetOrdersDto
 // @Router /orders [get]
-func (o *OrderQueryController) getOrders(c echo.Context) error {
+func (o OrderQueryController) getOrders(c echo.Context) error {
 	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
 		return o.orderservice.GetOrders(ctx), nil
 	})
@@ -47,7 +47,7 @@ func (o *OrderQueryController) getOrders(c echo.Context) error {
 // @Success 200 {object} query.GetOrderDto
 // @Param id path string true "id"
 // @Router /orders/{id} [get]
-func (o *OrderQueryController) getOrder(c echo.Context) error {
+func (o OrderQueryController) getOrder(c echo.Context) error {
 	id := c.Param("id")
 
 	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
