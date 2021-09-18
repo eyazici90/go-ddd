@@ -27,7 +27,7 @@ type Order struct {
 func NewOrder(id ID, customerID CustomerID,
 	productID ProductID, now aggregate.Now,
 	status Status, version aggregate.Version) (*Order, error) {
-	o := &Order{
+	o := Order{
 		id:          id,
 		customerID:  customerID,
 		productID:   productID,
@@ -36,13 +36,13 @@ func NewOrder(id ID, customerID CustomerID,
 		version:     version,
 	}
 
-	if err := valid(o); err != nil {
+	if err := valid(&o); err != nil {
 		return nil, err
 	}
 
 	o.AddEvent(CreatedEvent{id: string(id)})
 
-	return o, nil
+	return &o, nil
 }
 
 func (o *Order) Pay() {

@@ -31,7 +31,7 @@ func NewServer(cfg Config,
 	e *echo.Echo,
 	cmdController OrderCommandController,
 	querycontroller OrderQueryController) *Server {
-	server := &Server{
+	server := Server{
 		cfg:                    cfg,
 		echo:                   e,
 		orderCommandController: cmdController,
@@ -42,7 +42,7 @@ func NewServer(cfg Config,
 	server.useRoutes()
 	server.useMiddlewares()
 
-	return server
+	return &server
 }
 
 func (s *Server) Start() error {

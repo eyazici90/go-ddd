@@ -18,6 +18,12 @@ type CancelOrderHandler struct {
 	orderHandler
 }
 
+func NewCancelOrderHandler(getOrder GetOrder, updateOrder UpdateOrder) CancelOrderHandler {
+	return CancelOrderHandler{
+		orderHandler: newOrderHandler(getOrder, updateOrder),
+	}
+}
+
 func (h CancelOrderHandler) Handle(ctx context.Context, msg mediator.Message) error {
 	cmd, ok := msg.(CancelOrder)
 	if err := checkType(ok); err != nil {
