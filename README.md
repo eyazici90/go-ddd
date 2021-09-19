@@ -49,15 +49,16 @@ go 1.14
 
 **_Mediator with pipeline behaviours_** (order matters for pipeline behaviours)
 
-    sender, err := mediator.NewContext(
-    	mediator.WithBehaviourFunc(behavior.Measure),
-    	mediator.WithBehaviourFunc(behavior.Validate),
-    	mediator.WithBehaviour(behavior.NewCancellator(timeout)),
-    	mediator.WithBehaviourFunc(behavior.Retry),
-    	mediator.WithHandler(command.CreateOrderCommand{}, command.NewCreateOrderCommandHandler(repository.Create)),
-    	mediator.WithHandler(command.PayOrderCommand{}, command.NewPayOrderCommandHandler(repository.Get, repository.Update)),
-    	mediator.WithHandler(command.ShipOrderCommand{}, command.NewShipOrderCommandHandler(repository, ep)),
-    ).Build()
+    sender, err := mediator.New(
+		// Behaviors
+		mediator.WithBehaviourFunc(behavior.Measure),
+		mediator.WithBehaviourFunc(behavior.Validate),
+		mediator.WithBehaviour(behavior.NewCancellator(timeout)),
+		// Handlers
+		mediator.WithHandler(command.CreateOrder{}, command.NewCreateOrderHandler(store.Create)),
+		mediator.WithHandler(command.PayOrder{}, command.NewPayOrderHandler(store.Get, store.Update)),
+		mediator.WithHandler(command.ShipOrder{}, command.NewShipOrderHandler(store.Get, store.Update, ep)),
+	)
 
 
     err = sender.Send(ctx, cmd)
