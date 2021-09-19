@@ -22,7 +22,7 @@ type OrderStore interface {
 func NewMediator(store OrderStore,
 	ep event.Publisher,
 	timeout time.Duration) (*mediator.Mediator, error) {
-	sender, err := mediator.New(
+	m, err := mediator.New(
 		// Behaviors
 		mediator.WithBehaviourFunc(behavior.Measure),
 		mediator.WithBehaviourFunc(behavior.Validate),
@@ -35,5 +35,5 @@ func NewMediator(store OrderStore,
 	if err != nil {
 		return nil, err
 	}
-	return sender, nil
+	return m, nil
 }
