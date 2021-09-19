@@ -20,10 +20,14 @@ type OrderCommandController struct {
 
 func NewOrderCommandController(r application.OrderStore,
 	e event.Publisher,
-	timeout time.Duration) OrderCommandController {
-	return OrderCommandController{
-		sender: application.NewMediator(r, e, timeout),
+	timeout time.Duration) (OrderCommandController, error) {
+	m, err := application.NewMediator(r, e, timeout)
+	if err != nil {
+		return OrderCommandController{}, err
 	}
+	return OrderCommandController{
+		sender: m,
+	}, nil
 }
 
 // CreateOrder godoc
