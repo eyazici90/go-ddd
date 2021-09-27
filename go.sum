@@ -51,8 +51,6 @@ github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
-github.com/eyazici90/go-mediator v0.0.0-20210629192029-d7c04a352fbc h1:yl+sbWXILATcMf8yLPm+eOIeszEiOHFZ+qG1+3bAAAc=
-github.com/eyazici90/go-mediator v0.0.0-20210629192029-d7c04a352fbc/go.mod h1:UvcrNc2ojoGQTH1qSmmrB6E5Gz+m6HN4GHkVG0vh52c=
 github.com/eyazici90/go-mediator v0.0.0-20210917231127-e68746b7e144 h1:xqkEyhsZDorWFGCNT8TcMxFN3D34/zdEO8gm7FhRPcc=
 github.com/eyazici90/go-mediator v0.0.0-20210917231127-e68746b7e144/go.mod h1:UvcrNc2ojoGQTH1qSmmrB6E5Gz+m6HN4GHkVG0vh52c=
 github.com/fatih/color v1.7.0/go.mod h1:Zm6kSWBoL9eyXnKyktHP6abPY2pDugNf5KwzbycvMj4=
