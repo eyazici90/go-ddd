@@ -4,7 +4,7 @@ Practical DDD(_Domain Driven Design_) & CQRS implementation on order bounded con
 
 ## Prerequisites
 
-go 1.14
+go 1.17
 
 ## Warming - Up
 
@@ -79,15 +79,18 @@ go 1.14
         return CreateOrderCommandHandler{repository: r}
     }
 
-    func (handler CreateOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
-        cmd := msg.(CreateOrderCommand)
-        order, err := order.NewOrder(order.OrderId(cmd.Id), customer.New(), product.New(), func() time.Time { return time.Now() })
+    func (h CreateOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
+        cmd, ok := msg.(CreateOrder)
+	if err := checkType(ok); err != nil {
+		return err
+	}
+        order, err := order.NewOrder(order.OrderId(cmd.Id), customer.New(), product.New(), time.Now)
 
         if err != nil {
     	    return err
         }
 
-        handler.repository.Create(ctx, order)
+        h.repository.Create(ctx, order)
 
         return  nil
     }
