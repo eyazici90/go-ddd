@@ -40,12 +40,12 @@ type Handler struct {
 }
 
 func NewHandler(opts ...Option) *Handler {
-	errHandler := &Handler{}
+	var errHandler Handler
 	for _, v := range opts {
-		v(errHandler)
+		v(&errHandler)
 	}
 	errHandler.setDefaultProblemDetailsHandle()
-	return errHandler
+	return &errHandler
 }
 
 func (h *Handler) WithMap(statusCode int, errs ...error) Option {
