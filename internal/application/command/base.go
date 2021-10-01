@@ -10,16 +10,16 @@ import (
 )
 
 type (
-	GetOrder    func(context.Context, string) (*order.Order, error)
-	UpdateOrder func(context.Context, *order.Order) error
+	GetOrderFunc    func(context.Context, string) (*order.Order, error)
+	UpdateOrderFunc func(context.Context, *order.Order) error
 
 	orderHandler struct {
-		getOrder    GetOrder
-		updateOrder UpdateOrder
+		getOrder    GetOrderFunc
+		updateOrder UpdateOrderFunc
 	}
 )
 
-func newOrderHandler(getOrder GetOrder, updateOrder UpdateOrder) orderHandler {
+func newOrderHandler(getOrder GetOrderFunc, updateOrder UpdateOrderFunc) orderHandler {
 	return orderHandler{getOrder, updateOrder}
 }
 

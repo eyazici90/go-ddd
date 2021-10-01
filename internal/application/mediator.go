@@ -10,6 +10,7 @@ import (
 	"ordercontext/internal/domain/order"
 
 	"github.com/eyazici90/go-mediator/pkg/mediator"
+	"github.com/pkg/errors"
 )
 
 type OrderStore interface {
@@ -33,7 +34,7 @@ func NewMediator(store OrderStore,
 		mediator.WithHandler(command.ShipOrder{}, command.NewShipOrderHandler(store.Get, store.Update, ep)),
 	)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "create mediator")
 	}
 	return m, nil
 }
