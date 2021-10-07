@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"time"
@@ -28,7 +29,7 @@ import (
 // @host localhost:8080
 // @BasePath /api/v1
 func main() {
-	cleanup, err := run()
+	cleanup, err := run(os.Stdout)
 	defer cleanup()
 
 	if err != nil {
@@ -39,8 +40,8 @@ func main() {
 	shutdown.Gracefully()
 }
 
-func run() (func(), error) {
-	server := buildServer()
+func run(w io.Writer) (func(), error) {
+	server := buildServer(w)
 
 	go func() {
 		if err := server.Start(); err != nil && err != http.ErrServerClosed {
@@ -58,12 +59,9 @@ func run() (func(), error) {
 	}, nil
 }
 
-func buildServer() *api.Server {
+func buildServer(w io.Writer) *api.Server {
 	var cfg api.Config
-	viper.SetConfigFile(`./config.json`)
-
-	must.NotFailF(viper.ReadInConfig)
-	must.NotFail(viper.Unmarshal(&cfg))
+	readConfig(&cfg)
 
 	repository := store.NewOrderInMemoryRepository()
 	service := query.NewOrderQueryService(repository)
@@ -75,8 +73,16 @@ func buildServer() *api.Server {
 	queryController := api.NewOrderQueryController(service)
 
 	e := echo.New()
+	e.Logger.SetOutput(w)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	return api.NewServer(cfg, e, commandController, queryController)
+}
+
+func readConfig(cfg *api.Config) {
+	viper.SetConfigFile(`./config.json`)
+
+	must.NotFailF(viper.ReadInConfig)
+	must.NotFail(viper.Unmarshal(cfg))
 }
