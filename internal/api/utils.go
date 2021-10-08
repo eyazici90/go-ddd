@@ -12,8 +12,7 @@ var ErrInvalidRequest = errors.New("invalid Request params")
 func handle(c echo.Context,
 	statusCode int,
 	fn func(ctx context.Context) error) error {
-	err := fn(c.Request().Context())
-	if err != nil {
+	if err := fn(c.Request().Context()); err != nil {
 		return err
 	}
 	return c.JSON(statusCode, "")
