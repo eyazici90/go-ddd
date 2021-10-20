@@ -80,19 +80,19 @@ go 1.17
     }
 
     func (h CreateOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
-        cmd, ok := msg.(CreateOrder)
+       cmd, ok := msg.(CreateOrder)
 	if err := checkType(ok); err != nil {
 		return err
 	}
-        order, err := order.NewOrder(order.OrderId(cmd.Id), customer.New(), product.New(), time.Now)
 
-        if err != nil {
-    	    return err
-        }
+	ordr, err := order.NewOrder(order.ID(cmd.ID), order.NewCustomerID(), order.NewProductID(), time.Now,
+		order.Submitted, aggregate.NewVersion())
 
-        h.repository.Create(ctx, order)
+	if err != nil {
+		return errors.Wrap(err, "create order handle failed")
+	}
 
-        return  nil
+	return h.orderCreator.Create(ctx, ordr)
     }
 
 ## Pipeline Behaviours
