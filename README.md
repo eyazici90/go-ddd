@@ -55,9 +55,9 @@ go 1.17
 		mediator.WithBehaviourFunc(behavior.Validate),
 		mediator.WithBehaviour(behavior.NewCancellator(timeout)),
 		// Handlers
-		mediator.WithHandler(command.CreateOrder{}, command.NewCreateOrderHandler(store.Create)),
-		mediator.WithHandler(command.PayOrder{}, command.NewPayOrderHandler(store.Get, store.Update)),
-		mediator.WithHandler(command.ShipOrder{}, command.NewShipOrderHandler(store.Get, store.Update, ep)),
+		mediator.WithHandler(command.CreateOrder{}, command.NewCreateOrderHandler(store)),
+		mediator.WithHandler(command.PayOrder{}, command.NewPayOrderHandler(store, store)),
+		mediator.WithHandler(command.ShipOrder{}, command.NewShipOrderHandler(store, store, ep)),
 	)
 
 
@@ -70,13 +70,13 @@ go 1.17
     }
 
     type  CreateOrderCommandHandler  struct {
-        repository order.Repository
+        orderCreator OrderCreator
     }
 
      func (CreateOrderCommand) Key() string { return "CreateOrderCommand"}
 
-    func  NewCreateOrderCommandHandler(r order.Repository) CreateOrderCommandHandler {
-        return CreateOrderCommandHandler{repository: r}
+    func  NewCreateOrderCommandHandler(orderCreator OrderCreator) CreateOrderCommandHandler {
+        return CreateOrderHandler{orderCreator: orderCreator}
     }
 
     func (h CreateOrderCommandHandler) Handle(ctx context.Context, msg mediator.Message) error {
