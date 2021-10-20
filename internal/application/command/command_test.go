@@ -16,7 +16,7 @@ import (
 )
 
 func TestCreateOrder(t *testing.T) {
-	handler := command.NewCreateOrderHandler(store.NewOrderInMemoryRepository().Create)
+	handler := command.NewCreateOrderHandler(store.NewOrderInMemoryRepository())
 
 	orderID := uuid.New().String()
 
@@ -40,12 +40,16 @@ func TestPayOrder(t *testing.T) {
 		aggregate.NewVersion())
 	require.NoError(t, err)
 
-	handler := command.NewPayOrderHandler(func(context.Context, string) (*order.Order, error) {
+	handler := command.NewPayOrderHandler(orderGetterFunc(func(context.Context, string) (*order.Order, error) {
 		return newOrder, nil
-	}, store.NewOrderInMemoryRepository().Update)
+	}), store.NewOrderInMemoryRepository())
 
 	err = handler.Handle(context.TODO(), cmd)
 
 	assert.Nil(t, err)
 	assert.Equal(t, order.Paid, newOrder.Status())
 }
+
+type orderGetterFunc func(context.Context, string) (*order.Order, error)
+
+func (o orderGetterFunc) Get(ctx context.Context, id string) (*order.Order, error) { return o(ctx, id) }

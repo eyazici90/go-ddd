@@ -11,7 +11,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-type CreateOrderFn func(context.Context, *order.Order) error
+type OrderCreator interface {
+	Create(context.Context, *order.Order) error
+}
 
 type CreateOrder struct {
 	ID string `validate:"required,min=10"`
@@ -20,11 +22,11 @@ type CreateOrder struct {
 func (CreateOrder) Key() string { return "CreateOrder" }
 
 type CreateOrderHandler struct {
-	createOrderFn CreateOrderFn
+	orderCreator OrderCreator
 }
 
-func NewCreateOrderHandler(createOrderFn CreateOrderFn) CreateOrderHandler {
-	return CreateOrderHandler{createOrderFn}
+func NewCreateOrderHandler(orderCreator OrderCreator) CreateOrderHandler {
+	return CreateOrderHandler{orderCreator: orderCreator}
 }
 
 func (h CreateOrderHandler) Handle(ctx context.Context, msg mediator.Message) error {
@@ -40,5 +42,5 @@ func (h CreateOrderHandler) Handle(ctx context.Context, msg mediator.Message) er
 		return errors.Wrap(err, "create order handle failed")
 	}
 
-	return h.createOrderFn(ctx, ordr)
+	return h.orderCreator.Create(ctx, ordr)
 }

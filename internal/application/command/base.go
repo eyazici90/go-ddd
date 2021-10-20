@@ -10,17 +10,21 @@ import (
 )
 
 type (
-	GetOrderFunc    func(context.Context, string) (*order.Order, error)
-	UpdateOrderFunc func(context.Context, *order.Order) error
-
-	orderHandler struct {
-		getOrder    GetOrderFunc
-		updateOrder UpdateOrderFunc
+	OrderGetter interface {
+		Get(context.Context, string) (*order.Order, error)
+	}
+	OrderUpdater interface {
+		Update(context.Context, *order.Order) error
 	}
 )
 
-func newOrderHandler(getOrder GetOrderFunc, updateOrder UpdateOrderFunc) orderHandler {
-	return orderHandler{getOrder, updateOrder}
+type orderHandler struct {
+	orderGetter  OrderGetter
+	orderUpdater OrderUpdater
+}
+
+func newOrderHandler(orderGetter OrderGetter, orderUpdater OrderUpdater) orderHandler {
+	return orderHandler{orderGetter, orderUpdater}
 }
 
 func (h orderHandler) update(ctx context.Context,
@@ -35,7 +39,7 @@ func (h orderHandler) update(ctx context.Context,
 func (h orderHandler) updateErr(ctx context.Context,
 	identifier string,
 	fn func(*order.Order) error) error {
-	o, err := h.getOrder(ctx, identifier)
+	o, err := h.orderGetter.Get(ctx, identifier)
 
 	if err != nil {
 		return errors.Wrap(err, "get order failed")
@@ -47,5 +51,5 @@ func (h orderHandler) updateErr(ctx context.Context,
 	if err := fn(o); err != nil {
 		return err
 	}
-	return h.updateOrder(ctx, o)
+	return h.orderUpdater.Update(ctx, o)
 }

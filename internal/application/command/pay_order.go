@@ -18,9 +18,9 @@ type PayOrderHandler struct {
 	orderHandler
 }
 
-func NewPayOrderHandler(getOrder GetOrderFunc, updateOrder UpdateOrderFunc) PayOrderHandler {
+func NewPayOrderHandler(orderGetter OrderGetter, orderUpdater OrderUpdater) PayOrderHandler {
 	return PayOrderHandler{
-		orderHandler: newOrderHandler(getOrder, updateOrder),
+		orderHandler: newOrderHandler(orderGetter, orderUpdater),
 	}
 }
 
