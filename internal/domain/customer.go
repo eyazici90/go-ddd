@@ -1,4 +1,4 @@
-package order
+package domain
 
 import (
 	"github.com/google/uuid"

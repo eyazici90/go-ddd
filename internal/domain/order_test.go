@@ -1,10 +1,10 @@
-package order_test
+package domain_test
 
 import (
+	"ordercontext/internal/domain"
 	"testing"
 	"time"
 
-	"ordercontext/internal/domain/order"
 	"ordercontext/pkg/aggregate"
 
 	"github.com/stretchr/testify/assert"
@@ -21,7 +21,7 @@ func TestPayOrder(t *testing.T) {
 
 	o.Pay()
 
-	assert.Equal(t, order.Paid, o.Status())
+	assert.Equal(t, domain.Paid, o.Status())
 }
 
 func TestCancelOrder(t *testing.T) {
@@ -29,7 +29,7 @@ func TestCancelOrder(t *testing.T) {
 
 	o.Cancel()
 
-	assert.Equal(t, order.Canceled, o.Status())
+	assert.Equal(t, domain.Canceled, o.Status())
 }
 
 func TestShipOrder(t *testing.T) {
@@ -47,11 +47,11 @@ func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
 
 	err := o.Ship()
 
-	assert.Equal(t, order.ErrNotPaid, err)
+	assert.Equal(t, domain.ErrNotPaid, err)
 }
 
-func fakeOrder() *order.Order {
-	o, _ := order.NewOrder("123", order.NewCustomerID(), order.NewProductID(),
-		time.Now, order.Submitted, aggregate.NewVersion())
+func fakeOrder() *domain.Order {
+	o, _ := domain.NewOrder("123", domain.NewCustomerID(), domain.NewProductID(),
+		time.Now, domain.Submitted, aggregate.NewVersion())
 	return o
 }

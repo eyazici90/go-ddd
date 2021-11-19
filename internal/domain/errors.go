@@ -1,4 +1,4 @@
-package order
+package domain
 
 import (
 	"errors"

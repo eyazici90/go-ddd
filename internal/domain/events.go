@@ -1,4 +1,4 @@
-package order
+package domain
 
 type (
 	CreatedEvent struct {

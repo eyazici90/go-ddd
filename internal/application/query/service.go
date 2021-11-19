@@ -2,12 +2,12 @@ package query
 
 import (
 	"context"
-	"ordercontext/internal/domain/order"
+	"ordercontext/internal/domain"
 )
 
 type OrderQueryStore interface {
-	GetAll(context.Context) ([]*order.Order, error)
-	Get(ctx context.Context, id string) (*order.Order, error)
+	GetAll(context.Context) ([]*domain.Order, error)
+	Get(ctx context.Context, id string) (*domain.Order, error)
 }
 
 type Service struct {

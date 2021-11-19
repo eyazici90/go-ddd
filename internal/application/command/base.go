@@ -2,8 +2,8 @@ package command
 
 import (
 	"context"
+	"ordercontext/internal/domain"
 
-	"ordercontext/internal/domain/order"
 	"ordercontext/pkg/aggregate"
 
 	"github.com/pkg/errors"
@@ -11,10 +11,10 @@ import (
 
 type (
 	OrderGetter interface {
-		Get(context.Context, string) (*order.Order, error)
+		Get(context.Context, string) (*domain.Order, error)
 	}
 	OrderUpdater interface {
-		Update(context.Context, *order.Order) error
+		Update(context.Context, *domain.Order) error
 	}
 )
 
@@ -29,8 +29,8 @@ func newOrderHandler(orderGetter OrderGetter, orderUpdater OrderUpdater) orderHa
 
 func (h orderHandler) update(ctx context.Context,
 	identifier string,
-	fn func(*order.Order)) error {
-	return h.updateErr(ctx, identifier, func(o *order.Order) error {
+	fn func(*domain.Order)) error {
+	return h.updateErr(ctx, identifier, func(o *domain.Order) error {
 		fn(o)
 		return nil
 	})
@@ -38,11 +38,10 @@ func (h orderHandler) update(ctx context.Context,
 
 func (h orderHandler) updateErr(ctx context.Context,
 	identifier string,
-	fn func(*order.Order) error) error {
+	fn func(*domain.Order) error) error {
 	o, err := h.orderGetter.Get(ctx, identifier)
-
 	if err != nil {
-		return errors.Wrap(err, "get order failed")
+		return errors.Wrap(err, "getting order")
 	}
 	if o == nil {
 		return errors.Wrapf(aggregate.ErrNotFound, "identifier : (%s)", identifier)
@@ -51,5 +50,9 @@ func (h orderHandler) updateErr(ctx context.Context,
 	if err := fn(o); err != nil {
 		return err
 	}
-	return h.orderUpdater.Update(ctx, o)
+
+	if err := h.orderUpdater.Update(ctx, o); err != nil {
+		return errors.Wrap(err, "updating order")
+	}
+	return nil
 }

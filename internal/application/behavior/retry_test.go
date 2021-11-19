@@ -13,7 +13,7 @@ func TestRetrier(t *testing.T) {
 
 	retryCount := 0
 
-	var networkError = errors.New("Fake network error")
+	var networkError = errors.New("fake network error")
 
 	next := func(context.Context) error {
 		retryCount++
