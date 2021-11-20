@@ -30,12 +30,12 @@ type Server struct {
 func NewServer(cfg Config,
 	e *echo.Echo,
 	cmdController OrderCommandController,
-	querycontroller OrderQueryController) *Server {
+	queryController OrderQueryController) *Server {
 	server := Server{
 		cfg:                    cfg,
 		echo:                   e,
 		orderCommandController: cmdController,
-		orderQueryController:   querycontroller,
+		orderQueryController:   queryController,
 	}
 
 	server.useHealth()

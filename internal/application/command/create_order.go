@@ -2,9 +2,9 @@ package command
 
 import (
 	"context"
+	"ordercontext/internal/domain"
 	"time"
 
-	"ordercontext/internal/domain/order"
 	"ordercontext/pkg/aggregate"
 
 	"github.com/eyazici90/go-mediator/pkg/mediator"
@@ -12,7 +12,7 @@ import (
 )
 
 type OrderCreator interface {
-	Create(context.Context, *order.Order) error
+	Create(context.Context, *domain.Order) error
 }
 
 type CreateOrder struct {
@@ -35,12 +35,12 @@ func (h CreateOrderHandler) Handle(ctx context.Context, msg mediator.Message) er
 		return err
 	}
 
-	ordr, err := order.NewOrder(order.ID(cmd.ID), order.NewCustomerID(), order.NewProductID(), time.Now,
-		order.Submitted, aggregate.NewVersion())
+	order, err := domain.NewOrder(domain.OrderID(cmd.ID), domain.NewCustomerID(), domain.NewProductID(), time.Now,
+		domain.Submitted, aggregate.NewVersion())
 
 	if err != nil {
-		return errors.Wrap(err, "create order handle failed")
+		return errors.Wrap(err, "new order")
 	}
 
-	return h.orderCreator.Create(ctx, ordr)
+	return h.orderCreator.Create(ctx, order)
 }

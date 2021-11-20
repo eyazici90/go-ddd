@@ -1,4 +1,4 @@
-package order
+package domain
 
 import (
 	"time"
@@ -8,15 +8,15 @@ import (
 	"github.com/google/uuid"
 )
 
-type ID string
+type OrderID string
 
-func NewID() ID {
-	return ID(uuid.New().String())
+func NewOrderID() OrderID {
+	return OrderID(uuid.New().String())
 }
 
 type Order struct {
 	aggregate.Root
-	id          ID
+	id          OrderID
 	customerID  CustomerID
 	productID   ProductID
 	createdTime time.Time
@@ -24,7 +24,7 @@ type Order struct {
 	version     aggregate.Version
 }
 
-func NewOrder(id ID, customerID CustomerID,
+func NewOrder(id OrderID, customerID CustomerID,
 	productID ProductID, now aggregate.Now,
 	status Status, version aggregate.Version) (*Order, error) {
 	o := Order{
