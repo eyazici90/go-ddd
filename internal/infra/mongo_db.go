@@ -2,6 +2,7 @@ package infra
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -12,7 +13,7 @@ type MongoStore struct {
 	db *mongo.Database
 }
 
-func NewMongoStore(uri, dbName string, timeout time.Duration) *MongoStore {
+func NewMongoStore(uri, dbName string, timeout time.Duration) (*MongoStore, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -20,9 +21,9 @@ func NewMongoStore(uri, dbName string, timeout time.Duration) *MongoStore {
 	client, err := mongo.Connect(ctx, clientOpts)
 
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	return &MongoStore{client.Database(dbName)}
+	return &MongoStore{client.Database(dbName)}, nil
 }
 
 func (store *MongoStore) Store(ctx context.Context, collection string, data interface{}) error {
@@ -44,11 +45,13 @@ func (store *MongoStore) Update(ctx context.Context, collection string, query, u
 func (store *MongoStore) FindAll(ctx context.Context, collection string, query, result interface{}) error {
 	cur, err := store.db.Collection(collection).Find(ctx, query)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "finding collection")
 	}
 
-	defer cur.Close(ctx)
-	if err := cur.All(ctx, result); err != nil {
+	defer func() {
+		_ = cur.Close(ctx)
+	}()
+	if err = cur.All(ctx, result); err != nil {
 		return err
 	}
 
