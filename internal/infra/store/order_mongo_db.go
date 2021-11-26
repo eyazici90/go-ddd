@@ -27,7 +27,7 @@ func FromBson(o *orderBson) *domain.Order {
 		domain.CustomerID(o.CustomerID),
 		domain.ProductID(o.ProductID),
 		time.Now,
-		domain.Status(o.Status),
+		domain.OrderStatus(o.Status),
 		aggregate.Version(o.Version))
 
 	ord.Clear()

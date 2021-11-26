@@ -4,15 +4,19 @@ import (
 	"time"
 
 	"ordercontext/pkg/aggregate"
-
-	"github.com/google/uuid"
 )
 
 type OrderID string
 
-func NewOrderID() OrderID {
-	return OrderID(uuid.New().String())
-}
+type OrderStatus int
+
+const (
+	Unknown OrderStatus = iota
+	Submitted
+	Paid
+	Shipped
+	Canceled
+)
 
 type Order struct {
 	aggregate.Root
@@ -20,13 +24,13 @@ type Order struct {
 	customerID  CustomerID
 	productID   ProductID
 	createdTime time.Time
-	status      Status
+	status      OrderStatus
 	version     aggregate.Version
 }
 
 func NewOrder(id OrderID, customerID CustomerID,
 	productID ProductID, now aggregate.Now,
-	status Status, version aggregate.Version) (*Order, error) {
+	status OrderStatus, version aggregate.Version) (*Order, error) {
 	o := Order{
 		id:          id,
 		customerID:  customerID,
@@ -72,7 +76,7 @@ func (o *Order) CustomerID() string { return o.customerID.String() }
 
 func (o *Order) Version() string { return o.version.String() }
 
-func (o *Order) Status() Status { return o.status }
+func (o *Order) Status() OrderStatus { return o.status }
 
 func valid(o *Order) error {
 	if o.id == "" || o.customerID == "" || o.productID == "" {
