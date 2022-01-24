@@ -1,11 +1,11 @@
 package domain_test
 
 import (
-	"ordercontext/internal/domain"
 	"testing"
 	"time"
 
-	"ordercontext/pkg/aggregate"
+	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/pkg/aggregate"
 
 	"github.com/stretchr/testify/assert"
 )

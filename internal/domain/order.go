@@ -3,7 +3,7 @@ package domain
 import (
 	"time"
 
-	"ordercontext/pkg/aggregate"
+	"github.com/eyazici90/go-ddd/pkg/aggregate"
 )
 
 type OrderID string

@@ -1,11 +1,12 @@
-package api
+package http
 
 import (
 	"net/http"
-	"ordercontext/internal/domain"
-	"ordercontext/pkg/aggregate"
-	"ordercontext/pkg/httperr"
 	"time"
+
+	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/pkg/aggregate"
+	"github.com/eyazici90/go-ddd/pkg/httperr"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4/middleware"

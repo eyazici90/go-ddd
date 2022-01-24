@@ -2,10 +2,10 @@ package command
 
 import (
 	"context"
-	"ordercontext/internal/domain"
 	"time"
 
-	"ordercontext/pkg/aggregate"
+	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/pkg/aggregate"
 
 	"github.com/eyazici90/go-mediator/pkg/mediator"
 	"github.com/pkg/errors"
@@ -37,7 +37,6 @@ func (h CreateOrderHandler) Handle(ctx context.Context, msg mediator.Message) er
 
 	order, err := domain.NewOrder(domain.OrderID(cmd.ID), domain.NewCustomerID(), domain.NewProductID(), time.Now,
 		domain.Submitted, aggregate.NewVersion())
-
 	if err != nil {
 		return errors.Wrap(err, "new order")
 	}

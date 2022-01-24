@@ -1,26 +1,26 @@
-package api
+package http
 
 import (
 	"context"
 	"net/http"
 
-	"ordercontext/internal/application/query"
+	"github.com/eyazici90/go-ddd/internal/app/query"
 
 	"github.com/labstack/echo/v4"
 )
 
-type OrderQueryService interface {
+type QueryService interface {
 	GetOrders(context.Context) *query.GetOrdersDto
 	GetOrder(ctx context.Context, id string) *query.GetOrderDto
 }
 
 type OrderQueryController struct {
-	orderservice OrderQueryService
+	orderService QueryService
 }
 
-func NewOrderQueryController(s OrderQueryService) OrderQueryController {
+func NewQueryController(s QueryService) OrderQueryController {
 	return OrderQueryController{
-		orderservice: s,
+		orderService: s,
 	}
 }
 
@@ -34,7 +34,7 @@ func NewOrderQueryController(s OrderQueryService) OrderQueryController {
 // @Router /orders [get]
 func (o OrderQueryController) getOrders(c echo.Context) error {
 	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
-		return o.orderservice.GetOrders(ctx), nil
+		return o.orderService.GetOrders(ctx), nil
 	})
 }
 
@@ -51,6 +51,6 @@ func (o OrderQueryController) getOrder(c echo.Context) error {
 	id := c.Param("id")
 
 	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
-		return o.orderservice.GetOrder(ctx, id), nil
+		return o.orderService.GetOrder(ctx, id), nil
 	})
 }

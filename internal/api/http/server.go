@@ -1,4 +1,4 @@
-package api
+package http
 
 import (
 	"context"
@@ -23,13 +23,13 @@ type Config struct {
 type Server struct {
 	cfg                    Config
 	echo                   *echo.Echo
-	orderCommandController OrderCommandController
+	orderCommandController CommandController
 	orderQueryController   OrderQueryController
 }
 
 func NewServer(cfg Config,
 	e *echo.Echo,
-	cmdController OrderCommandController,
+	cmdController CommandController,
 	queryController OrderQueryController) *Server {
 	server := Server{
 		cfg:                    cfg,

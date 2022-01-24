@@ -2,13 +2,13 @@ package command_test
 
 import (
 	"context"
-	"ordercontext/internal/domain"
 	"testing"
 	"time"
 
-	"ordercontext/internal/application/command"
-	"ordercontext/internal/infra/store"
-	"ordercontext/pkg/aggregate"
+	"github.com/eyazici90/go-ddd/internal/app/command"
+	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/internal/infra/inmem"
+	"github.com/eyazici90/go-ddd/pkg/aggregate"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -16,7 +16,7 @@ import (
 )
 
 func TestCreateOrder(t *testing.T) {
-	handler := command.NewCreateOrderHandler(store.NewOrderInMemoryRepository())
+	handler := command.NewCreateOrderHandler(inmem.NewOrderRepository())
 
 	orderID := uuid.New().String()
 
@@ -42,7 +42,7 @@ func TestPayOrder(t *testing.T) {
 
 	handler := command.NewPayOrderHandler(orderGetterFunc(func(context.Context, string) (*domain.Order, error) {
 		return newOrder, nil
-	}), store.NewOrderInMemoryRepository())
+	}), inmem.NewOrderRepository())
 
 	err = handler.Handle(context.TODO(), cmd)
 
