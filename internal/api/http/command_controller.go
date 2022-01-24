@@ -1,31 +1,31 @@
-package api
+package http
 
 import (
 	"context"
 	"net/http"
 	"time"
 
-	"ordercontext/internal/application"
-	"ordercontext/internal/application/command"
-	"ordercontext/internal/application/event"
+	"github.com/eyazici90/go-ddd/internal/app"
+	"github.com/eyazici90/go-ddd/internal/app/command"
+	"github.com/eyazici90/go-ddd/internal/app/event"
 
 	"github.com/eyazici90/go-mediator/pkg/mediator"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
-type OrderCommandController struct {
+type CommandController struct {
 	sender mediator.Sender
 }
 
-func NewOrderCommandController(r application.OrderStore,
+func NewCommandController(r app.OrderStore,
 	e event.Publisher,
-	timeout time.Duration) (OrderCommandController, error) {
-	m, err := application.NewMediator(r, e, timeout)
+	timeout time.Duration) (CommandController, error) {
+	m, err := app.NewMediator(r, e, timeout)
 	if err != nil {
-		return OrderCommandController{}, err
+		return CommandController{}, err
 	}
-	return OrderCommandController{
+	return CommandController{
 		sender: m,
 	}, nil
 }
@@ -38,7 +38,7 @@ func NewOrderCommandController(r application.OrderStore,
 // @Produce json
 // @Success 201 {object} string
 // @Router /orders [post]
-func (o OrderCommandController) create(c echo.Context) error {
+func (o CommandController) create(c echo.Context) error {
 	return handle(c,
 		http.StatusCreated,
 		func(ctx context.Context) error {
@@ -55,7 +55,7 @@ func (o OrderCommandController) create(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/pay/{id} [put]
-func (o OrderCommandController) pay(c echo.Context) error {
+func (o CommandController) pay(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
@@ -72,7 +72,7 @@ func (o OrderCommandController) pay(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/cancel/{id} [put]
-func (o OrderCommandController) cancel(c echo.Context) error {
+func (o CommandController) cancel(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
@@ -89,7 +89,7 @@ func (o OrderCommandController) cancel(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/ship/{id} [put]
-func (o OrderCommandController) ship(c echo.Context) error {
+func (o CommandController) ship(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {

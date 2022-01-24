@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"ordercontext/internal/application/command"
+	"github.com/eyazici90/go-ddd/internal/app/command"
 
 	"github.com/stretchr/testify/assert"
 )

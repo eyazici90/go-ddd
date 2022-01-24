@@ -2,9 +2,7 @@ package command
 
 import "github.com/pkg/errors"
 
-var (
-	ErrInvalidCommand = errors.New("invalid command")
-)
+var ErrInvalidCommand = errors.New("invalid command")
 
 func checkType(ok bool) error {
 	if !ok {

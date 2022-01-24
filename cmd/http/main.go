@@ -5,18 +5,18 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
+	nethttp "net/http"
 	"os"
 	"time"
 
-	"ordercontext/internal/api"
-	"ordercontext/internal/application/query"
-	"ordercontext/internal/infra"
-	"ordercontext/internal/infra/store"
-	"ordercontext/pkg/must"
-	"ordercontext/pkg/shutdown"
+	"github.com/eyazici90/go-ddd/internal/api/http"
+	"github.com/eyazici90/go-ddd/internal/app/query"
+	"github.com/eyazici90/go-ddd/internal/infra"
+	"github.com/eyazici90/go-ddd/internal/infra/inmem"
+	"github.com/eyazici90/go-ddd/pkg/must"
+	"github.com/eyazici90/go-ddd/pkg/shutdown"
 
-	_ "ordercontext/docs"
+	_ "github.com/eyazici90/go-ddd/docs"
 
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -27,14 +27,20 @@ import (
 // @description order context
 // @version 1.0
 // @host localhost:8080
-// @BasePath /api/v1
+// @BasePath /http/v1
 func main() {
+	var exitCode int
+	defer func() {
+		os.Exit(exitCode)
+	}()
+
 	cleanup, err := run(os.Stdout)
 	defer cleanup()
 
 	if err != nil {
 		fmt.Printf("%v", err)
-		os.Exit(1)
+		exitCode = 1
+		return
 	}
 
 	shutdown.Gracefully()
@@ -44,7 +50,7 @@ func run(w io.Writer) (func(), error) {
 	server := buildServer(w)
 
 	go func() {
-		if err := server.Start(); err != nil && err != http.ErrServerClosed {
+		if err := server.Start(); err != nil && err != nethttp.ErrServerClosed {
 			server.Fatal(errors.New("server could not be started"))
 		}
 	}()
@@ -59,28 +65,28 @@ func run(w io.Writer) (func(), error) {
 	}, nil
 }
 
-func buildServer(w io.Writer) *api.Server {
-	var cfg api.Config
+func buildServer(w io.Writer) *http.Server {
+	var cfg http.Config
 	readConfig(&cfg)
 
-	repository := store.NewOrderInMemoryRepository()
+	repository := inmem.NewOrderRepository()
 	service := query.NewOrderQueryService(repository)
 	eventBus := infra.NewNoBus()
 
-	commandController, err := api.NewOrderCommandController(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
+	commandController, err := http.NewCommandController(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
 	must.NotFail(err)
 
-	queryController := api.NewOrderQueryController(service)
+	queryController := http.NewQueryController(service)
 
 	e := echo.New()
 	e.Logger.SetOutput(w)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	return api.NewServer(cfg, e, commandController, queryController)
+	return http.NewServer(cfg, e, commandController, queryController)
 }
 
-func readConfig(cfg *api.Config) {
+func readConfig(cfg *http.Config) {
 	viper.SetConfigFile(`./config.json`)
 
 	must.NotFailF(viper.ReadInConfig)

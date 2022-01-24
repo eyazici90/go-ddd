@@ -2,8 +2,9 @@ package infra
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -19,7 +20,6 @@ func NewMongoStore(uri, dbName string, timeout time.Duration) (*MongoStore, erro
 
 	clientOpts := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(ctx, clientOpts)
-
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (store *MongoStore) FindAll(ctx context.Context, collection string, query, 
 	defer func() {
 		_ = cur.Close(ctx)
 	}()
-	if err = cur.All(ctx, result); err != nil {
+	if err := cur.All(ctx, result); err != nil {
 		return err
 	}
 

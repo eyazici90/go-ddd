@@ -2,7 +2,8 @@ package query
 
 import (
 	"context"
-	"ordercontext/internal/domain"
+
+	"github.com/eyazici90/go-ddd/internal/domain"
 )
 
 type OrderQueryStore interface {

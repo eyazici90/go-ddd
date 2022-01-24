@@ -2,10 +2,11 @@ package command
 
 import (
 	"context"
-	"ordercontext/internal/domain"
+
+	"github.com/eyazici90/go-ddd/internal/app/event"
+	"github.com/eyazici90/go-ddd/internal/domain"
 
 	"github.com/eyazici90/go-mediator/pkg/mediator"
-	"ordercontext/internal/application/event"
 )
 
 type ShipOrder struct {

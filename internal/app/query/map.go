@@ -1,7 +1,7 @@
 package query
 
 import (
-	"ordercontext/internal/domain"
+	"github.com/eyazici90/go-ddd/internal/domain"
 )
 
 func mapTo(o *domain.Order) OrderView {

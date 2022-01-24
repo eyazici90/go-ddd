@@ -1,4 +1,4 @@
-module ordercontext
+module github.com/eyazici90/go-ddd
 
 go 1.17
 

@@ -1,4 +1,4 @@
-package api
+package http
 
 import (
 	"net/http"
@@ -6,11 +6,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-const orderBaseURL string = "/orders"
-const version string = "v1"
+const (
+	orderBaseURL string = "/orders"
+	version      string = "v1"
+)
 
 func (s *Server) useRoutes() {
-	v1 := s.echo.Group("/api/" + version)
+	v1 := s.echo.Group("/http/" + version)
 
 	v1.GET(orderBaseURL, s.orderQueryController.getOrders)
 	v1.GET(orderBaseURL+"/:id", s.orderQueryController.getOrder)

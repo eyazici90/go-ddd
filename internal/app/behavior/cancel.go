@@ -2,7 +2,6 @@ package behavior
 
 import (
 	"context"
-
 	"time"
 
 	"github.com/eyazici90/go-mediator/pkg/mediator"

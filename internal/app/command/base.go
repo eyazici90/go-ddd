@@ -2,9 +2,9 @@ package command
 
 import (
 	"context"
-	"ordercontext/internal/domain"
 
-	"ordercontext/pkg/aggregate"
+	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/pkg/aggregate"
 
 	"github.com/pkg/errors"
 )
