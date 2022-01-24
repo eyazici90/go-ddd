@@ -1,0 +1,31 @@
+package http
+
+import (
+	"net/http"
+
+	"github.com/labstack/echo/v4"
+)
+
+const (
+	orderBaseURL string = "/orders"
+	version      string = "v1"
+)
+
+func (s *Server) useRoutes() {
+	v1 := s.echo.Group("/http/" + version)
+
+	v1.GET(orderBaseURL, s.queryController.getOrders)
+	v1.GET(orderBaseURL+"/:id", s.queryController.getOrder)
+
+	v1.POST(orderBaseURL, s.commandController.create)
+
+	v1.PUT(orderBaseURL+"/pay"+"/:id", s.commandController.pay)
+	v1.PUT(orderBaseURL+"/ship"+"/:id", s.commandController.ship)
+	v1.PUT(orderBaseURL+"/cancel"+"/:id", s.commandController.cancel)
+}
+
+func (s *Server) useHealth() {
+	s.echo.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Healthy")
+	})
+}

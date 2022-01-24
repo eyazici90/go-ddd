@@ -9,7 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/eyazici90/go-ddd/internal/api/http"
+	http2 "github.com/eyazici90/go-ddd/internal/http"
+
 	"github.com/eyazici90/go-ddd/internal/app/query"
 	"github.com/eyazici90/go-ddd/internal/infra"
 	"github.com/eyazici90/go-ddd/internal/infra/inmem"
@@ -65,28 +66,28 @@ func run(w io.Writer) (func(), error) {
 	}, nil
 }
 
-func buildServer(w io.Writer) *http.Server {
-	var cfg http.Config
+func buildServer(w io.Writer) *http2.Server {
+	var cfg http2.Config
 	readConfig(&cfg)
 
 	repository := inmem.NewOrderRepository()
 	service := query.NewOrderQueryService(repository)
 	eventBus := infra.NewNoBus()
 
-	commandController, err := http.NewCommandController(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
+	commandController, err := http2.NewCommandController(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
 	must.NotFail(err)
 
-	queryController := http.NewQueryController(service)
+	queryController := http2.NewQueryController(service)
 
 	e := echo.New()
 	e.Logger.SetOutput(w)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	return http.NewServer(cfg, e, commandController, queryController)
+	return http2.NewServer(cfg, e, commandController, queryController)
 }
 
-func readConfig(cfg *http.Config) {
+func readConfig(cfg *http2.Config) {
 	viper.SetConfigFile(`./config.json`)
 
 	must.NotFailF(viper.ReadInConfig)
