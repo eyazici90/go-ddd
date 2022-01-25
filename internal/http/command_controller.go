@@ -31,7 +31,7 @@ func NewCommandController(r app.OrderStore,
 }
 
 // CreateOrder godoc
-// @Summary Create a order
+// @Summary Create an order
 // @Description Create a new order
 // @Tags order
 // @Accept json

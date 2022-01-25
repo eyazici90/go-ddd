@@ -2,7 +2,11 @@ package http
 
 import (
 	"net/http"
+	"strings"
 	"time"
+
+	"github.com/labstack/echo-contrib/prometheus"
+	"github.com/labstack/echo/v4"
 
 	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
@@ -17,6 +21,7 @@ func (s *Server) useMiddlewares() {
 	s.useRecover()
 	s.useRequestID()
 	s.useTimeout()
+	s.useMetrics()
 
 	s.useErrorHandler(httperr.NewHandler(
 		httperr.DefaultHandler.WithMap(http.StatusBadRequest,
@@ -52,4 +57,16 @@ func (s *Server) useRequestID() {
 
 func (s *Server) useErrorHandler(httpErrHandler *httperr.Handler) {
 	s.echo.HTTPErrorHandler = httpErrHandler.Handle()
+}
+
+func (s *Server) useMetrics() {
+	p := prometheus.NewPrometheus("echo", urlSkipper)
+	p.Use(s.echo)
+}
+
+func urlSkipper(c echo.Context) bool {
+	if strings.HasPrefix(c.Path(), "/health") {
+		return true
+	}
+	return false
 }

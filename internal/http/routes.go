@@ -12,7 +12,7 @@ const (
 )
 
 func (s *Server) useRoutes() {
-	v1 := s.echo.Group("/http/" + version)
+	v1 := s.echo.Group("/api/" + version)
 
 	v1.GET(orderBaseURL, s.queryController.getOrders)
 	v1.GET(orderBaseURL+"/:id", s.queryController.getOrder)
@@ -25,7 +25,7 @@ func (s *Server) useRoutes() {
 }
 
 func (s *Server) useHealth() {
-	s.echo.GET("/", func(c echo.Context) error {
+	s.echo.GET("/health", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Healthy")
 	})
 }
