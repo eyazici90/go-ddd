@@ -38,6 +38,7 @@ go 1.17
 - Health checks
 - Graceful shutdown on interrupt signals
 - Global http error handling with Problem Details rfc7807 (https://datatracker.ietf.org/doc/html/rfc7807)
+- Prometheus metrics for echo
 - Swagger docs (/swagger/index.html)
 - Graceful config management by viper
 - Mediator usage for command dispatching
@@ -49,7 +50,9 @@ go 1.17
 
 **_Mediator with pipeline behaviours_** (order matters for pipeline behaviours)
 
-    sender, err := mediator.New(
+
+```go
+     sender, err := mediator.New(
 		// Behaviors
 		mediator.WithBehaviourFunc(behavior.Measure),
 		mediator.WithBehaviourFunc(behavior.Validate),
@@ -62,9 +65,12 @@ go 1.17
 
 
     err = sender.Send(ctx, cmd)
+```
+    
 
 **_Command & Command handler_**
 
+```go
     type  CreateOrderCommand  struct {
         Id string  `validate:"required,min=10"`
     }
@@ -73,7 +79,7 @@ go 1.17
         orderCreator OrderCreator
     }
 
-     func (CreateOrderCommand) Key() string { return "CreateOrderCommand"}
+    func (CreateOrderCommand) Key() string { return "CreateOrderCommand"}
 
     func  NewCreateOrderCommandHandler(orderCreator OrderCreator) CreateOrderCommandHandler {
         return CreateOrderHandler{orderCreator: orderCreator}
@@ -94,11 +100,14 @@ go 1.17
 
 	return h.orderCreator.Create(ctx, ordr)
     }
+```
+
+    
 
 ## Pipeline Behaviours
 
 **_Auto command validation_**
-
+```go
     var  validate *validator.Validate = validator.New()
 
     type  Validator  struct{}
@@ -113,9 +122,12 @@ go 1.17
 
         return  next(ctx)
     }
+```
 
+    
 **_Context timeout_**
 
+```go
     type  Cancellator  struct {
         timeout int
     }
@@ -134,4 +146,11 @@ go 1.17
 
     }
 
-...
+
+```
+
+    
+## IAC
+
+
+TBD
