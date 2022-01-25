@@ -65,8 +65,5 @@ func (s *Server) useMetrics() {
 }
 
 func urlSkipper(c echo.Context) bool {
-	if strings.HasPrefix(c.Path(), "/health") {
-		return true
-	}
-	return false
+	return strings.HasPrefix(c.Path(), "/health")
 }
