@@ -7,7 +7,7 @@ import (
 	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
 
-	"github.com/eyazici90/go-mediator/pkg/mediator"
+	"github.com/eyazici90/go-mediator/mediator"
 	"github.com/pkg/errors"
 )
 
@@ -19,7 +19,7 @@ type CreateOrder struct {
 	ID string `validate:"required,min=10"`
 }
 
-func (CreateOrder) Key() string { return "CreateOrder" }
+func (CreateOrder) Key() int { return createCommandKey }
 
 type CreateOrderHandler struct {
 	orderCreator OrderCreator

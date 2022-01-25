@@ -6,14 +6,14 @@ import (
 
 	"github.com/eyazici90/go-ddd/internal/domain"
 
-	"github.com/eyazici90/go-mediator/pkg/mediator"
+	"github.com/eyazici90/go-mediator/mediator"
 )
 
 type PayOrder struct {
 	OrderID string `validate:"required,min=10"`
 }
 
-func (PayOrder) Key() string { return "PayOrder" }
+func (PayOrder) Key() int { return payCommandKey }
 
 type PayOrderHandler struct {
 	orderHandler

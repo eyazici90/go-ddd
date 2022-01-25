@@ -6,7 +6,7 @@ require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/aws/aws-sdk-go v1.37.1 // indirect
-	github.com/eyazici90/go-mediator v0.0.0-20210917231127-e68746b7e144
+	github.com/eyazici90/go-mediator v0.0.0-20220120164512-6fc572a4ad7d
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-openapi/spec v0.20.2 // indirect
 	github.com/go-playground/validator/v10 v10.4.1

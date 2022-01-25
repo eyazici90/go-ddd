@@ -79,7 +79,7 @@ go 1.17
         orderCreator OrderCreator
     }
 
-    func (CreateOrderCommand) Key() string { return "CreateOrderCommand"}
+    func (CreateOrderCommand) Key() int { return createCommandKey }
 
     func  NewCreateOrderCommandHandler(orderCreator OrderCreator) CreateOrderCommandHandler {
         return CreateOrderHandler{orderCreator: orderCreator}

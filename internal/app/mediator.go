@@ -6,7 +6,8 @@ import (
 	"github.com/eyazici90/go-ddd/internal/app/behavior"
 	"github.com/eyazici90/go-ddd/internal/app/command"
 	"github.com/eyazici90/go-ddd/internal/app/event"
-	"github.com/eyazici90/go-mediator/pkg/mediator"
+
+	"github.com/eyazici90/go-mediator/mediator"
 	"github.com/pkg/errors"
 )
 

@@ -9,6 +9,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	createCommandKey int = iota
+	payCommandKey
+	cancelCommandKey
+	shipCommandKey
+)
+
 type (
 	OrderGetter interface {
 		Get(context.Context, string) (*domain.Order, error)

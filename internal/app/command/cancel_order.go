@@ -6,14 +6,14 @@ import (
 
 	"github.com/eyazici90/go-ddd/internal/domain"
 
-	"github.com/eyazici90/go-mediator/pkg/mediator"
+	"github.com/eyazici90/go-mediator/mediator"
 )
 
 type CancelOrder struct {
 	OrderID string `validate:"required,min=10"`
 }
 
-func (CancelOrder) Key() string { return "CancelOrder" }
+func (CancelOrder) Key() int { return cancelCommandKey }
 
 type CancelOrderHandler struct {
 	orderHandler
