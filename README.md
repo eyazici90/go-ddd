@@ -16,6 +16,10 @@ go 1.17
 
 - docker build -t go-ddd -f docker/Dockerfile .
 - docker run -it --rm -p 8080:8080 go-ddd
+- locate
+```
+http://localhost:8080/swagger/index.html
+```
 
 ## K8s
 
