@@ -5,14 +5,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/labstack/echo-contrib/prometheus"
-	"github.com/labstack/echo/v4"
-
 	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
 	"github.com/eyazici90/go-ddd/pkg/httperr"
-
 	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo-contrib/prometheus"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 

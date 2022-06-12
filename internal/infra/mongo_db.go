@@ -2,9 +2,8 @@ package infra
 
 import (
 	"context"
+	"fmt"
 	"time"
-
-	"github.com/pkg/errors"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -45,14 +44,14 @@ func (store *MongoStore) Update(ctx context.Context, collection string, query, u
 func (store *MongoStore) FindAll(ctx context.Context, collection string, query, result interface{}) error {
 	cur, err := store.db.Collection(collection).Find(ctx, query)
 	if err != nil {
-		return errors.Wrap(err, "finding collection")
+		return fmt.Errorf("finding collection: %w", err)
 	}
-
 	defer func() {
 		_ = cur.Close(ctx)
 	}()
+
 	if err := cur.All(ctx, result); err != nil {
-		return err
+		return fmt.Errorf("fetching result: %w", err)
 	}
 
 	return cur.Err()

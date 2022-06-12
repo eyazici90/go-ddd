@@ -2,12 +2,9 @@ package http
 
 import (
 	"context"
-	"errors"
 
 	"github.com/labstack/echo/v4"
 )
-
-var ErrInvalidRequest = errors.New("invalid Request params")
 
 func handle(c echo.Context,
 	statusCode int,

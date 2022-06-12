@@ -2,15 +2,14 @@ package command
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
-
-	"github.com/pkg/errors"
 )
 
 const (
-	createCommandKey int = iota
+	createCommandKey int = iota + 1
 	payCommandKey
 	cancelCommandKey
 	shipCommandKey
@@ -35,31 +34,29 @@ func newOrderHandler(orderGetter OrderGetter, orderUpdater OrderUpdater) orderHa
 }
 
 func (h orderHandler) update(ctx context.Context,
-	identifier string,
+	id string,
 	fn func(*domain.Order)) error {
-	return h.updateErr(ctx, identifier, func(o *domain.Order) error {
+	return h.updateErr(ctx, id, func(o *domain.Order) error {
 		fn(o)
 		return nil
 	})
 }
 
 func (h orderHandler) updateErr(ctx context.Context,
-	identifier string,
+	id string,
 	fn func(*domain.Order) error) error {
-	o, err := h.orderGetter.Get(ctx, identifier)
+	o, err := h.orderGetter.Get(ctx, id)
 	if err != nil {
-		return errors.Wrap(err, "getting order")
+		return fmt.Errorf("getting order: %w", err)
 	}
 	if o == nil {
-		return errors.Wrapf(aggregate.ErrNotFound, "identifier : (%s)", identifier)
+		return fmt.Errorf("id: (%s): %w", id, aggregate.ErrNotFound)
 	}
-
-	if err := fn(o); err != nil {
+	if err = fn(o); err != nil {
 		return err
 	}
-
-	if err := h.orderUpdater.Update(ctx, o); err != nil {
-		return errors.Wrap(err, "updating order")
+	if err = h.orderUpdater.Update(ctx, o); err != nil {
+		return fmt.Errorf("updating order: %w", err)
 	}
 	return nil
 }

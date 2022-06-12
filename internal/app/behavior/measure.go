@@ -15,7 +15,6 @@ func Measure(ctx context.Context, msg mediator.Message, next mediator.Next) erro
 	err := next(ctx)
 
 	elapsed := time.Since(start)
-
 	log.Printf("Execution for the command (%s) took %s", reflect.TypeOf(msg), elapsed)
 
 	return err

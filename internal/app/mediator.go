@@ -1,14 +1,13 @@
 package app
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/eyazici90/go-ddd/internal/app/behavior"
 	"github.com/eyazici90/go-ddd/internal/app/command"
 	"github.com/eyazici90/go-ddd/internal/app/event"
-
 	"github.com/eyazici90/go-mediator/mediator"
-	"github.com/pkg/errors"
 )
 
 type OrderStore interface {
@@ -31,7 +30,7 @@ func NewMediator(store OrderStore,
 		mediator.WithHandler(command.ShipOrder{}, command.NewShipOrderHandler(store, store, ep)),
 	)
 	if err != nil {
-		return nil, errors.Wrap(err, "create mediator")
+		return nil, fmt.Errorf("create mediator: %w", err)
 	}
 	return m, nil
 }

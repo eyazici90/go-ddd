@@ -2,13 +2,12 @@ package command
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
-
 	"github.com/eyazici90/go-mediator/mediator"
-	"github.com/pkg/errors"
 )
 
 type OrderCreator interface {
@@ -31,14 +30,14 @@ func NewCreateOrderHandler(orderCreator OrderCreator) CreateOrderHandler {
 
 func (h CreateOrderHandler) Handle(ctx context.Context, msg mediator.Message) error {
 	cmd, ok := msg.(CreateOrder)
-	if err := checkType(ok); err != nil {
-		return err
+	if !ok {
+		return ErrInvalidCommand
 	}
 
 	order, err := domain.NewOrder(domain.OrderID(cmd.ID), domain.NewCustomerID(), domain.NewProductID(), time.Now,
 		domain.Submitted, aggregate.NewVersion())
 	if err != nil {
-		return errors.Wrap(err, "new order")
+		return fmt.Errorf("new order: %w", err)
 	}
 
 	return h.orderCreator.Create(ctx, order)

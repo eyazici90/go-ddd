@@ -6,7 +6,6 @@ import (
 
 	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
-
 	"github.com/stretchr/testify/assert"
 )
 

@@ -20,6 +20,7 @@ const (
 
 type Order struct {
 	aggregate.Root
+
 	id          OrderID
 	customerID  CustomerID
 	productID   ProductID
@@ -39,11 +40,9 @@ func NewOrder(id OrderID, customerID CustomerID,
 		status:      status,
 		version:     version,
 	}
-
 	if err := valid(&o); err != nil {
 		return nil, err
 	}
-
 	o.AddEvent(CreatedEvent{id: string(id)})
 
 	return &o, nil
@@ -63,7 +62,6 @@ func (o *Order) Ship() error {
 	if o.status != Paid {
 		return ErrNotPaid
 	}
-
 	o.status = Shipped
 	return nil
 }

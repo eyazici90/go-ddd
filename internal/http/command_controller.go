@@ -8,14 +8,13 @@ import (
 	"github.com/eyazici90/go-ddd/internal/app"
 	"github.com/eyazici90/go-ddd/internal/app/command"
 	"github.com/eyazici90/go-ddd/internal/app/event"
-
 	"github.com/eyazici90/go-mediator/mediator"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
 type CommandController struct {
-	sender mediator.Sender
+	sender *mediator.Mediator
 }
 
 func NewCommandController(r app.OrderStore,

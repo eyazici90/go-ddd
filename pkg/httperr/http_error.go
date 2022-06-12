@@ -45,6 +45,7 @@ func NewHandler(opts ...Option) *Handler {
 		v(&errHandler)
 	}
 	errHandler.setDefaultProblemDetailsHandle()
+
 	return &errHandler
 }
 

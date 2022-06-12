@@ -7,7 +7,6 @@ import (
 	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/internal/infra"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
-
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -44,13 +43,11 @@ func NewOrderRepository(mongoStore *infra.MongoStore) *OrderRepository {
 
 func (r *OrderRepository) GetAll(ctx context.Context) ([]*domain.Order, error) {
 	var result []*orderBson
-
 	if err := r.mStore.FindAll(ctx, collectionName, bson.M{}, &result); err != nil {
 		return nil, err
 	}
 
 	var orders []*domain.Order
-
 	for _, o := range result {
 		orders = append(orders, FromOrderBson(o))
 	}
@@ -83,6 +80,7 @@ func (r *OrderRepository) Create(ctx context.Context, o *domain.Order) error {
 	if bOrder.Version == "" {
 		bOrder.Version = aggregate.NewVersion().String()
 	}
+
 	return r.mStore.Store(ctx, collectionName, bOrder)
 }
 

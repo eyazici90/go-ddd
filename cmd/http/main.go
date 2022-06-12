@@ -9,16 +9,13 @@ import (
 	"os"
 	"time"
 
-	"github.com/eyazici90/go-ddd/internal/http"
-
+	_ "github.com/eyazici90/go-ddd/docs"
 	"github.com/eyazici90/go-ddd/internal/app/query"
+	"github.com/eyazici90/go-ddd/internal/http"
 	"github.com/eyazici90/go-ddd/internal/infra"
 	"github.com/eyazici90/go-ddd/internal/infra/inmem"
 	"github.com/eyazici90/go-ddd/pkg/must"
 	"github.com/eyazici90/go-ddd/pkg/shutdown"
-
-	_ "github.com/eyazici90/go-ddd/docs"
-
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -48,7 +45,10 @@ func main() {
 }
 
 func run(w io.Writer) (func(), error) {
-	server := buildServer(w)
+	server, err := buildServer(w)
+	if err != nil {
+		return nil, err
+	}
 
 	go func() {
 		if err := server.Start(); err != nil && err != nethttp.ErrServerClosed {
@@ -66,7 +66,7 @@ func run(w io.Writer) (func(), error) {
 	}, nil
 }
 
-func buildServer(w io.Writer) *http.Server {
+func buildServer(w io.Writer) (*http.Server, error) {
 	var cfg http.Config
 	readConfig(&cfg)
 
@@ -75,7 +75,9 @@ func buildServer(w io.Writer) *http.Server {
 	eventBus := infra.NewNoBus()
 
 	commandController, err := http.NewCommandController(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
-	must.NotFail(err)
+	if err != nil {
+		return nil, err
+	}
 
 	queryController := http.NewQueryController(service)
 
@@ -84,7 +86,7 @@ func buildServer(w io.Writer) *http.Server {
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	return http.NewServer(cfg, e, commandController, queryController)
+	return http.NewServer(cfg, e, commandController, queryController), nil
 }
 
 func readConfig(cfg *http.Config) {

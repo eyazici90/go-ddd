@@ -5,7 +5,6 @@ import (
 	"context"
 
 	"github.com/eyazici90/go-ddd/internal/domain"
-
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
@@ -27,8 +26,8 @@ func NewPayOrderHandler(orderGetter OrderGetter, orderUpdater OrderUpdater) PayO
 
 func (h PayOrderHandler) Handle(ctx context.Context, msg mediator.Message) error {
 	cmd, ok := msg.(PayOrder)
-	if err := checkType(ok); err != nil {
-		return err
+	if !ok {
+		return ErrInvalidCommand
 	}
 	return h.update(ctx, cmd.OrderID, func(o *domain.Order) {
 		o.Pay()

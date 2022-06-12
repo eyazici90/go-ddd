@@ -3,7 +3,6 @@ package command
 
 import (
 	"context"
-
 	"github.com/eyazici90/go-ddd/internal/domain"
 
 	"github.com/eyazici90/go-mediator/mediator"
@@ -27,8 +26,8 @@ func NewCancelOrderHandler(orderGetter OrderGetter, orderUpdater OrderUpdater) C
 
 func (h CancelOrderHandler) Handle(ctx context.Context, msg mediator.Message) error {
 	cmd, ok := msg.(CancelOrder)
-	if err := checkType(ok); err != nil {
-		return err
+	if !ok {
+		return ErrInvalidCommand
 	}
 	return h.update(ctx, cmd.OrderID, func(o *domain.Order) {
 		o.Cancel()

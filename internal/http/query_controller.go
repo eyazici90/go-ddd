@@ -5,12 +5,11 @@ import (
 	"net/http"
 
 	"github.com/eyazici90/go-ddd/internal/app/query"
-
 	"github.com/labstack/echo/v4"
 )
 
 type QueryService interface {
-	GetOrders(context.Context) *query.GetOrdersDto
+	GetOrders(ctx context.Context) *query.GetOrdersDto
 	GetOrder(ctx context.Context, id string) *query.GetOrderDto
 }
 
