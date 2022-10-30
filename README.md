@@ -50,6 +50,10 @@ http://localhost:8080/swagger/index.html
 - Optimistic concurrency.
 - Docker, K8s
 
+### Note:
+Check [vertical-slice](https://github.com/eyazici90/go-ddd/tree/vertical-slice) branch for Vertical-Slice (feature driven) packaging style structure.
+
+
 ## Command dispatcher
 
 **_Mediator with pipeline behaviours_** (order matters for pipeline behaviours)
