@@ -1,4 +1,4 @@
-package infra
+package mongo
 
 import (
 	"context"
@@ -9,11 +9,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type MongoStore struct {
+type Store struct {
 	db *mongo.Database
 }
 
-func NewMongoStore(uri, dbName string, timeout time.Duration) (*MongoStore, error) {
+func NewStore(uri, dbName string, timeout time.Duration) (*Store, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -22,10 +22,10 @@ func NewMongoStore(uri, dbName string, timeout time.Duration) (*MongoStore, erro
 	if err != nil {
 		return nil, err
 	}
-	return &MongoStore{client.Database(dbName)}, nil
+	return &Store{client.Database(dbName)}, nil
 }
 
-func (store *MongoStore) Store(ctx context.Context, collection string, data interface{}) error {
+func (store *Store) Store(ctx context.Context, collection string, data interface{}) error {
 	if _, err := store.db.Collection(collection).InsertOne(ctx, data); err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func (store *MongoStore) Store(ctx context.Context, collection string, data inte
 	return nil
 }
 
-func (store *MongoStore) Update(ctx context.Context, collection string, query, update interface{}) error {
+func (store *Store) Update(ctx context.Context, collection string, query, update interface{}) error {
 	if _, err := store.db.Collection(collection).UpdateOne(ctx, query, update); err != nil {
 		return err
 	}
@@ -41,7 +41,7 @@ func (store *MongoStore) Update(ctx context.Context, collection string, query, u
 	return nil
 }
 
-func (store *MongoStore) FindAll(ctx context.Context, collection string, query, result interface{}) error {
+func (store *Store) FindAll(ctx context.Context, collection string, query, result interface{}) error {
 	cur, err := store.db.Collection(collection).Find(ctx, query)
 	if err != nil {
 		return fmt.Errorf("finding collection: %w", err)
@@ -57,7 +57,7 @@ func (store *MongoStore) FindAll(ctx context.Context, collection string, query, 
 	return cur.Err()
 }
 
-func (store *MongoStore) FindOne(
+func (store *Store) FindOne(
 	ctx context.Context,
 	collection string,
 	query interface{},

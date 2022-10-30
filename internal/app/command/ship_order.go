@@ -19,11 +19,11 @@ type ShipOrderHandler struct {
 	eventPublisher event.Publisher
 }
 
-func NewShipOrderHandler(orderGetter OrderGetter,
-	orderUpdater OrderUpdater,
+func NewShipOrderHandler(getter OrderGetter,
+	updater OrderUpdater,
 	e event.Publisher) ShipOrderHandler {
 	return ShipOrderHandler{
-		orderHandler:   newOrderHandler(orderGetter, orderUpdater),
+		orderHandler:   newOrderHandler(getter, updater),
 		eventPublisher: e,
 	}
 }

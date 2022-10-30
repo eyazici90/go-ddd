@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/eyazici90/go-ddd/internal/domain"
-	"github.com/eyazici90/go-ddd/internal/infra"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -34,10 +33,10 @@ func FromOrderBson(o *orderBson) *domain.Order {
 }
 
 type OrderRepository struct {
-	mStore *infra.MongoStore
+	mStore *Store
 }
 
-func NewOrderRepository(mongoStore *infra.MongoStore) *OrderRepository {
+func NewOrderRepository(mongoStore *Store) *OrderRepository {
 	return &OrderRepository{mStore: mongoStore}
 }
 

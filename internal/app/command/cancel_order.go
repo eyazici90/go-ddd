@@ -18,9 +18,9 @@ type CancelOrderHandler struct {
 	orderHandler
 }
 
-func NewCancelOrderHandler(orderGetter OrderGetter, orderUpdater OrderUpdater) CancelOrderHandler {
+func NewCancelOrderHandler(getter OrderGetter, updater OrderUpdater) CancelOrderHandler {
 	return CancelOrderHandler{
-		orderHandler: newOrderHandler(orderGetter, orderUpdater),
+		orderHandler: newOrderHandler(getter, updater),
 	}
 }
 

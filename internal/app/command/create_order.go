@@ -21,11 +21,11 @@ type CreateOrder struct {
 func (CreateOrder) Key() int { return createCommandKey }
 
 type CreateOrderHandler struct {
-	orderCreator OrderCreator
+	creator OrderCreator
 }
 
-func NewCreateOrderHandler(orderCreator OrderCreator) CreateOrderHandler {
-	return CreateOrderHandler{orderCreator: orderCreator}
+func NewCreateOrderHandler(creator OrderCreator) CreateOrderHandler {
+	return CreateOrderHandler{creator: creator}
 }
 
 func (h CreateOrderHandler) Handle(ctx context.Context, msg mediator.Message) error {
@@ -40,5 +40,5 @@ func (h CreateOrderHandler) Handle(ctx context.Context, msg mediator.Message) er
 		return fmt.Errorf("new order: %w", err)
 	}
 
-	return h.orderCreator.Create(ctx, order)
+	return h.creator.Create(ctx, order)
 }

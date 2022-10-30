@@ -29,8 +29,8 @@ type orderHandler struct {
 	orderUpdater OrderUpdater
 }
 
-func newOrderHandler(orderGetter OrderGetter, orderUpdater OrderUpdater) orderHandler {
-	return orderHandler{orderGetter, orderUpdater}
+func newOrderHandler(getter OrderGetter, updater OrderUpdater) orderHandler {
+	return orderHandler{getter, updater}
 }
 
 func (h orderHandler) update(ctx context.Context,
