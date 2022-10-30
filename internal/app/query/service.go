@@ -3,23 +3,23 @@ package query
 import (
 	"context"
 
-	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/internal/order"
 )
 
 type OrderQueryStore interface {
-	GetAll(context.Context) ([]*domain.Order, error)
-	Get(ctx context.Context, id string) (*domain.Order, error)
+	GetAll(context.Context) ([]*order.Order, error)
+	Get(ctx context.Context, id string) (*order.Order, error)
 }
 
-type Service struct {
+type service struct {
 	store OrderQueryStore
 }
 
-func NewOrderQueryService(store OrderQueryStore) *Service {
-	return &Service{store}
+func NewOrderService(store OrderQueryStore) *service {
+	return &service{store}
 }
 
-func (s *Service) GetOrders(ctx context.Context) *GetOrdersDto {
+func (s *service) GetOrders(ctx context.Context) *GetOrdersDto {
 	orders, err := s.store.GetAll(ctx)
 	if err != nil {
 		return nil
@@ -31,7 +31,7 @@ func (s *Service) GetOrders(ctx context.Context) *GetOrdersDto {
 	return result
 }
 
-func (s *Service) GetOrder(ctx context.Context, id string) *GetOrderDto {
+func (s *service) GetOrder(ctx context.Context, id string) *GetOrderDto {
 	ord, err := s.store.Get(ctx, id)
 	if err != nil {
 		return nil

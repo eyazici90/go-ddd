@@ -1,4 +1,4 @@
-package domain
+package order
 
 import (
 	"time"
@@ -6,12 +6,12 @@ import (
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
 )
 
-type OrderID string
+type ID string
 
-type OrderStatus int
+type Status int
 
 const (
-	Unknown OrderStatus = iota
+	Unknown Status = iota
 	Submitted
 	Paid
 	Shipped
@@ -21,17 +21,18 @@ const (
 type Order struct {
 	aggregate.Root
 
-	id          OrderID
+	id          ID
 	customerID  CustomerID
 	productID   ProductID
 	createdTime time.Time
-	status      OrderStatus
+	status      Status
 	version     aggregate.Version
 }
 
-func NewOrder(id OrderID, customerID CustomerID,
+func New(id ID, customerID CustomerID,
 	productID ProductID, now aggregate.Now,
-	status OrderStatus, version aggregate.Version) (*Order, error) {
+	status Status, version aggregate.Version,
+) (*Order, error) {
 	o := Order{
 		id:          id,
 		customerID:  customerID,
@@ -74,7 +75,7 @@ func (o *Order) CustomerID() string { return o.customerID.String() }
 
 func (o *Order) Version() string { return o.version.String() }
 
-func (o *Order) Status() OrderStatus { return o.status }
+func (o *Order) Status() Status { return o.status }
 
 func valid(o *Order) error {
 	if o.id == "" || o.customerID == "" || o.productID == "" {

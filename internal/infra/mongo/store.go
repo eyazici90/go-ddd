@@ -62,7 +62,8 @@ func (store *Store) FindOne(
 	collection string,
 	query interface{},
 	projection interface{},
-	result interface{}) error {
+	result interface{},
+) error {
 	return store.db.Collection(collection).
 		FindOne(
 			ctx,

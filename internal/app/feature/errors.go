@@ -1,4 +1,4 @@
-package command
+package feature
 
 import "errors"
 

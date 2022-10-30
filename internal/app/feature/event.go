@@ -1,6 +1,6 @@
-package event
+package feature
 
-type Publisher interface {
+type EventPublisher interface {
 	Publish(event interface{})
 	PublishAll(events ...interface{})
 }

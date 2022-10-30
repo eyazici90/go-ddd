@@ -116,7 +116,8 @@ func handleErr(c echo.Context, pDetails ProblemDetails) {
 func prepareProblemDetails(err error,
 	typ string,
 	code int,
-	c echo.Context) ProblemDetails {
+	c echo.Context,
+) ProblemDetails {
 	return ProblemDetails{
 		Type:     typ,
 		Title:    err.Error(),

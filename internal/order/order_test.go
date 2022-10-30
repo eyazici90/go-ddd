@@ -1,10 +1,9 @@
-package domain_test
+package order_test
 
 import (
 	"testing"
 	"time"
 
-	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
 	"github.com/stretchr/testify/assert"
 )
@@ -20,7 +19,7 @@ func TestPayOrder(t *testing.T) {
 
 	o.Pay()
 
-	assert.Equal(t, domain.Paid, o.Status())
+	assert.Equal(t, order.Paid, o.Status())
 }
 
 func TestCancelOrder(t *testing.T) {
@@ -28,7 +27,7 @@ func TestCancelOrder(t *testing.T) {
 
 	o.Cancel()
 
-	assert.Equal(t, domain.Canceled, o.Status())
+	assert.Equal(t, order.Canceled, o.Status())
 }
 
 func TestShipOrder(t *testing.T) {
@@ -46,11 +45,11 @@ func TestShipOrderWithoutPaidExpectErr(t *testing.T) {
 
 	err := o.Ship()
 
-	assert.Equal(t, domain.ErrNotPaid, err)
+	assert.Equal(t, order.ErrNotPaid, err)
 }
 
-func fakeOrder() *domain.Order {
-	o, _ := domain.NewOrder("123", domain.NewCustomerID(), domain.NewProductID(),
-		time.Now, domain.Submitted, aggregate.NewVersion())
+func fakeOrder() *order.Order {
+	o, _ := order.NewOrder("123", order.NewCustomerID(), order.NewProductID(),
+		time.Now, order.Submitted, aggregate.NewVersion())
 	return o
 }

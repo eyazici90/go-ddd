@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/eyazici90/go-ddd/internal/app/command"
+	"github.com/eyazici90/go-ddd/internal/create"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -12,7 +12,7 @@ import (
 func TestValidator(t *testing.T) {
 	invalidID := "123"
 
-	cmd := command.CreateOrder{ID: invalidID}
+	cmd := create.CreateOrder{ID: invalidID}
 
 	next := func(context.Context) error {
 		return nil

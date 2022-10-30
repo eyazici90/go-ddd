@@ -3,6 +3,8 @@ package http
 import (
 	"context"
 
+	"github.com/eyazici90/go-ddd/internal/app/query"
+	"github.com/eyazici90/go-mediator/mediator"
 	"github.com/labstack/echo/v4"
 )
 
@@ -21,21 +23,21 @@ type Config struct {
 }
 
 type Server struct {
-	cfg               Config
-	echo              *echo.Echo
-	commandController CommandController
-	queryController   OrderQueryController
+	cfg      Config
+	echo     *echo.Echo
+	qry      query.OrderController
+	mediator *mediator.Mediator
 }
 
 func NewServer(cfg Config,
 	e *echo.Echo,
-	cmdController CommandController,
-	queryController OrderQueryController) *Server {
+	qry query.OrderController,
+	med *mediator.Mediator,
+) *Server {
 	server := Server{
-		cfg:               cfg,
-		echo:              e,
-		commandController: cmdController,
-		queryController:   queryController,
+		cfg:      cfg,
+		echo:     e,
+		mediator: med,
 	}
 
 	server.useHealth()

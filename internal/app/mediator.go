@@ -4,30 +4,33 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/eyazici90/go-ddd/internal/app/behavior"
-	"github.com/eyazici90/go-ddd/internal/app/command"
-	"github.com/eyazici90/go-ddd/internal/app/event"
+	"github.com/eyazici90/go-ddd/internal/app/create"
+	"github.com/eyazici90/go-ddd/internal/app/feature"
+	"github.com/eyazici90/go-ddd/internal/app/pay"
+	"github.com/eyazici90/go-ddd/internal/app/ship"
+	"github.com/eyazici90/go-ddd/internal/infra/behavior"
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
 type OrderStore interface {
-	command.OrderCreator
-	command.OrderGetter
-	command.OrderUpdater
+	create.OrderCreator
+	feature.OrderGetter
+	feature.OrderUpdater
 }
 
 func NewMediator(store OrderStore,
-	ep event.Publisher,
-	timeout time.Duration) (*mediator.Mediator, error) {
+	ep feature.EventPublisher,
+	timeout time.Duration,
+) (*mediator.Mediator, error) {
 	m, err := mediator.New(
 		// Behaviors
 		mediator.WithBehaviourFunc(behavior.Measure),
 		mediator.WithBehaviourFunc(behavior.Validate),
 		mediator.WithBehaviour(behavior.NewCancellator(timeout)),
 		// Handlers
-		mediator.WithHandler(command.CreateOrder{}, command.NewCreateOrderHandler(store)),
-		mediator.WithHandler(command.PayOrder{}, command.NewPayOrderHandler(store, store)),
-		mediator.WithHandler(command.ShipOrder{}, command.NewShipOrderHandler(store, store, ep)),
+		mediator.WithHandler(create.OrderCommand{}, create.NewOrderCommandHandler(store)),
+		mediator.WithHandler(pay.OrderCommand{}, pay.NewOrderCommandHandler(store, store)),
+		mediator.WithHandler(ship.OrderCommand{}, ship.NewOrderCommandHandler(store, store, ep)),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("create mediator: %w", err)

@@ -3,6 +3,10 @@ package http
 import (
 	"net/http"
 
+	"github.com/eyazici90/go-ddd/internal/app/cancel"
+	"github.com/eyazici90/go-ddd/internal/app/create"
+	"github.com/eyazici90/go-ddd/internal/app/pay"
+	"github.com/eyazici90/go-ddd/internal/app/ship"
 	"github.com/labstack/echo/v4"
 )
 
@@ -14,14 +18,14 @@ const (
 func (s *Server) useRoutes() {
 	v1 := s.echo.Group("/api/" + version)
 
-	v1.GET(orderBaseURL, s.queryController.getOrders)
-	v1.GET(orderBaseURL+"/:id", s.queryController.getOrder)
+	v1.GET(orderBaseURL, s.qry.GetOrders)
+	v1.GET(orderBaseURL+"/:id", s.qry.GetOrder)
 
-	v1.POST(orderBaseURL, s.commandController.create)
+	v1.POST(orderBaseURL, create.CommandController(s.mediator))
 
-	v1.PUT(orderBaseURL+"/pay"+"/:id", s.commandController.pay)
-	v1.PUT(orderBaseURL+"/ship"+"/:id", s.commandController.ship)
-	v1.PUT(orderBaseURL+"/cancel"+"/:id", s.commandController.cancel)
+	v1.PUT(orderBaseURL+"/pay"+"/:id", pay.CommandController(s.mediator))
+	v1.PUT(orderBaseURL+"/ship"+"/:id", ship.CommandController(s.mediator))
+	v1.PUT(orderBaseURL+"/cancel"+"/:id", cancel.CommandController(s.mediator))
 }
 
 func (s *Server) useHealth() {

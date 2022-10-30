@@ -10,6 +10,7 @@ import (
 	"time"
 
 	_ "github.com/eyazici90/go-ddd/docs"
+	"github.com/eyazici90/go-ddd/internal/app"
 	"github.com/eyazici90/go-ddd/internal/app/query"
 	"github.com/eyazici90/go-ddd/internal/http"
 	"github.com/eyazici90/go-ddd/internal/infra"
@@ -71,22 +72,21 @@ func buildServer(w io.Writer) (*http.Server, error) {
 	readConfig(&cfg)
 
 	repository := inmem.NewOrderRepository()
-	service := query.NewOrderQueryService(repository)
-	eventBus := infra.NewNoBus()
-
-	commandController, err := http.NewCommandController(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
-	if err != nil {
-		return nil, err
-	}
-
-	queryController := http.NewQueryController(service)
+	service := query.NewOrderService(repository)
+	queryController := query.NewOrderController(service)
 
 	e := echo.New()
 	e.Logger.SetOutput(w)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	return http.NewServer(cfg, e, commandController, queryController), nil
+	eventBus := infra.NewNoBus()
+	med, err := app.NewMediator(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
+	if err != nil {
+		return nil, fmt.Errorf("new mediator: %w", err)
+	}
+
+	return http.NewServer(cfg, e, queryController, med), nil
 }
 
 func readConfig(cfg *http.Config) {
