@@ -47,8 +47,8 @@ http://localhost:8080/swagger/index.html
 - Graceful config management by viper
 - Mediator usage for command dispatching
 - DDD structure
-- Optimistic concurrency.
-- Docker, K8s
+- Optimistic concurrency control.
+- Docker, K8s, Helm.
 
 ### Note:
 Check [vertical-slice](https://github.com/eyazici90/go-ddd/tree/vertical-slice) branch for Vertical-Slice (feature driven) packaging style structure.
