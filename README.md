@@ -45,10 +45,13 @@ http://localhost:8080/swagger/index.html
 - Prometheus metrics for echo
 - Swagger docs (/swagger/index.html)
 - Graceful config management by viper
-- Mediator usage for command dispatching
+- Mediator usage for command dispatching & dynamic behaviours
 - DDD structure
 - Optimistic concurrency control.
 - Docker, K8s, Helm.
+- (TODO): [OTEL(open telemetry)](https://github.com/open-telemetry/opentelemetry-go) integration
+- (TODO): [Toxiproxy](https://github.com/Shopify/toxiproxy) for resilency testing
+- (TODO): [Tilt](https://github.com/tilt-dev/tilt) & kind setup
 
 ### Note:
 Check [vertical-slice](https://github.com/eyazici90/go-ddd/tree/vertical-slice) branch for Vertical-Slice (feature driven) packaging style structure.
