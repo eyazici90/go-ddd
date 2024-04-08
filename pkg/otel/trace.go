@@ -72,7 +72,7 @@ func (ot *OTel) Shutdown() func(ctx context.Context) error {
 }
 
 func newTraceProvider(ctx context.Context, cfg *Config) (*sdktrace.TracerProvider, error) {
-	exporter, err := newExporter(ctx)
+	exporter, err := otlptrace.New(ctx, otlptracegrpc.NewClient())
 	if err != nil {
 		return nil, fmt.Errorf("new exporter: %w", err)
 	}
@@ -94,10 +94,4 @@ func newPropagator() propagation.TextMapPropagator {
 		propagation.TraceContext{},
 		propagation.Baggage{},
 	)
-}
-
-func newExporter(ctx context.Context) (*otlptrace.Exporter, error) {
-	client := otlptracegrpc.NewClient()
-	exporter, err := otlptrace.New(ctx, client)
-	return exporter, err
 }

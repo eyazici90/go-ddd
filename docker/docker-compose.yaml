@@ -5,7 +5,15 @@ services:
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
-#    environment:
-#      - SOMETHING=hello
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-lgtm:4317
     ports:
       - "8080:8080"
+    depends_on:
+      - otel-lgtm
+  otel-lgtm:
+    image: grafana/otel-lgtm:0.5.0
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "3000:3000"
