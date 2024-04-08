@@ -26,17 +26,6 @@ http://localhost:8080/swagger/index.html
 - kubectl apply -f ./deploy/k8s/deployment.yaml
 - kubectl apply -f ./deploy/k8s/service.yaml
 
-## Libraries
-
-- mediator https://github.com/eyazici90/go-mediator
-- echo https://github.com/labstack/echo
-- viper https://github.com/spf13/viper
-- validator https://github.com/go-playground/validator
-- swaggo https://github.com/swaggo/echo-swagger
-- retry-go https://github.com/avast/retry-go
-- testify https://github.com/stretchr/testify
-- golangci https://github.com/golangci/golangci-lint
-
 ## Futures
 
 - Health checks
@@ -52,6 +41,19 @@ http://localhost:8080/swagger/index.html
 - (TODO): [OTEL(open telemetry)](https://github.com/open-telemetry/opentelemetry-go) integration
 - (TODO): [Toxiproxy](https://github.com/Shopify/toxiproxy) for resilency testing
 - (TODO): [Tilt](https://github.com/tilt-dev/tilt) & kind setup
+
+## Libraries
+
+- mediator https://github.com/eyazici90/go-mediator
+- echo https://github.com/labstack/echo
+- viper https://github.com/spf13/viper
+- validator https://github.com/go-playground/validator
+- swaggo https://github.com/swaggo/echo-swagger
+- retry-go https://github.com/avast/retry-go
+- testify https://github.com/stretchr/testify
+- golangci https://github.com/golangci/golangci-lint
+
+
 
 ### Note:
 Check [vertical-slice](https://github.com/eyazici90/go-ddd/tree/vertical-slice) branch for Vertical-Slice (feature driven) packaging style structure.
