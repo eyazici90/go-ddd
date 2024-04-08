@@ -17,11 +17,6 @@ import (
 	"go.opentelemetry.io/otel/trace/noop"
 )
 
-const (
-	name    = "github.com/eyazici90/go-ddd"
-	version = "1.0.0"
-)
-
 type OTel struct {
 	traceP trace.TracerProvider
 	tracer trace.Tracer
@@ -30,18 +25,26 @@ type OTel struct {
 }
 
 type Config struct {
-	SvcName string
+	Name, Version string
+}
+
+func MustNew(ctx context.Context, cfg *Config) *OTel {
+	otl, err := New(ctx, cfg)
+	if err != nil {
+		panic(err)
+	}
+	return otl
 }
 
 func New(ctx context.Context, cfg *Config) (*OTel, error) {
 	var otl OTel
-	if cfg.SvcName == "" {
+	if cfg.Name == "" {
 		nop := noop.NewTracerProvider()
 		otl.tracer = nop.Tracer("no-op-provider")
 		return &otl, nil
 	}
 
-	traceP, err := newTraceProvider(ctx)
+	traceP, err := newTraceProvider(ctx, cfg)
 	otl.shutdown = traceP.Shutdown
 	if err != nil {
 		err = errors.Join(err, otl.shutdown(ctx))
@@ -52,8 +55,8 @@ func New(ctx context.Context, cfg *Config) (*OTel, error) {
 	)
 	otel.SetTracerProvider(traceP)
 	otl.tracer = otl.traceP.Tracer(
-		name,
-		trace.WithInstrumentationVersion(version),
+		cfg.Name,
+		trace.WithInstrumentationVersion(cfg.Version),
 		trace.WithSchemaURL(semconv.SchemaURL),
 	)
 	return &otl, nil
@@ -67,7 +70,7 @@ func (ot *OTel) Shutdown() func(ctx context.Context) error {
 	return ot.shutdown
 }
 
-func newTraceProvider(ctx context.Context) (*sdktrace.TracerProvider, error) {
+func newTraceProvider(ctx context.Context, cfg *Config) (*sdktrace.TracerProvider, error) {
 	exporter, err := newExporter(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("new exporter: %w", err)
@@ -77,9 +80,10 @@ func newTraceProvider(ctx context.Context) (*sdktrace.TracerProvider, error) {
 			sdktrace.WithBatchTimeout(time.Second)),
 		sdktrace.WithResource(resource.NewWithAttributes(
 			semconv.SchemaURL,
-			semconv.ServiceNameKey.String(name),
-			semconv.ServiceVersionKey.String(version),
+			semconv.ServiceNameKey.String(cfg.Name),
+			semconv.ServiceVersionKey.String(cfg.Version),
 		)),
+		sdktrace.WithSampler(sdktrace.TraceIDRatioBased(100)),
 	)
 	return traceP, nil
 }

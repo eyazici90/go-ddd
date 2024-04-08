@@ -7,6 +7,7 @@ import (
 	"github.com/eyazici90/go-ddd/internal/app/behavior"
 	"github.com/eyazici90/go-ddd/internal/app/command"
 	"github.com/eyazici90/go-ddd/internal/app/event"
+	"github.com/eyazici90/go-ddd/pkg/otel"
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
@@ -18,10 +19,12 @@ type OrderStore interface {
 
 func NewMediator(store OrderStore,
 	ep event.Publisher,
-	timeout time.Duration) (*mediator.Mediator, error) {
+	otl *otel.OTel,
+	timeout time.Duration,
+) (*mediator.Mediator, error) {
 	m, err := mediator.New(
 		// Behaviors
-		mediator.WithBehaviourFunc(behavior.Measure),
+		mediator.WithBehaviourFunc(behavior.Measure(otl)),
 		mediator.WithBehaviourFunc(behavior.Validate),
 		mediator.WithBehaviour(behavior.NewCancellator(timeout)),
 		// Handlers

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	nethttp "net/http"
+	gohttp "net/http"
 	"os"
 	"time"
 
@@ -15,6 +15,7 @@ import (
 	"github.com/eyazici90/go-ddd/internal/infra"
 	"github.com/eyazici90/go-ddd/internal/infra/inmem"
 	"github.com/eyazici90/go-ddd/pkg/must"
+	"github.com/eyazici90/go-ddd/pkg/otel"
 	"github.com/eyazici90/go-ddd/pkg/shutdown"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -51,7 +52,7 @@ func run(w io.Writer) (func(), error) {
 	}
 
 	go func() {
-		if err := server.Start(); err != nil && !errors.Is(err, nethttp.ErrServerClosed) {
+		if err := server.Start(); err != nil && !errors.Is(err, gohttp.ErrServerClosed) {
 			server.Fatal(errors.New("server could not be started"))
 		}
 	}()
@@ -70,11 +71,15 @@ func buildServer(wr io.Writer) (*http.Server, error) {
 	var cfg http.Config
 	readConfig(&cfg)
 
+	otl := otel.MustNew(context.Background(), &otel.Config{
+		Name:    "github.com/eyazici90/go-ddd",
+		Version: "1.0.0",
+	})
 	repo := inmem.NewOrderRepository()
 	svc := query.NewOrderQueryService(repo)
 	eventBus := infra.NewNoBus()
 
-	cmdCtrl, err := http.NewCommandController(repo, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
+	cmdCtrl, err := http.NewCommandController(repo, eventBus, otl, time.Second*time.Duration(cfg.Context.Timeout))
 	if err != nil {
 		return nil, err
 	}

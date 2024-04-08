@@ -8,6 +8,7 @@ import (
 	"github.com/eyazici90/go-ddd/internal/app"
 	"github.com/eyazici90/go-ddd/internal/app/command"
 	"github.com/eyazici90/go-ddd/internal/app/event"
+	"github.com/eyazici90/go-ddd/pkg/otel"
 	"github.com/eyazici90/go-mediator/mediator"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
@@ -17,10 +18,13 @@ type CommandController struct {
 	sender *mediator.Mediator
 }
 
-func NewCommandController(r app.OrderStore,
+func NewCommandController(
+	r app.OrderStore,
 	e event.Publisher,
-	timeout time.Duration) (CommandController, error) {
-	m, err := app.NewMediator(r, e, timeout)
+	otl *otel.OTel,
+	timeout time.Duration,
+) (CommandController, error) {
+	m, err := app.NewMediator(r, e, otl, timeout)
 	if err != nil {
 		return CommandController{}, err
 	}
