@@ -14,14 +14,14 @@ const (
 func (s *Server) useRoutes() {
 	v1 := s.echo.Group("/api/" + version)
 
-	v1.GET(orderBaseURL, s.queryController.getOrders)
-	v1.GET(orderBaseURL+"/:id", s.queryController.getOrder)
+	v1.GET(orderBaseURL, s.queryCtrl.getOrders)
+	v1.GET(orderBaseURL+"/:id", s.queryCtrl.getOrder)
 
-	v1.POST(orderBaseURL, s.commandController.create)
+	v1.POST(orderBaseURL, s.cmdCtrl.create)
 
-	v1.PUT(orderBaseURL+"/pay"+"/:id", s.commandController.pay)
-	v1.PUT(orderBaseURL+"/ship"+"/:id", s.commandController.ship)
-	v1.PUT(orderBaseURL+"/cancel"+"/:id", s.commandController.cancel)
+	v1.PUT(orderBaseURL+"/pay"+"/:id", s.cmdCtrl.pay)
+	v1.PUT(orderBaseURL+"/ship"+"/:id", s.cmdCtrl.ship)
+	v1.PUT(orderBaseURL+"/cancel"+"/:id", s.cmdCtrl.cancel)
 }
 
 func (s *Server) useHealth() {

@@ -21,21 +21,21 @@ type Config struct {
 }
 
 type Server struct {
-	cfg               Config
-	echo              *echo.Echo
-	commandController CommandController
-	queryController   OrderQueryController
+	cfg       Config
+	echo      *echo.Echo
+	cmdCtrl   CommandController
+	queryCtrl OrderQueryController
 }
 
 func NewServer(cfg Config,
 	e *echo.Echo,
-	cmdController CommandController,
-	queryController OrderQueryController) *Server {
+	cmdCtrl CommandController,
+	queryCtrl OrderQueryController) *Server {
 	server := Server{
-		cfg:               cfg,
-		echo:              e,
-		commandController: cmdController,
-		queryController:   queryController,
+		cfg:       cfg,
+		echo:      e,
+		cmdCtrl:   cmdCtrl,
+		queryCtrl: queryCtrl,
 	}
 
 	server.useHealth()

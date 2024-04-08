@@ -70,23 +70,23 @@ func buildServer(w io.Writer) (*http.Server, error) {
 	var cfg http.Config
 	readConfig(&cfg)
 
-	repository := inmem.NewOrderRepository()
-	service := query.NewOrderQueryService(repository)
+	repo := inmem.NewOrderRepository()
+	svc := query.NewOrderQueryService(repo)
 	eventBus := infra.NewNoBus()
 
-	commandController, err := http.NewCommandController(repository, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
+	cmdCtrl, err := http.NewCommandController(repo, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
 	if err != nil {
 		return nil, err
 	}
 
-	queryController := http.NewQueryController(service)
+	queryCtrl := http.NewQueryController(svc)
 
 	e := echo.New()
 	e.Logger.SetOutput(w)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	return http.NewServer(cfg, e, commandController, queryController), nil
+	return http.NewServer(cfg, e, cmdCtrl, queryCtrl), nil
 }
 
 func readConfig(cfg *http.Config) {
