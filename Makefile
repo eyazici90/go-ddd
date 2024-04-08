@@ -2,7 +2,7 @@ NAME:=go-ddd
 DC=docker-compose -f ./docker/docker-compose.yaml
 
 tidy:
-	rm -f go.sum; go mod tidy -compat=1.17
+	rm -f go.sum; go mod tidy -compat=1.22.1
 
 vet:
 	go vet ./...

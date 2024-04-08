@@ -1,6 +1,6 @@
 module github.com/eyazici90/go-ddd
 
-go 1.17
+go 1.22.1
 
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751

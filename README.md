@@ -4,7 +4,7 @@ Practical DDD(_Domain Driven Design_) & CQRS implementation on order bounded con
 
 ## Prerequisites
 
-go 1.17
+go 1.22.1
 
 ## Warming - Up
 - run make command as: `make run` to run the app 
