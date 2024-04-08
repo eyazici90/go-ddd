@@ -7,24 +7,11 @@ Practical DDD(_Domain Driven Design_) & CQRS implementation on order bounded con
 go 1.17
 
 ## Warming - Up
+- run make command as: `make run` to run the app 
+- Locate to http://localhost:8080/swagger/index.html
 
-- go to directory **/cmd/http/**
-- go run main.go <br/>
-  locate => http://localhost:8080/swagger/index.html
-
-## Docker
-
-- docker build -t go-ddd -f docker/Dockerfile .
-- docker run -it --rm -p 8080:8080 go-ddd
-- locate
-```
-http://localhost:8080/swagger/index.html
-```
-
-## K8s
-
-- kubectl apply -f ./deploy/k8s/deployment.yaml
-- kubectl apply -f ./deploy/k8s/service.yaml
+## Helm
+- make helm-charts
 
 ## Futures
 
