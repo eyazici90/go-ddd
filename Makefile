@@ -29,3 +29,7 @@ build: clean
 
 run: stop
 	$(DC) up
+
+helm-charts:
+	helm lint helm/*
+	helm package helm/*
