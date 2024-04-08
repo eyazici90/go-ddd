@@ -14,7 +14,6 @@ import (
 	"github.com/eyazici90/go-ddd/internal/http"
 	"github.com/eyazici90/go-ddd/internal/infra"
 	"github.com/eyazici90/go-ddd/internal/infra/inmem"
-	"github.com/eyazici90/go-ddd/pkg/must"
 	"github.com/eyazici90/go-ddd/pkg/otel"
 	"github.com/eyazici90/go-ddd/pkg/shutdown"
 	"github.com/labstack/echo/v4"
@@ -69,12 +68,17 @@ func run(w io.Writer) (func(), error) {
 
 func buildServer(wr io.Writer) (*http.Server, error) {
 	var cfg http.Config
-	readConfig(&cfg)
+	if err := readConfig(&cfg); err != nil {
+		return nil, err
+	}
 
-	otl := otel.MustNew(context.Background(), &otel.Config{
+	otl, err := otel.New(context.Background(), &otel.Config{
 		Name:    "github.com/eyazici90/go-ddd",
 		Version: "1.0.0",
 	})
+	if err != nil {
+		return nil, err
+	}
 	repo := inmem.NewOrderRepository()
 	svc := query.NewOrderQueryService(repo)
 	eventBus := infra.NewNoBus()
@@ -94,9 +98,14 @@ func buildServer(wr io.Writer) (*http.Server, error) {
 	return http.NewServer(cfg, e, cmdCtrl, queryCtrl), nil
 }
 
-func readConfig(cfg *http.Config) {
+func readConfig(cfg *http.Config) error {
 	viper.SetConfigFile(`./config.json`)
 
-	must.NotFailF(viper.ReadInConfig)
-	must.NotFail(viper.Unmarshal(cfg))
+	if err := viper.ReadInConfig(); err != nil {
+		return fmt.Errorf("read cfg: %w", err)
+	}
+	if err := viper.Unmarshal(cfg); err != nil {
+		return fmt.Errorf("unmarshal cfg: %w", err)
+	}
+	return nil
 }
