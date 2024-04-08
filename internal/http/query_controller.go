@@ -31,9 +31,9 @@ func NewQueryController(s QueryService) OrderQueryController {
 // @Produce json
 // @Success 200 {object} query.GetOrdersDto
 // @Router /orders [get]
-func (o OrderQueryController) getOrders(c echo.Context) error {
+func (oqc OrderQueryController) getOrders(c echo.Context) error {
 	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
-		return o.orderService.GetOrders(ctx), nil
+		return oqc.orderService.GetOrders(ctx), nil
 	})
 }
 
@@ -46,10 +46,10 @@ func (o OrderQueryController) getOrders(c echo.Context) error {
 // @Success 200 {object} query.GetOrderDto
 // @Param id path string true "id"
 // @Router /orders/{id} [get]
-func (o OrderQueryController) getOrder(c echo.Context) error {
+func (oqc OrderQueryController) getOrder(c echo.Context) error {
 	id := c.Param("id")
 
 	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
-		return o.orderService.GetOrder(ctx, id), nil
+		return oqc.orderService.GetOrder(ctx, id), nil
 	})
 }

@@ -66,7 +66,7 @@ func run(w io.Writer) (func(), error) {
 	}, nil
 }
 
-func buildServer(w io.Writer) (*http.Server, error) {
+func buildServer(wr io.Writer) (*http.Server, error) {
 	var cfg http.Config
 	readConfig(&cfg)
 
@@ -82,7 +82,7 @@ func buildServer(w io.Writer) (*http.Server, error) {
 	queryCtrl := http.NewQueryController(svc)
 
 	e := echo.New()
-	e.Logger.SetOutput(w)
+	e.Logger.SetOutput(wr)
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 

@@ -33,7 +33,8 @@ type Server struct {
 func NewServer(cfg Config,
 	e *echo.Echo,
 	cmdCtrl CommandController,
-	queryCtrl OrderQueryController) *Server {
+	queryCtrl OrderQueryController,
+) *Server {
 	server := Server{
 		cfg:       cfg,
 		echo:      e,
@@ -49,8 +50,8 @@ func NewServer(cfg Config,
 }
 
 func (s *Server) Start() error {
-	port := s.cfg.Server.Port
 	s.shutdowns = append(s.shutdowns, s.echo.Shutdown)
+	port := s.cfg.Server.Port
 	return s.echo.Start(port)
 }
 

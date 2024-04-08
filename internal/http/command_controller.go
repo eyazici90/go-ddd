@@ -37,11 +37,11 @@ func NewCommandController(r app.OrderStore,
 // @Produce json
 // @Success 201 {object} string
 // @Router /orders [post]
-func (o CommandController) create(c echo.Context) error {
+func (cc CommandController) create(c echo.Context) error {
 	return handle(c,
 		http.StatusCreated,
 		func(ctx context.Context) error {
-			return o.sender.Send(ctx, command.CreateOrder{ID: uuid.New().String()})
+			return cc.sender.Send(ctx, command.CreateOrder{ID: uuid.New().String()})
 		})
 }
 
@@ -54,11 +54,11 @@ func (o CommandController) create(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/pay/{id} [put]
-func (o CommandController) pay(c echo.Context) error {
+func (cc CommandController) pay(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
-		return o.sender.Send(ctx, command.PayOrder{OrderID: id})
+		return cc.sender.Send(ctx, command.PayOrder{OrderID: id})
 	})
 }
 
@@ -71,11 +71,11 @@ func (o CommandController) pay(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/cancel/{id} [put]
-func (o CommandController) cancel(c echo.Context) error {
+func (cc CommandController) cancel(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
-		return o.sender.Send(ctx, command.CancelOrder{OrderID: id})
+		return cc.sender.Send(ctx, command.CancelOrder{OrderID: id})
 	})
 }
 
@@ -88,10 +88,10 @@ func (o CommandController) cancel(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/ship/{id} [put]
-func (o CommandController) ship(c echo.Context) error {
+func (cc CommandController) ship(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
-		return o.sender.Send(ctx, command.ShipOrder{OrderID: id})
+		return cc.sender.Send(ctx, command.ShipOrder{OrderID: id})
 	})
 }
