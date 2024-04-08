@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  go-ddd:
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+#    environment:
+#      - SOMETHING=hello
+    ports:
+      - "8080:8080"

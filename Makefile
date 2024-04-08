@@ -1,5 +1,5 @@
 NAME:=go-ddd
-
+DC=docker-compose -f ./docker/docker-compose.yaml
 
 tidy:
 	rm -f go.sum; go mod tidy -compat=1.17
@@ -16,3 +16,16 @@ install-linter:
 
 lint: install-linter
 	./bin/golangci-lint run
+
+stop:
+	$(DC) stop
+
+clean: stop
+	$(DC) down --rmi local --remove-orphans -v
+	$(DC) rm -f -v
+
+build: clean
+	$(DC) build
+
+run: stop
+	$(DC) up
