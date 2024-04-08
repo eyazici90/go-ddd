@@ -51,7 +51,7 @@ func run(w io.Writer) (func(), error) {
 	}
 
 	go func() {
-		if err := server.Start(); err != nil && err != nethttp.ErrServerClosed {
+		if err := server.Start(); err != nil && !errors.Is(err, nethttp.ErrServerClosed) {
 			server.Fatal(errors.New("server could not be started"))
 		}
 	}()

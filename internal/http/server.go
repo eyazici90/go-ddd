@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"errors"
 
 	"github.com/labstack/echo/v4"
 )
@@ -25,6 +26,8 @@ type Server struct {
 	echo      *echo.Echo
 	cmdCtrl   CommandController
 	queryCtrl OrderQueryController
+
+	shutdowns []func(ctx context.Context) error
 }
 
 func NewServer(cfg Config,
@@ -47,11 +50,16 @@ func NewServer(cfg Config,
 
 func (s *Server) Start() error {
 	port := s.cfg.Server.Port
+	s.shutdowns = append(s.shutdowns, s.echo.Shutdown)
 	return s.echo.Start(port)
 }
 
 func (s *Server) Shutdown(ctx context.Context) error {
-	return s.echo.Shutdown(ctx)
+	var err error
+	for _, shutdown := range s.shutdowns {
+		err = errors.Join(err, shutdown(ctx))
+	}
+	return err
 }
 
 func (s *Server) Fatal(err error) { s.echo.Logger.Fatal(err) }
