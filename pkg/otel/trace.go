@@ -18,7 +18,7 @@ import (
 )
 
 type OTel struct {
-	traceP trace.TracerProvider
+	traceP *sdktrace.TracerProvider
 	tracer trace.Tracer
 
 	shutdown func(ctx context.Context) error
@@ -44,8 +44,9 @@ func New(ctx context.Context, cfg *Config) (*OTel, error) {
 		return &otl, nil
 	}
 
-	traceP, err := newTraceProvider(ctx, cfg)
-	otl.shutdown = traceP.Shutdown
+	tp, err := newTraceProvider(ctx, cfg)
+	otl.traceP = tp
+	otl.shutdown = tp.Shutdown
 	if err != nil {
 		err = errors.Join(err, otl.shutdown(ctx))
 		return &otl, err
@@ -53,7 +54,7 @@ func New(ctx context.Context, cfg *Config) (*OTel, error) {
 	otel.SetTextMapPropagator(
 		newPropagator(),
 	)
-	otel.SetTracerProvider(traceP)
+	otel.SetTracerProvider(otl.traceP)
 	otl.tracer = otl.traceP.Tracer(
 		cfg.Name,
 		trace.WithInstrumentationVersion(cfg.Version),
