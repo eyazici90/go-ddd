@@ -24,8 +24,11 @@ func (s *Server) useRoutes() {
 	v1.PUT(orderBaseURL+"/cancel"+"/:id", s.cmdCtrl.cancel)
 }
 
-func (s *Server) useHealth() {
+func (s *Server) useProbes() {
 	s.echo.GET("/health", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Healthy")
+		return c.String(http.StatusOK, "healthy")
+	})
+	s.echo.GET("/ready", func(c echo.Context) error {
+		return c.String(http.StatusOK, "ready")
 	})
 }

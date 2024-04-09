@@ -42,7 +42,7 @@ func NewServer(cfg Config,
 		queryCtrl: queryCtrl,
 	}
 
-	server.useHealth()
+	server.useProbes()
 	server.useRoutes()
 	server.useMiddlewares()
 
