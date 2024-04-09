@@ -72,18 +72,18 @@ func buildServer(wr io.Writer) (*http.Server, error) {
 		return nil, err
 	}
 
-	otl, err := otel.New(context.Background(), &otel.Config{
+	cleanup, err := otel.New(context.Background(), &otel.Config{
 		Name:    "github.com/eyazici90/go-ddd",
 		Version: "1.0.0",
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Join(err, cleanup(context.Background()))
 	}
 	repo := inmem.NewOrderRepository()
 	svc := query.NewOrderQueryService(repo)
 	eventBus := infra.NewNoBus()
 
-	cmdCtrl, err := http.NewCommandController(repo, eventBus, otl, time.Second*time.Duration(cfg.Context.Timeout))
+	cmdCtrl, err := http.NewCommandController(repo, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
 	if err != nil {
 		return nil, err
 	}

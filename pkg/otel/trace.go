@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sync/atomic"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -17,58 +18,42 @@ import (
 	"go.opentelemetry.io/otel/trace/noop"
 )
 
-type OTel struct {
-	traceP *sdktrace.TracerProvider
-	tracer trace.Tracer
+var globalTracer = defaultTracerValue()
 
-	shutdown func(ctx context.Context) error
+func Tracer() trace.Tracer {
+	v, ok := globalTracer.Load().(trace.Tracer)
+	if !ok {
+		fmt.Println("unable to cast tracer")
+		return nil
+	}
+	return v
 }
 
 type Config struct {
 	Name, Version string
 }
 
-func MustNew(ctx context.Context, cfg *Config) *OTel {
-	otl, err := New(ctx, cfg)
-	if err != nil {
-		panic(err)
-	}
-	return otl
-}
-
-func New(ctx context.Context, cfg *Config) (*OTel, error) {
-	var otl OTel
+func New(ctx context.Context, cfg *Config) (func(ctx context.Context) error, error) {
 	if cfg.Name == "" {
-		nop := noop.NewTracerProvider()
-		otl.tracer = nop.Tracer("no-op-provider")
-		return &otl, nil
+		return nil, nil
 	}
 
 	tp, err := newTraceProvider(ctx, cfg)
-	otl.traceP = tp
-	otl.shutdown = tp.Shutdown
 	if err != nil {
-		err = errors.Join(err, otl.shutdown(ctx))
-		return &otl, err
+		err = errors.Join(err, tp.Shutdown(ctx))
+		return tp.Shutdown, err
 	}
 	otel.SetTextMapPropagator(
 		newPropagator(),
 	)
-	otel.SetTracerProvider(otl.traceP)
-	otl.tracer = otl.traceP.Tracer(
+	otel.SetTracerProvider(tp)
+	tracer := otel.Tracer(
 		cfg.Name,
 		trace.WithInstrumentationVersion(cfg.Version),
 		trace.WithSchemaURL(semconv.SchemaURL),
 	)
-	return &otl, nil
-}
-
-func (ot *OTel) Tracer() trace.Tracer {
-	return ot.tracer
-}
-
-func (ot *OTel) Shutdown() func(ctx context.Context) error {
-	return ot.shutdown
+	globalTracer.Store(tracer)
+	return tp.Shutdown, nil
 }
 
 func newTraceProvider(ctx context.Context, cfg *Config) (*sdktrace.TracerProvider, error) {
@@ -94,4 +79,11 @@ func newPropagator() propagation.TextMapPropagator {
 		propagation.TraceContext{},
 		propagation.Baggage{},
 	)
+}
+
+func defaultTracerValue() *atomic.Value {
+	v := &atomic.Value{}
+	nop := noop.NewTracerProvider().Tracer("no-op")
+	v.Store(nop)
+	return v
 }
