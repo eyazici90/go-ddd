@@ -5,6 +5,8 @@ import (
 	"sync"
 
 	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/pkg/otel"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 type OrderRepository struct {
@@ -18,7 +20,10 @@ func NewOrderRepository() *OrderRepository {
 	}
 }
 
-func (i *OrderRepository) GetAll(_ context.Context) ([]*domain.Order, error) {
+func (i *OrderRepository) GetAll(ctx context.Context) ([]*domain.Order, error) {
+	ctx, span := otel.Tracer().Start(ctx, "inmem-store-getall")
+	defer span.End()
+
 	i.mutex.RLock()
 	defer i.mutex.RUnlock()
 
@@ -31,14 +36,22 @@ func (i *OrderRepository) GetAll(_ context.Context) ([]*domain.Order, error) {
 	return result, nil
 }
 
-func (i *OrderRepository) Get(_ context.Context, id string) (*domain.Order, error) {
+func (i *OrderRepository) Get(ctx context.Context, id string) (*domain.Order, error) {
+	ctx, span := otel.Tracer().Start(ctx, "inmem-store-get")
+	defer span.End()
+
+	span.SetAttributes(attribute.String("order-id", id))
 	i.mutex.RLock()
 	defer i.mutex.RUnlock()
 
 	return i.data[id], nil
 }
 
-func (i *OrderRepository) Update(_ context.Context, o *domain.Order) error {
+func (i *OrderRepository) Update(ctx context.Context, o *domain.Order) error {
+	ctx, span := otel.Tracer().Start(ctx, "inmem-store-update")
+	defer span.End()
+
+	span.SetAttributes(attribute.String("order-id", o.ID()))
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
 
@@ -46,7 +59,11 @@ func (i *OrderRepository) Update(_ context.Context, o *domain.Order) error {
 	return nil
 }
 
-func (i *OrderRepository) Create(_ context.Context, o *domain.Order) error {
+func (i *OrderRepository) Create(ctx context.Context, o *domain.Order) error {
+	ctx, span := otel.Tracer().Start(ctx, "inmem-store-create")
+	defer span.End()
+
+	span.SetAttributes(attribute.String("order-id", o.ID()))
 	i.mutex.Lock()
 	defer i.mutex.Unlock()
 

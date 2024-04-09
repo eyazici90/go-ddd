@@ -18,7 +18,7 @@ import (
 	"go.opentelemetry.io/otel/trace/noop"
 )
 
-var globalTracer = defaultTracerValue()
+var globalTracer = &atomic.Value{}
 
 func Tracer() trace.Tracer {
 	v, ok := globalTracer.Load().(trace.Tracer)
@@ -35,6 +35,8 @@ type Config struct {
 
 func New(ctx context.Context, cfg *Config) (func(ctx context.Context) error, error) {
 	if cfg.Name == "" {
+		nop := noop.NewTracerProvider().Tracer("no-op")
+		globalTracer.Store(nop)
 		return nil, nil
 	}
 
@@ -79,11 +81,4 @@ func newPropagator() propagation.TextMapPropagator {
 		propagation.TraceContext{},
 		propagation.Baggage{},
 	)
-}
-
-func defaultTracerValue() *atomic.Value {
-	v := &atomic.Value{}
-	nop := noop.NewTracerProvider().Tracer("no-op")
-	v.Store(nop)
-	return v
 }

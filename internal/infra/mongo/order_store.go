@@ -2,10 +2,12 @@ package mongo
 
 import (
 	"context"
+	"go.opentelemetry.io/otel/attribute"
 	"time"
 
 	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
+	"github.com/eyazici90/go-ddd/pkg/otel"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -41,6 +43,9 @@ func NewOrderRepository(mongoStore *Store) *OrderRepository {
 }
 
 func (r *OrderRepository) GetAll(ctx context.Context) ([]*domain.Order, error) {
+	ctx, span := otel.Tracer().Start(ctx, "mongo-store-getall")
+	defer span.End()
+
 	var result []*orderBson
 	if err := r.mStore.FindAll(ctx, collectionName, bson.M{}, &result); err != nil {
 		return nil, err
@@ -55,6 +60,10 @@ func (r *OrderRepository) GetAll(ctx context.Context) ([]*domain.Order, error) {
 }
 
 func (r *OrderRepository) Get(ctx context.Context, id string) (*domain.Order, error) {
+	ctx, span := otel.Tracer().Start(ctx, "mongo-store-get")
+	defer span.End()
+	span.SetAttributes(attribute.String("order-id", id))
+
 	var (
 		bsonResult = &orderBson{}
 		query      = bson.M{"id": id}
@@ -68,6 +77,11 @@ func (r *OrderRepository) Get(ctx context.Context, id string) (*domain.Order, er
 }
 
 func (r *OrderRepository) Update(ctx context.Context, o *domain.Order) error {
+	ctx, span := otel.Tracer().Start(ctx, "mongo-store-update")
+	defer span.End()
+
+	span.SetAttributes(attribute.String("order-id", o.ID()))
+
 	query := bson.M{"id": o.ID(), "version": o.Version()}
 	update := bson.M{"$set": bson.M{"status": o.Status(), "version": aggregate.NewVersion().String()}}
 
@@ -75,6 +89,11 @@ func (r *OrderRepository) Update(ctx context.Context, o *domain.Order) error {
 }
 
 func (r *OrderRepository) Create(ctx context.Context, o *domain.Order) error {
+	ctx, span := otel.Tracer().Start(ctx, "mongo-store-create")
+	defer span.End()
+
+	span.SetAttributes(attribute.String("order-id", o.ID()))
+
 	bOrder := fromOrder(o)
 	if bOrder.Version == "" {
 		bOrder.Version = aggregate.NewVersion().String()
