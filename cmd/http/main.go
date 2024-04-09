@@ -44,7 +44,18 @@ func main() {
 	shutdown.Gracefully()
 }
 
-func run(w io.Writer) (func(), error) {
+func run(w io.Writer) (cleanup func(), err error) {
+	defer func() {
+		if rvr := recover(); rvr != nil {
+			switch r := rvr.(type) {
+			case error:
+				err = fmt.Errorf("recovery: %w", r)
+			default:
+				err = fmt.Errorf("recovery: %v", r)
+			}
+		}
+	}()
+
 	server, err := buildServer(w)
 	if err != nil {
 		return nil, err
@@ -56,14 +67,15 @@ func run(w io.Writer) (func(), error) {
 		}
 	}()
 
-	return func() {
+	cleanup = func() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Duration(server.Config().Context.Timeout)*time.Second)
 		defer cancel()
 
 		if err := server.Shutdown(ctx); err != nil {
 			server.Fatal(err)
 		}
-	}, nil
+	}
+	return cleanup, nil
 }
 
 func buildServer(wr io.Writer) (*http.Server, error) {
