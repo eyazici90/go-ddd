@@ -33,3 +33,10 @@ run: stop
 helm-charts:
 	helm lint helm/*
 	helm package helm/*
+
+helm-uninstall:
+	helm uninstall go-ddd
+
+helm-upgrade:helm-uninstall
+	helm upgrade --install go-ddd ./helm/go-ddd
+

@@ -3,26 +3,24 @@ kind: Deployment
 metadata:
   name: {{ .Chart.Name }}
   labels:
-    {{ .Chart.Name }}
+    app: {{ .Chart.Name }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{ .Chart.Name }}
+      app: {{ .Chart.Name }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
-        {{ .Chart.Name }}
+        app: {{ .Chart.Name }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion}}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"
           securityContext:
             readOnlyRootFilesystem: true
             runAsUser: 1000
@@ -38,11 +36,23 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /health
               port: {{ .Values.service.port}}
           readinessProbe:
             httpGet:
-              path: /
+              path: /ready
               port: {{ .Values.service.port}}
             initialDelaySeconds: 5
             periodSeconds: 3
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          env:
+            - name: GOMAXPROCS
+              valueFrom:
+                resourceFieldRef:
+                  resource: limits.cpu

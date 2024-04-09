@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ .Chart.Name }}
   labels:
-    {{ .Chart.Name }}
+    app: {{ .Chart.Name }}
 spec:
   type: {{ .Values.service.type }}
   selector:
