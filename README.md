@@ -7,7 +7,7 @@ Practical DDD(_Domain Driven Design_) & CQRS implementation on order bounded con
 go 1.22.1
 
 ## Warming - Up
-- run make command as: `make run` to run the app 
+- run in terminal: `make run` 
 - Locate to http://localhost:8080/swagger/index.html
 
 ## Helm
@@ -17,7 +17,7 @@ go 1.22.1
 
 - Health checks
 - Graceful shutdown on interrupt signals
-- Global http error handling with Problem Details rfc7807 (https://datatracker.ietf.org/doc/html/rfc7807)
+- Global http error handling with Problem Details [rfc7807](https://datatracker.ietf.org/doc/html/rfc7807)
 - Prometheus metrics for echo
 - Swagger docs (/swagger/index.html)
 - Graceful config management by viper
