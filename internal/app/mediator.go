@@ -22,6 +22,7 @@ func NewMediator(store OrderStore,
 ) (*mediator.Mediator, error) {
 	m, err := mediator.New(
 		// Behaviors
+		mediator.WithBehaviourFunc(behavior.Log),
 		mediator.WithBehaviourFunc(behavior.Trace),
 		mediator.WithBehaviourFunc(behavior.Validate),
 		mediator.WithBehaviour(behavior.NewCancellator(timeout)),

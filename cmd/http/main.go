@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	gohttp "net/http"
 	"os"
 	"time"
@@ -44,7 +45,7 @@ func main() {
 	shutdown.Gracefully()
 }
 
-func run(w io.Writer) (cleanup func(), err error) {
+func run(wr io.Writer) (cleanup func(), err error) {
 	defer func() {
 		if rvr := recover(); rvr != nil {
 			switch r := rvr.(type) {
@@ -55,8 +56,8 @@ func run(w io.Writer) (cleanup func(), err error) {
 			}
 		}
 	}()
-
-	server, err := buildServer(w)
+	setUpSlog(wr)
+	server, err := buildServer(wr)
 	if err != nil {
 		return nil, err
 	}
@@ -120,4 +121,14 @@ func readConfig(cfg *http.Config) error {
 		return fmt.Errorf("unmarshal cfg: %w", err)
 	}
 	return nil
+}
+
+func setUpSlog(wr io.Writer) {
+	opts := &slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}
+	h := slog.NewJSONHandler(wr, opts)
+	sl := slog.New(h)
+
+	slog.SetDefault(sl)
 }
