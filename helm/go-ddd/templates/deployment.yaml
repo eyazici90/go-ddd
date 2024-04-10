@@ -18,6 +18,10 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
+      terminationGracePeriodSeconds: 30
+      {{- if .Values.serviceAccount.enabled }}
+      serviceAccountName: {{.Chart.Name}}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag}}"

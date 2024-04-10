@@ -15,4 +15,10 @@ service:
   type: NodePort
   port: 8080
 
+serviceAccount:
+  # Specifies whether a service account should be created
+  enabled: false
+  # List of image pull secrets if pulling from private registries
+  imagePullSecrets: []
+
 podDisruptionBudget: {}
