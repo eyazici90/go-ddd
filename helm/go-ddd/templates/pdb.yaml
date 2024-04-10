@@ -1,0 +1,12 @@
+{{- if and .Values.podDisruptionBudget (gt (int .Values.replicaCount) 1) }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Chart.Name }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+{{- end }}

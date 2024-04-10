@@ -14,3 +14,5 @@ replicaCount: 2
 service:
   type: NodePort
   port: 8080
+
+podDisruptionBudget: {}

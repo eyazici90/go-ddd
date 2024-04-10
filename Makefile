@@ -37,6 +37,5 @@ helm-charts:
 helm-uninstall:
 	helm uninstall go-ddd
 
-helm-upgrade:helm-uninstall
+helm-upgrade:
 	helm upgrade --install go-ddd ./helm/go-ddd
-
