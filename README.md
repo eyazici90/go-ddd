@@ -25,6 +25,7 @@ go 1.22.1
 - DDD structure
 - Optimistic concurrency control.
 - Docker, K8s, Helm.
+- [Distroless](https://github.com/GoogleContainerTools/distroless) docker image usage
 - [OTEL(open telemetry)](https://github.com/open-telemetry/opentelemetry-go) & [grafana/otel-lgtm](https://grafana.com/blog/2024/03/13/an-opentelemetry-backend-in-a-docker-image-introducing-grafana/otel-lgtm/) integration
 - [Structured Logging with slog](https://go.dev/blog/slog)
 - (TODO): [Toxiproxy](https://github.com/Shopify/toxiproxy) for resilency testing

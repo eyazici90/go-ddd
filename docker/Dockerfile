@@ -11,14 +11,11 @@ COPY . .
 RUN go build -o /build/cmd/http/app /build/cmd/http/main.go
 
 #
-FROM alpine:latest  
-RUN apk --no-cache add ca-certificates
+FROM gcr.io/distroless/static-debian12
 
 COPY --from=build-env /build/cmd/http/app /app/main 
 COPY --from=build-env /build/cmd/http/config.json /app/config.json 
 
 WORKDIR /app
-
-RUN chmod +x main
 
 ENTRYPOINT ["./main","app"]
