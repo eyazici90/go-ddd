@@ -29,11 +29,11 @@ func (e *eventRecorder) Clear() {
 }
 
 type Root struct {
-	eventRecorder eventRecorder
+	er eventRecorder
 }
 
-func (root *Root) AddEvent(event interface{}) { root.eventRecorder.Record(event) }
+func (root *Root) AddEvent(event interface{}) { root.er.Record(event) }
 
-func (root *Root) Clear() { root.eventRecorder.Clear() }
+func (root *Root) Clear() { root.er.Clear() }
 
-func (root *Root) Events() []interface{} { return root.eventRecorder.Events() }
+func (root *Root) Events() []interface{} { return root.er.Events() }
