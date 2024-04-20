@@ -63,7 +63,7 @@ func newTraceProvider(ctx context.Context, cfg *Config) (*sdktrace.TracerProvide
 	if err != nil {
 		return nil, fmt.Errorf("new exporter: %w", err)
 	}
-	traceP := sdktrace.NewTracerProvider(
+	tp := sdktrace.NewTracerProvider(
 		sdktrace.WithBatcher(exporter,
 			sdktrace.WithBatchTimeout(time.Second)),
 		sdktrace.WithResource(resource.NewWithAttributes(
@@ -73,7 +73,7 @@ func newTraceProvider(ctx context.Context, cfg *Config) (*sdktrace.TracerProvide
 		)),
 		sdktrace.WithSampler(sdktrace.TraceIDRatioBased(100)),
 	)
-	return traceP, nil
+	return tp, nil
 }
 
 func newPropagator() propagation.TextMapPropagator {
