@@ -7,6 +7,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const serverName = "go-ddd"
+
 type Config struct {
 	Server struct {
 		Port    string `json:"port"`
