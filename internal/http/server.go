@@ -26,16 +26,16 @@ type Config struct {
 type Server struct {
 	cfg       Config
 	echo      *echo.Echo
-	cmdCtrl   CommandController
-	queryCtrl OrderQueryController
+	cmdCtrl   *CommandController
+	queryCtrl *QueryController
 
 	shutdowns []func(ctx context.Context) error
 }
 
 func NewServer(cfg Config,
 	e *echo.Echo,
-	cmdCtrl CommandController,
-	queryCtrl OrderQueryController,
+	cmdCtrl *CommandController,
+	queryCtrl *QueryController,
 ) *Server {
 	server := Server{
 		cfg:       cfg,

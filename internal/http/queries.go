@@ -8,18 +8,18 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type QueryService interface {
+type OrderQuerier interface {
 	GetOrders(ctx context.Context) *query.GetOrdersDto
 	GetOrder(ctx context.Context, id string) *query.GetOrderDto
 }
 
-type OrderQueryController struct {
-	orderService QueryService
+type QueryController struct {
+	orderQuerier OrderQuerier
 }
 
-func NewQueryController(s QueryService) OrderQueryController {
-	return OrderQueryController{
-		orderService: s,
+func NewQueryController(s OrderQuerier) *QueryController {
+	return &QueryController{
+		orderQuerier: s,
 	}
 }
 
@@ -31,9 +31,9 @@ func NewQueryController(s QueryService) OrderQueryController {
 // @Produce json
 // @Success 200 {object} query.GetOrdersDto
 // @Router /orders [get]
-func (oqc OrderQueryController) getOrders(c echo.Context) error {
+func (oqc *QueryController) getOrders(c echo.Context) error {
 	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
-		return oqc.orderService.GetOrders(ctx), nil
+		return oqc.orderQuerier.GetOrders(ctx), nil
 	})
 }
 
@@ -46,10 +46,10 @@ func (oqc OrderQueryController) getOrders(c echo.Context) error {
 // @Success 200 {object} query.GetOrderDto
 // @Param id path string true "id"
 // @Router /orders/{id} [get]
-func (oqc OrderQueryController) getOrder(c echo.Context) error {
+func (oqc *QueryController) getOrder(c echo.Context) error {
 	id := c.Param("id")
 
 	return handleR(c, http.StatusOK, func(ctx context.Context) (interface{}, error) {
-		return oqc.orderService.GetOrder(ctx, id), nil
+		return oqc.orderQuerier.GetOrder(ctx, id), nil
 	})
 }

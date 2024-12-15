@@ -2,6 +2,8 @@ package command_test
 
 import (
 	"context"
+	"github.com/eyazici90/go-ddd/pkg/otel"
+	"os"
 	"testing"
 	"time"
 
@@ -9,7 +11,6 @@ import (
 	"github.com/eyazici90/go-ddd/internal/domain"
 	"github.com/eyazici90/go-ddd/internal/infra/inmem"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
-
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -54,4 +55,10 @@ type orderGetterFunc func(context.Context, string) (*domain.Order, error)
 
 func (o orderGetterFunc) Get(ctx context.Context, id string) (*domain.Order, error) {
 	return o(ctx, id)
+}
+
+func TestMain(m *testing.M) {
+	_, _ = otel.New(context.Background(), &otel.Config{})
+	code := m.Run()
+	os.Exit(code)
 }

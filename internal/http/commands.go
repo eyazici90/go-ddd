@@ -21,12 +21,12 @@ func NewCommandController(
 	r app.OrderStore,
 	e event.Publisher,
 	timeout time.Duration,
-) (CommandController, error) {
+) (*CommandController, error) {
 	m, err := app.NewMediator(r, e, timeout)
 	if err != nil {
-		return CommandController{}, err
+		return nil, err
 	}
-	return CommandController{
+	return &CommandController{
 		sender: m,
 	}, nil
 }
@@ -39,7 +39,7 @@ func NewCommandController(
 // @Produce json
 // @Success 201 {object} string
 // @Router /orders [post]
-func (cc CommandController) create(c echo.Context) error {
+func (cc *CommandController) create(c echo.Context) error {
 	return handle(c,
 		http.StatusCreated,
 		func(ctx context.Context) error {
@@ -56,7 +56,7 @@ func (cc CommandController) create(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/pay/{id} [put]
-func (cc CommandController) pay(c echo.Context) error {
+func (cc *CommandController) pay(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
@@ -73,7 +73,7 @@ func (cc CommandController) pay(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/cancel/{id} [put]
-func (cc CommandController) cancel(c echo.Context) error {
+func (cc *CommandController) cancel(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {
@@ -90,7 +90,7 @@ func (cc CommandController) cancel(c echo.Context) error {
 // @Success 202 {object} string
 // @Param id path string true "id"
 // @Router /orders/ship/{id} [put]
-func (cc CommandController) ship(c echo.Context) error {
+func (cc *CommandController) ship(c echo.Context) error {
 	id := c.Param("id")
 
 	return handle(c, http.StatusAccepted, func(ctx context.Context) error {

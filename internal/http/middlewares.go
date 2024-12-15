@@ -48,7 +48,7 @@ func (s *Server) useInstrumentation() {
 	skipper := func(c echo.Context) bool {
 		return strings.HasPrefix(c.Path(), "/health")
 	}
-	p := prometheus.NewPrometheus("echo", skipper)
+	p := prometheus.NewPrometheus(serverName, skipper)
 	p.Use(s.echo)
 	s.echo.Use(otelecho.Middleware(serverName, otelecho.WithSkipper(skipper)))
 }

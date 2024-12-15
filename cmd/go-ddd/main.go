@@ -92,22 +92,18 @@ func buildServer(wr io.Writer) (*http.Server, error) {
 	if err != nil {
 		return nil, errors.Join(err, cleanup(context.Background()))
 	}
-	repo := inmem.NewOrderRepository()
-	svc := query.NewOrderQueryService(repo)
 	eventBus := infra.NewNoBus()
-
-	cmdCtrl, err := http.NewCommandController(repo, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
+	mem := inmem.NewOrderRepository()
+	qsvc := query.NewService(mem)
+	queryCtrl := http.NewQueryController(qsvc)
+	cmdCtrl, err := http.NewCommandController(mem, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
 	if err != nil {
 		return nil, err
 	}
 
-	queryCtrl := http.NewQueryController(svc)
-
 	e := echo.New()
 	e.Logger.SetOutput(wr)
-
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
-
 	return http.NewServer(cfg, e, cmdCtrl, queryCtrl), nil
 }
 
@@ -127,8 +123,7 @@ func setUpSlog(wr io.Writer) {
 	opts := &slog.HandlerOptions{
 		Level: slog.LevelInfo,
 	}
-	h := slog.NewJSONHandler(wr, opts)
+	h := slog.NewTextHandler(wr, opts)
 	sl := slog.New(h)
-
 	slog.SetDefault(sl)
 }

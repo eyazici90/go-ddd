@@ -15,7 +15,7 @@ type Service struct {
 	store OrderQueryStore
 }
 
-func NewOrderQueryService(store OrderQueryStore) *Service {
+func NewService(store OrderQueryStore) *Service {
 	return &Service{store}
 }
 
