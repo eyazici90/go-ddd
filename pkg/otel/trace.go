@@ -49,12 +49,12 @@ func New(ctx context.Context, cfg *Config) (func(ctx context.Context) error, err
 		newPropagator(),
 	)
 	otel.SetTracerProvider(tp)
-	tracer := otel.Tracer(
+	tc := tp.Tracer(
 		cfg.Name,
 		trace.WithInstrumentationVersion(cfg.Version),
 		trace.WithSchemaURL(semconv.SchemaURL),
 	)
-	globalTracer.Store(tracer)
+	globalTracer.Store(tc)
 	return tp.Shutdown, nil
 }
 

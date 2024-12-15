@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"go.opentelemetry.io/otel/trace"
 	"io"
 	"log/slog"
 	gohttp "net/http"
@@ -119,11 +120,27 @@ func readConfig(cfg *http.Config) error {
 	return nil
 }
 
+type contextHandler struct {
+	slog.Handler
+}
+
+func (h *contextHandler) Handle(ctx context.Context, r slog.Record) error {
+	span := trace.SpanContextFromContext(ctx)
+	if span.HasTraceID() {
+		r.AddAttrs(
+			slog.Any("traceID", span.TraceID()),
+		)
+	}
+	return h.Handler.Handle(ctx, r)
+}
+
 func setUpSlog(wr io.Writer) {
 	opts := &slog.HandlerOptions{
 		Level: slog.LevelInfo,
 	}
 	h := slog.NewTextHandler(wr, opts)
-	sl := slog.New(h)
+	sl := slog.New(&contextHandler{
+		Handler: h,
+	})
 	slog.SetDefault(sl)
 }
