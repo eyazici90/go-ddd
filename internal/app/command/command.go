@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/internal/order"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
 )
 
@@ -17,10 +17,10 @@ const (
 
 type (
 	OrderGetter interface {
-		Get(context.Context, string) (*domain.Order, error)
+		Get(context.Context, string) (*order.Order, error)
 	}
 	OrderUpdater interface {
-		Update(context.Context, *domain.Order) error
+		Update(context.Context, *order.Order) error
 	}
 )
 
@@ -35,8 +35,8 @@ func newOrderHandler(getter OrderGetter, updater OrderUpdater) orderHandler {
 
 func (h orderHandler) update(ctx context.Context,
 	id string,
-	fn func(*domain.Order)) error {
-	return h.updateErr(ctx, id, func(o *domain.Order) error {
+	fn func(*order.Order)) error {
+	return h.updateErr(ctx, id, func(o *order.Order) error {
 		fn(o)
 		return nil
 	})
@@ -44,7 +44,7 @@ func (h orderHandler) update(ctx context.Context,
 
 func (h orderHandler) updateErr(ctx context.Context,
 	id string,
-	fn func(*domain.Order) error) error {
+	fn func(*order.Order) error) error {
 	o, err := h.orderGetter.Get(ctx, id)
 	if err != nil {
 		return fmt.Errorf("getting order: %w", err)

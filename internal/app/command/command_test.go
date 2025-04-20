@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/eyazici90/go-ddd/internal/app/command"
-	"github.com/eyazici90/go-ddd/internal/domain"
-	"github.com/eyazici90/go-ddd/internal/infra/inmem"
+	"github.com/eyazici90/go-ddd/internal/infra/mem"
+	"github.com/eyazici90/go-ddd/internal/order"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -17,7 +17,7 @@ import (
 )
 
 func TestCreateOrder(t *testing.T) {
-	handler := command.NewCreateOrderHandler(inmem.NewOrderRepository())
+	handler := command.NewCreateOrderHandler(mem.NewOrderRepository())
 
 	orderID := uuid.New().String()
 
@@ -33,27 +33,27 @@ func TestPayOrder(t *testing.T) {
 
 	cmd := command.PayOrder{orderID}
 
-	newOrder, err := domain.NewOrder(domain.OrderID(cmd.OrderID),
-		domain.NewCustomerID(),
-		domain.NewProductID(),
+	newOrder, err := order.New(order.ID(cmd.OrderID),
+		order.NewCustomerID(),
+		order.NewProductID(),
 		time.Now,
-		domain.Submitted,
+		order.Submitted,
 		aggregate.NewVersion())
 	require.NoError(t, err)
 
-	handler := command.NewPayOrderHandler(orderGetterFunc(func(context.Context, string) (*domain.Order, error) {
+	handler := command.NewPayOrderHandler(orderGetterFunc(func(context.Context, string) (*order.Order, error) {
 		return newOrder, nil
-	}), inmem.NewOrderRepository())
+	}), mem.NewOrderRepository())
 
 	err = handler.Handle(context.TODO(), cmd)
 
 	assert.Nil(t, err)
-	assert.Equal(t, domain.Paid, newOrder.Status())
+	assert.Equal(t, order.Paid, newOrder.Status())
 }
 
-type orderGetterFunc func(context.Context, string) (*domain.Order, error)
+type orderGetterFunc func(context.Context, string) (*order.Order, error)
 
-func (o orderGetterFunc) Get(ctx context.Context, id string) (*domain.Order, error) {
+func (o orderGetterFunc) Get(ctx context.Context, id string) (*order.Order, error) {
 	return o(ctx, id)
 }
 

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/eyazici90/go-ddd/internal/app/event"
-	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/internal/order"
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
@@ -34,8 +34,8 @@ func (h ShipOrderHandler) Handle(ctx context.Context, msg mediator.Message) erro
 		return ErrInvalidCommand
 	}
 
-	var ord *domain.Order
-	if err := h.updateErr(ctx, cmd.OrderID, func(o *domain.Order) error {
+	var ord *order.Order
+	if err := h.updateErr(ctx, cmd.OrderID, func(o *order.Order) error {
 		ord = o
 		return ord.Ship()
 	}); err != nil {

@@ -3,12 +3,12 @@ package query
 import (
 	"context"
 
-	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/internal/order"
 )
 
 type OrderQueryStore interface {
-	GetAll(context.Context) ([]*domain.Order, error)
-	Get(ctx context.Context, id string) (*domain.Order, error)
+	GetAll(context.Context) ([]*order.Order, error)
+	Get(ctx context.Context, id string) (*order.Order, error)
 }
 
 type Service struct {

@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/internal/order"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
 	"github.com/eyazici90/go-mediator/mediator"
 )
 
 type OrderCreator interface {
-	Create(context.Context, *domain.Order) error
+	Create(context.Context, *order.Order) error
 }
 
 type CreateOrder struct {
@@ -34,8 +34,8 @@ func (h CreateOrderHandler) Handle(ctx context.Context, msg mediator.Message) er
 		return ErrInvalidCommand
 	}
 
-	order, err := domain.NewOrder(domain.OrderID(cmd.ID), domain.NewCustomerID(), domain.NewProductID(), time.Now,
-		domain.Submitted, aggregate.NewVersion())
+	order, err := order.New(order.ID(cmd.ID), order.NewCustomerID(), order.NewProductID(), time.Now,
+		order.Submitted, aggregate.NewVersion())
 	if err != nil {
 		return fmt.Errorf("new order: %w", err)
 	}

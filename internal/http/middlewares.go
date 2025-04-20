@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/eyazici90/go-ddd/internal/domain"
+	"github.com/eyazici90/go-ddd/internal/order"
 	"github.com/eyazici90/go-ddd/pkg/aggregate"
 	"github.com/eyazici90/go-ddd/pkg/httperr"
 	"github.com/go-playground/validator/v10"
@@ -29,8 +29,8 @@ func (s *Server) useMiddlewares() {
 	s.useErrorHandler(httperr.NewHandler(
 		httperr.DefaultHandler.WithMap(http.StatusBadRequest,
 			aggregate.ErrNotFound,
-			domain.ErrNotPaid,
-			domain.ErrInvalidValue,
+			order.ErrNotPaid,
+			order.ErrInvalidValue,
 		),
 		httperr.DefaultHandler.WithMapFunc(
 			func(err error) (int, bool) {

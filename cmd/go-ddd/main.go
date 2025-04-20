@@ -14,7 +14,7 @@ import (
 	"github.com/eyazici90/go-ddd/internal/app/query"
 	"github.com/eyazici90/go-ddd/internal/http"
 	"github.com/eyazici90/go-ddd/internal/infra"
-	"github.com/eyazici90/go-ddd/internal/infra/inmem"
+	"github.com/eyazici90/go-ddd/internal/infra/mem"
 	"github.com/eyazici90/go-ddd/pkg/otel"
 	"github.com/eyazici90/go-ddd/pkg/shutdown"
 	"github.com/labstack/echo/v4"
@@ -94,7 +94,7 @@ func buildServer(wr io.Writer) (*http.Server, error) {
 		return nil, errors.Join(err, cleanup(context.Background()))
 	}
 	eventBus := infra.NewNoBus()
-	mem := inmem.NewOrderRepository()
+	mem := mem.NewOrderRepository()
 	qsvc := query.NewService(mem)
 	queryCtrl := http.NewQueryController(qsvc)
 	cmdCtrl, err := http.NewCommandController(mem, eventBus, time.Second*time.Duration(cfg.Context.Timeout))
