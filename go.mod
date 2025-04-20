@@ -1,12 +1,12 @@
 module github.com/eyazici90/go-ddd
 
-go 1.22.1
+go 1.24.0
 
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/aws/aws-sdk-go v1.37.1 // indirect
-	github.com/eyazici90/go-mediator v0.0.0-20220525200543-03834e996bd2
+	github.com/eyazici90/go-mediator v0.0.0-20241227145223-8761f22ae19d
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-openapi/spec v0.20.2 // indirect
 	github.com/go-playground/validator/v10 v10.4.1

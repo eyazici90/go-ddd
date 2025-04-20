@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"go.opentelemetry.io/otel/trace"
 	"io"
 	"log/slog"
 	gohttp "net/http"
@@ -21,6 +20,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	"go.opentelemetry.io/otel/trace"
 )
 
 // @title Order Application
